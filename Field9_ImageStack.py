@@ -3,7 +3,7 @@
 Created on Tue May 29 21:05:05 2018
 
 @author: Matthew Peek
-Last Modified: 9 June 2018
+Last Modified: 10 June 2018
 """
 import numpy as np
 from astropy.io import ascii
@@ -26,21 +26,31 @@ count = 0
 absorberFile = ascii.read('Absorption_Data.dat', delimiter='|')
 ID = absorberFile['col2']
 
-fileList = [[]]
+fileList = []
 for i in range(1, len(ID)):
     try:
         fileName = 'CROP-SDSS-J120639.85+025308.3-G141_00' + ID[i] + '.2d.fits'
         file = fits.open(fileName)
         image = file[0].data
         
-        fileList = [np.array(image)]
+        fileList = ([np.array(image)])
+        
         print (ID[i])
-        print (fileList)
+        #print (fileList)
         #print (image.shape)
         
         count += 1
     except IOError:
         print ("Image ID " + ID[i] + " not found!")
+file.close()
+
+print (count)  
+print ("Total fileList:", fileList)
+
+finalImage = np.sum(fileList, axis=0)
+fits.writeto('Field9_Stacked_Image.fits', finalImage, overwrite=True)
+plt.imshow(finalImage)
+plt.colorbar()
 """
 for x in range(0, len(data)):
     for y in range(0, len(data[i])):
@@ -48,15 +58,3 @@ for x in range(0, len(data)):
         finalImage = data
 print ("Final", finalImage)
 """
-#print ("fileList:", fileList)
-#stack = np.stack(fileList, axis=0)
-#finalImage = np.mean(stack, axis=0)
-
-finalImage = np.sum(fileList, axis=0)
-fits.writeto('Field9_Stacked_Image.fits', finalImage, file[0].header, overwrite=True)
-file.close()
-print (count)
-
-#Show stacked image.
-plt.imshow(finalImage)
-plt.colorbar()
