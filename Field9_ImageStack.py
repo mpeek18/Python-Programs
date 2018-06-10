@@ -26,17 +26,17 @@ count = 0
 absorberFile = ascii.read('Absorption_Data.dat', delimiter='|')
 ID = absorberFile['col2']
 
+fileList = [[]]
 for i in range(1, len(ID)):
-    #if (ID[i] == '341' or ID[i] == '410' or ID[i] == '352' or ID[i] == '333'):
     try:
         fileName = 'CROP-SDSS-J120639.85+025308.3-G141_00' + ID[i] + '.2d.fits'
         file = fits.open(fileName)
         image = file[0].data
-        #print (image)
-        fileList = [fits.getdata(fileName) for image in fileName]
-        #print (fileList)
+        
+        fileList = [np.array(image)]
         print (ID[i])
-        print (image.shape)
+        print (fileList)
+        #print (image.shape)
         
         count += 1
     except IOError:
