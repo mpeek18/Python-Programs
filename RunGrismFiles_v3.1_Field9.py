@@ -3,7 +3,7 @@
 Created on Mon Feb 23 22:07:40 2017
 
 @author: Matthew Peek
-Last Modified: 20 April 2018
+Last Modified: 11 June 2018
 Field 9
 
 Algorithm:
@@ -118,6 +118,7 @@ def analyzeFits(finalName, fitsName, zGal, sciHeight, hAlphaFlux):
     hdulist = fits.open(fitsName)
     f = fits.open(finalName)
     newData = f[0].data
+    #print ("new data", newData)
     
     xAxisMin = 0
     xAxisMax = 0
@@ -130,18 +131,24 @@ def analyzeFits(finalName, fitsName, zGal, sciHeight, hAlphaFlux):
     if (zGal < 1.60):    #If zGal is less then z=1.6, check H-Alpha lines
         hAlphaGal = hAlphaWavelength * (zGal+1)
         print ("H-Alpha:", hAlphaGal)
-    
+        print ("Wavelength:", wavelength)
         for m in range(0, len(wavelength)):
             if (abs(wavelength[m] - hAlphaGal) < 800):
                 if (xAxisMin == 0):
                     xAxisMin = m
-                xAxisMax = m
+                if ((m - xAxisMin) < 34):
+                    xAxisMax = 34 + xAxisMin
+                else:
+                    xAxisMax = m
             #print ("H-Alpha Wavelength: ", wavelength[m], " Index: ", m)
-        print ("XMAX ", xAxisMin)
-        print ("YMAX ", xAxisMax)
+        print ("XMIN ", xAxisMin)
+        print ("XMAX ", xAxisMax)
         print()
+        
         newImage = newData[:,xAxisMin:xAxisMax]
-    
+        #print ("newImage", newImage)
+        
+        
     elif (zGal > 1.60):  #If zGal is greater than z=1.6, check O-III lines
         OIIIGal = (zGal+1) * OIIIWavelength
         print ("O-III:", OIIIGal)
@@ -150,7 +157,10 @@ def analyzeFits(finalName, fitsName, zGal, sciHeight, hAlphaFlux):
             if (abs(wavelength[m] - OIIIGal) < 800):
                 if (xAxisMin == 0):
                     xAxisMin = m
-                xAxisMax = m
+                if ((m - xAxisMin) < 34):
+                    xAxisMax = 34 + xAxisMin
+                else:
+                    xAxisMax = m
                 #print ("OIII Wavelength: ", wavelength[m], " Index: ", m)
         print (xAxisMin)
         print (xAxisMax)
@@ -241,10 +251,10 @@ def analyzeFits(finalName, fitsName, zGal, sciHeight, hAlphaFlux):
     #plt.clf()
     plt.imshow(newImage)
     plt.savefig('noImageBlur' + str(galID) + '.png')
-    plt.subplots_adjust(right=2.0)
+    #plt.subplots_adjust(right=2.0)
     plt.subplots_adjust(top=1.0)
     plt.show()
-        
+       
     #Gaussian Blur
     #plt.clf()
     imgBlur = ndimage.gaussian_filter(newImage, sigma=(2,2), order=0)
@@ -282,6 +292,7 @@ def analyzeFits(finalName, fitsName, zGal, sciHeight, hAlphaFlux):
     plt.show()
     
     """
+    
     #Same image as above but with no gaussian blur
     fig = plt.figure()
     ax = fig.add_subplot(1,1,1)
@@ -447,6 +458,8 @@ R50 = []
 R90 = []
 errorFile = []
 angularDistKpc = []
+row = []
+col = []
 #countError = 0
 
 for i in range(0, len(galaxyID)): #Loop through Galaxy ID #'s.    
