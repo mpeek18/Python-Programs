@@ -3,7 +3,7 @@
 Created on Mon Feb 23 22:07:40 2017
 
 @author: Matthew Peek
-Last Modified: 11 June 2018
+Last Modified: 15 June 2018
 Field 9
 
 Algorithm:
@@ -44,9 +44,10 @@ import astropy.units as u
 from photutils import CircularAperture, aperture_photometry
 ###############################################################################
 # Open Grism, read and process sci, contam, model. Write to new final fits file
-def processFits(fitsName, finalName):
+def processFits(fitsName, finalName, fitsModel):
     hdulist = fits.open(fitsName)
     hdulist.info()
+    zFitsModel = fits.open(fitsModel)
     print()
     sci, header = hdulist[5].data, hdulist[5].header
     sciHeight = header['NAXIS2']
@@ -57,13 +58,15 @@ def processFits(fitsName, finalName):
     plt.savefig('Sci')
     """
     contam, header = hdulist[8].data, hdulist[8].header
+    hdulist.close()
     """
     plt.clf()
     plt.imshow(contam, cmap='gray', norm=LogNorm())
     plt.colorbar()
     plt.savefig('contam')
     """
-    model, header = hdulist[7].data, hdulist[7].header
+    model = zFitsModel[1].data
+    zFitsModel.close()
     """
     plt.clf()
     plt.imshow(model, cmap='gray', norm=LogNorm())
@@ -131,7 +134,7 @@ def analyzeFits(finalName, fitsName, zGal, sciHeight, hAlphaFlux):
     if (zGal < 1.60):    #If zGal is less then z=1.6, check H-Alpha lines
         hAlphaGal = hAlphaWavelength * (zGal+1)
         print ("H-Alpha:", hAlphaGal)
-        print ("Wavelength:", wavelength)
+        #print ("Wavelength:", wavelength)
         for m in range(0, len(wavelength)):
             if (abs(wavelength[m] - hAlphaGal) < 800):
                 if (xAxisMin == 0):
@@ -490,6 +493,14 @@ for i in range(0, len(galaxyID)): #Loop through Galaxy ID #'s.
         print ("Fits Name:",fitsName)
         print ("Final Name:", finalName)
         
+        #zfits.fits file has data for model subtraction in processFits function
+        try:
+            fitsModel = 'SDSS-J120639.85+025308.3' + str(frame) + 'G141_' + str(galID).zfill(5) + '.zfit.fits'
+            print ("Continuum model:", fitsModel)
+            
+        except IOError:
+            print ('zfits.fits file ' + galID + ' not found!')
+            
         """
         #linefit.dat file
         try:
@@ -521,7 +532,7 @@ for i in range(0, len(galaxyID)): #Loop through Galaxy ID #'s.
                 print ("Angular Distnace in Arcseconds", arcsecDist)
                 
         #call functions
-        sciHeight = processFits(fitsName, finalName)
+        sciHeight = processFits(fitsName, finalName, fitsModel)
         radius50, radius90 = analyzeFits(finalName, fitsName, zGal, sciHeight, hAlphaFlux)
         sfr, areaKpc, sfrSurfaceDens, lumDist = starFormation(hAlphaFlux, zGal, radius50)
         angDistKpc = convertDist(zGal, arcsecDist)
@@ -536,7 +547,7 @@ for i in range(0, len(galaxyID)): #Loop through Galaxy ID #'s.
         sfrDens.append(sfrSurfaceDens)
         distance.append(lumDist)
         angularDistKpc.append(angDistKpc)
-        
+    
     print ("END OF FITS FILE")
     print ("------------------------------------------------------------------------")
     print ("------------------------------------------------------------------------")
@@ -665,7 +676,7 @@ for i in range(0, len(SFRAbsorb)):
 
 #binArray local variable for histogram plots. Sets length and bin size.
 sfrBinArray = np.linspace(0, 30, 10)
-sfrDensBinArray = np.linspace(0, 0.2, 10)
+sfrDensBinArray = np.linspace(0, 1.8, 10)
 
 plt.hist(sfrDensAbsorb, bins=sfrDensBinArray, density=True, histtype='step', label= 'MgII Detection (%i)' %len(sfrDensAbsorb))
 plt.hist(sfrDensNoAbsorb, bins=sfrDensBinArray, density=True, histtype='step', label = 'MgII Non-Detection (%i)' %len(sfrDensNoAbsorb))
