@@ -27,10 +27,11 @@ Throws error if fits image cannot be found.
 try:
     fileName = 'CROP-SDSS-J120639.85+025308.3-G141_00360.2d.fits'
     image = fits.open(fileName)
-    image = image[0].data
-    print (image,'\n')
+    imageData = image[0].data
+    image.close()
+    print (imageData,'\n')
     
     #Call makeCopy function
-    makeCopy(image, 5)
+    makeCopy(imageData, 5)
 except IOError:
     print ("Image not found!")
