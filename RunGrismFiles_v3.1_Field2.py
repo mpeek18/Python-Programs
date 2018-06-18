@@ -3,7 +3,7 @@
 Created on Mon Feb 23 22:07:40 2017
 
 @author: Matthew Peek
-Last Modified: 20 April 2018
+Last Modified: 18 June 2018
 Field 2
 
 Algorithm:
@@ -44,9 +44,10 @@ import astropy.units as u
 from photutils import CircularAperture, aperture_photometry
 ###############################################################################
 # Open Grism, read and process sci, contam, model. Write to new final fits file
-def processFits(fitsName, finalName):
+def processFits(fitsName, finalName, fitsModel):
     hdulist = fits.open(fitsName)
     hdulist.info()
+    zFitsModel = fits.open(fitsModel)
     print()
     sci, header = hdulist[5].data, hdulist[5].header
     sciHeight = header['NAXIS2']
@@ -57,13 +58,15 @@ def processFits(fitsName, finalName):
     plt.savefig('Sci')
     """
     contam, header = hdulist[8].data, hdulist[8].header
+    hdulist.close()
     """
     plt.clf()
     plt.imshow(contam, cmap='gray', norm=LogNorm())
     plt.colorbar()
     plt.savefig('contam')
     """
-    model, header = hdulist[7].data, hdulist[7].header
+    model = zFitsModel[1].data
+    zFitsModel.close()
     """
     plt.clf()
     plt.imshow(model, cmap='gray', norm=LogNorm())
@@ -473,6 +476,14 @@ for i in range(0, len(galaxyID)): #Loop through Galaxy ID #'s.
         print ("Fits Name:",fitsName)
         print ("Final Name:", finalName)
         
+        #zfits.fits file has data for model subtraction in processFits function
+        try:
+            fitsModel = 'SDSS-J082946.90+185222.0' + str(frame) + 'G141_' + str(galID).zfill(5) + '.zfit.fits'
+            print ("Continuum model:", fitsModel)
+            
+        except IOError:
+            print ('zfits.fits file ' + galID + ' not found!')
+        
         """
         #linefit.dat file
         lineFitDat = 'SDSS-J001453.19+091217.6' + str(frame) + 'G141_' + str(galID).zfill(5) + '.linefit.dat'
@@ -503,7 +514,7 @@ for i in range(0, len(galaxyID)): #Loop through Galaxy ID #'s.
                 print ("Angular Distance in Arcseconds:", arcsecDist)
         
         #Call functions
-        sciHeight = processFits(fitsName, finalName)
+        sciHeight = processFits(fitsName, finalName, fitsModel)
         radius50, radius90 = analyzeFits(finalName, fitsName, zGal, sciHeight, hAlphaFlux)
         sfr, areaKpc, sfrSurfaceDens, lumDist = starFormation(hAlphaFlux, zGal, radius50)
         angDistKpc = convertDist(zGal, arcsecDist)
