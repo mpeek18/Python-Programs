@@ -3,7 +3,7 @@
 Created on Tue May 29 21:05:05 2018
 
 @author: Matthew Peek
-Last Modified: 21 June 2018
+Last Modified: 22 June 2018
 """
 import numpy as np
 from astropy.io import ascii
@@ -36,9 +36,9 @@ def stack(fileList):
     medianImage = np.median(imageData, axis=0)
     imageStack = np.sum(imageData, axis=0)
     
-    fits.writeto('Field8_Stacked_Image_Mean.fits', meanImage, overwrite=True)
-    fits.writeto('Field8_Stacked_Image_Median.fits', medianImage, overwrite=True)
-    fits.writeto('Field8_Stacked_Image.fits', imageStack, overwrite=True)
+    fits.writeto('Field7_Stacked_Image_Mean.fits', meanImage, overwrite=True)
+    fits.writeto('Field7_Stacked_Image_Median.fits', medianImage, overwrite=True)
+    fits.writeto('Field7_Stacked_Image.fits', imageStack, overwrite=True)
     
     print ("Image Mean:", meanImage,'\n')
     print ("Image Median:", medianImage,'\n')
@@ -68,16 +68,15 @@ fileList = []
 for i in range(1, len(ID)):
     try:
         fileName = 'CROP-SDSS-J113233.63+380346.4-G141_00' + ID[i] + '.2d.fits'
-        if (ID[i] != '357'):
-            file = fits.open(fileName)
-            fileList.append(fileName)
-            image = file[0].data
-            file.close()
+        file = fits.open(fileName)
+        fileList.append(fileName)
+        image = file[0].data
+        file.close()
         
-            print (ID[i])
-            print (image.shape)
+        print (ID[i])
+        print (image.shape)
         
-            count += 1
+        count += 1
     except IOError:
         print ("Image ID " + ID[i] + " not found!")
 print ("Number of images processed:", count,'\n')

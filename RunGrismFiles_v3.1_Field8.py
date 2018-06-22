@@ -3,7 +3,7 @@
 Created on Mon Feb 23 22:07:40 2017
 
 @author: Matthew Peek
-Last Modified: 21 June 2018
+Last Modified: 22 June 2018
 Field 8
 
 Algorithm:
@@ -204,6 +204,37 @@ def analyzeFits(finalName, fitsName, zGal, sciHeight, hAlphaFlux):
     plt.plot(radArray, fluxArray)
     plt.show()
     
+    #Check if new Image data is dimensions (34, 34), if not add 4 more columns
+    #to the numpy array, (need to find an automated way to do this).
+    if (newImage.shape != (34, 34)):
+        a = np.array([[0], [0], [0], [0], [0], [0], [0], [0], [0], [0],
+                      [0], [0], [0], [0], [0], [0], [0], [0], [0], [0],
+                      [0], [0], [0], [0], [0], [0], [0], [0], [0], [0],
+                      [0], [0], [0], [0]])
+        newImage = np.append(newImage, a, axis=1)
+        
+        if (newImage.shape != (34, 34)):
+                
+            b = np.array([[0], [0], [0], [0], [0], [0], [0], [0], [0], [0],
+                          [0], [0], [0], [0], [0], [0], [0], [0], [0], [0],
+                          [0], [0], [0], [0], [0], [0], [0], [0], [0], [0],
+                          [0], [0], [0], [0]])
+            newImage = np.append(newImage, b, axis=1)
+            
+            if (newImage.shape != (34, 34)):
+                c = np.array([[0], [0], [0], [0], [0], [0], [0], [0], [0], [0],
+                              [0], [0], [0], [0], [0], [0], [0], [0], [0], [0],
+                              [0], [0], [0], [0], [0], [0], [0], [0], [0], [0],
+                              [0], [0], [0], [0]])
+                newImage = np.append(newImage, c, axis=1)
+                
+                if (newImage.shape != (34, 34)):
+                    d = np.array([[0], [0], [0], [0], [0], [0], [0], [0], [0], [0],
+                                  [0], [0], [0], [0], [0], [0], [0], [0], [0], [0],
+                                  [0], [0], [0], [0], [0], [0], [0], [0], [0], [0],
+                                  [0], [0], [0], [0]])
+                    newImage = np.append(newImage, d, axis=1)
+        
     fits.writeto('CROP-SDSS-J120342.24+102831.8-G141_00' + str(galID) + '.2D.fits', newImage, f[0].header, overwrite=True)
     f.close()
     

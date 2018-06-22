@@ -3,9 +3,8 @@
 Created on Tue May 29 21:05:05 2018
 
 @author: Matthew Peek
-Last Modified: 11 June 2018
+Last Modified: 21 June 2018
 """
-import math
 import numpy as np
 from astropy.io import ascii
 import astropy.io.fits as fits

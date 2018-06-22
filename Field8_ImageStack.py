@@ -3,7 +3,7 @@
 Created on Tue May 29 21:05:05 2018
 
 @author: Matthew Peek
-Last Modified: 21 June 2018
+Last Modified: 22 June 2018
 """
 import numpy as np
 from astropy.io import ascii
@@ -68,16 +68,15 @@ fileList = []
 for i in range(1, len(ID)):
     try:
         fileName = 'CROP-SDSS-J120342.24+102831.8-G141_00' + ID[i] + '.2d.fits'
-        if (ID[i] != '418'):
-            file = fits.open(fileName)
-            fileList.append(fileName)
-            image = file[0].data
-            file.close()
+        file = fits.open(fileName)
+        image = file[0].data
+        fileList.append(fileName)
+        file.close()
         
-            print (ID[i])
-            print (image.shape)
+        print (ID[i])
+        print (image.shape)
         
-            count += 1
+        count += 1
     except IOError:
         print ("Image ID " + ID[i] + " not found!")
 print ("Number of images processed:", count,'\n')
