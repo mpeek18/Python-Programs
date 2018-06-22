@@ -456,13 +456,14 @@ redshift = []
 starForm = []
 galAreaKpc = []
 sfrDens = []
-distance = []
+lumDistance = []
 R50 = []
 R90 = []
 errorFile = []
 angularDistKpc = []
 row = []
 col = []
+flux = []
 #countError = 0
 
 for i in range(0, len(galaxyID)): #Loop through Galaxy ID #'s.    
@@ -479,6 +480,7 @@ for i in range(0, len(galaxyID)): #Loop through Galaxy ID #'s.
         #Get H-Alpha flux from Best_Redux file and calculate flux * 10 ^ -17
         hAlphaFlux = fluxHa[i] * math.pow(10, -17)
         hAlphaFluxErr = fluxErrHa[i]
+        flux.append(hAlphaFlux)
         print ("HAlpha Flux:", hAlphaFlux)
         print ("HAlpha Flux Error:", hAlphaFluxErr)
         
@@ -545,13 +547,13 @@ for i in range(0, len(galaxyID)): #Loop through Galaxy ID #'s.
         starForm.append(sfr)
         galAreaKpc.append(areaKpc)
         sfrDens.append(sfrSurfaceDens)
-        distance.append(lumDist)
+        lumDistance.append(lumDist)
         angularDistKpc.append(angDistKpc)
     
     print ("END OF FITS FILE")
     print ("------------------------------------------------------------------------")
     print ("------------------------------------------------------------------------")
-        
+print ("H-Alpha Flux List:", flux)        
 #End Main section
 ################################################################################
 #List of galaxy ID's with associated absorption, from absorber csv file.
@@ -610,6 +612,9 @@ totalSFRDens = []
 totalZQual = []
 totalZDist = []
 galAbsorption = []
+angDistQSO = []
+angDistAbsorb = []
+angDistNoAbsorb = []
 
 for i in range(0, len(sfrDens)):
     if (sfrDens[i] >= 0 and angularDistKpc[i] < 100):   #If sfr surface density is >= 0 and,
@@ -618,31 +623,34 @@ for i in range(0, len(sfrDens)):
         totalSFRDens.append(float(sfrDens[i]))
         totalZQual.append(zQual[i])
         totalZDist.append(redshift[i])
+        angDistQSO.append(angularDistKpc[i])
         
         if (ID[i] in newAbsorberGalID): #If galaxy ID in ID array is also in newAbsorberGalID array
             sfrDensAbsorb.append(sfrDens[i])
             galIDAbsorb.append(ID[i])
             areaKpcAbsorb.append(galAreaKpc[i])
-            distAbsorb.append(distance[i])
+            distAbsorb.append(lumDistance[i])
             SFRAbsorb.append(starForm[i])
             zDistAbsorb.append(redshift[i])
             zQualAbsorb.append(zQual[i])
             r90Absorb.append(R90[i])
             r50Absorb.append(R50[i])
             galAreaAbsorb.append(galAreaKpc[i])
+            angDistAbsorb.append(angularDistKpc[i])
             absorb = 'Yes'
             
         else:   #If galaxy ID in ID array is not also in newAbsorberGalID array
             sfrDensNoAbsorb.append(sfrDens[i])
             galIDNoAbsorb.append(ID[i])
             areaKpcNoAbsorb.append(galAreaKpc[i])
-            distNoAbsorb.append(distance[i])
+            distNoAbsorb.append(lumDistance[i])
             SFRNoAbsorb.append(starForm[i])
             zDistNonAbsorb.append(redshift[i])
             zQualNonAbsorb.append(zQual[i])
             r90NoAbsorb.append(R90[i])
             r50NoAbsorb.append(R50[i])
             galAreaNoAbsorb.append(galAreaKpc[i])
+            angDistNoAbsorb.append(angularDistKpc[i])
             absorb = 'No'
         
         galAbsorption.append(absorb)
@@ -702,6 +710,7 @@ plt.ylabel("Normalized Number")
 plt.legend()
 plt.savefig('Histogram_SfrDensity_ScaleY')
 plt.show()
+print ()
 
 #Histogram plot star formation rates for absorbers and non-absorbers.
 #plt.clf()
@@ -712,11 +721,14 @@ plt.ylabel("Normalized Number")
 plt.legend()
 plt.savefig('Histogram_Sfr')
 plt.show()
+print ()
 
+"""
 #Histogram plot 90% enclosed H-Alpha emission line map mgII detection only.
 plt.hist(r90Absorb, histtype="step")
 plt.xlabel("90% enclosed")
 plt.show()
+print ()
 
 #Scatter plot galaxy area vs. star formation rate, absorber and non-absorber
 #plt.clf()
@@ -727,6 +739,7 @@ plt.ylabel("Star Formation Rate")
 plt.legend(loc='upper right')
 plt.savefig('Absorber_Area_vs_SFR')
 plt.show()
+print ()
 
 #Scatter plot galaxy area vs. star formation rate surface density, absorber and non-absorber
 #plt.clf()
@@ -737,6 +750,7 @@ plt.ylabel("Star Formation Surface Density")
 plt.legend(loc='upper right')
 plt.savefig('Absorber_Area_vs_sfrDensity')
 plt.show()
+print ()
 
 #Scatter plot galaxy distance vs. star formation rate, absorber and non-absorber
 #plt.clf()
@@ -747,6 +761,7 @@ plt.ylabel("Star Formation Rate")
 plt.legend(loc='upper right')
 plt.savefig('Absorber_Distance_vs_SFR')
 plt.show()
+print ()
 
 #Scatter plot galaxy distance vs. star formation rate surface density, absorber and non-absorber
 #plt.clf()
@@ -757,6 +772,7 @@ plt.ylabel("Star Formation Surface Density")
 plt.legend(loc='upper right')
 plt.savefig('Absorber_Distance_vs_sfrDensity')
 plt.show()
+print ()
 
 #Scatter plot galaxy distance vs. area, absorber and non-absorber
 #plt.clf()
@@ -767,6 +783,8 @@ plt.ylabel("Galaxy Area (Kpc)")
 plt.legend(loc='upper left')
 plt.savefig('Absorber_Distance_vs_Area')
 plt.show()
+print ()
+"""
 
 #Scatter plot total galaxy angular distance vs. total sfr densities. Line of best fit included.
 plt.scatter(totalAngDist, totalSFRDens)
@@ -828,6 +846,18 @@ ascii.write(sfrAbsorbData, 'Field9_SFRAbsorb.dat', format='fixed_width', overwri
 #Table for combining sfr data.
 sfrNoAbsorbData = (Table([SFRNoAbsorb], names=['SFR Non Absorber']))
 ascii.write(sfrNoAbsorbData, 'Field9_SFRNoAbsorb.dat', format='fixed_width', overwrite=True)
+
+#Table for combining angular distance from QSO and sfr Density
+angDistData = (Table([totalSFRDens, angDistQSO], names=['SFR Density', 'Angular Distance (kpc)']))
+ascii.write(angDistData, 'Field9_AngularDistance.dat', format='fixed_width', overwrite=True)
+
+#Table for combining Absorber galaxies angular distance
+angDistAbsorbData = (Table([angDistAbsorb], names=['Absorbers Angular Distance']))
+ascii.write(angDistAbsorbData, 'Field9_AbsorbAngularDistance.dat', format='fixed_width', overwrite=True)
+
+#Table for combining Non-Absorber galaxies angular distance
+angDistNoAbsorbData = (Table([angDistNoAbsorb], names=['Non-Absorbers Angular Distance']))
+ascii.write(angDistNoAbsorbData, 'Field9_NoAbsorbAngularDistance.dat', format='fixed_width', overwrite=True)
 
 #Following tables are general output data of processed files.
 data = (Table([ID, redshift, R50, R90, starForm, galAreaKpc, sfrDens, angularDistKpc], 

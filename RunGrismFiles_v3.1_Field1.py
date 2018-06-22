@@ -607,14 +607,18 @@ totalSFRDens = []
 totalZQual = []
 totalZDist = []
 galAbsorption = []
+angDistQSO = []
+angDistAbsorb = []
+angDistNoAbsorb = []
 
 for i in range(0, len(sfrDens)):
-    if (sfrDens[i] >= 0 and angularDistKpc[i] < 120):   #If sfr surface density is >= 0 and,
+    if (sfrDens[i] >= 0 and angularDistKpc[i] < 100):   #If sfr surface density is >= 0 and,
         totalID.append(ID[i])                           #Angular distance in Kpc < 120.
         totalSFR.append(starForm[i])
         totalSFRDens.append(float(sfrDens[i]))
         totalZQual.append(zQual[i])
         totalZDist.append(redshift[i])
+        angDistQSO.append(angularDistKpc[i])
         
         if (ID[i] in newAbsorberGalID): #If galaxy ID in ID array is also in newAbsorberGalID array
             sfrDensAbsorb.append(sfrDens[i])
@@ -627,6 +631,7 @@ for i in range(0, len(sfrDens)):
             r90Absorb.append(R90[i])
             r50Absorb.append(R50[i])
             galAreaAbsorb.append(galAreaKpc[i])
+            angDistAbsorb.append(angularDistKpc[i])
             absorb = 'Yes'
             
         else:   #If galaxy ID in ID array is not also in newAbsorberGalID array
@@ -640,6 +645,7 @@ for i in range(0, len(sfrDens)):
             r90NoAbsorb.append(R90[i])
             r50NoAbsorb.append(R50[i])
             galAreaNoAbsorb.append(galAreaKpc[i])
+            angDistNoAbsorb.append(angularDistKpc[i])
             absorb = 'No'
         
         galAbsorption.append(absorb)
@@ -824,6 +830,18 @@ ascii.write(sfrAbsorbData, 'Field1_SFRAbsorb.dat', format='fixed_width', overwri
 #Table for combining sfr data.
 sfrNoAbsorbData = (Table([SFRNoAbsorb], names=['SFR Non Absorber']))
 ascii.write(sfrNoAbsorbData, 'Field1_SFRNoAbsorb.dat', format='fixed_width', overwrite=True)
+
+#Table for combining angular distance from QSO and sfr Density
+angDistData = (Table([totalSFRDens, angDistQSO], names=['SFR Density', 'Angular Distance (kpc)']))
+ascii.write(angDistData, 'Field1_AngularDistance.dat', format='fixed_width', overwrite=True)
+
+#Table for combining Absorber galaxies angular distance
+angDistAbsorbData = (Table([angDistAbsorb], names=['Absorbers Angular Distance']))
+ascii.write(angDistAbsorbData, 'Field1_AbsorbAngularDistance.dat', format='fixed_width', overwrite=True)
+
+#Table for combining Non-Absorber galaxies angular distance
+angDistNoAbsorbData = (Table([angDistNoAbsorb], names=['Non-Absorbers Angular Distance']))
+ascii.write(angDistNoAbsorbData, 'Field1_NoAbsorbAngularDistance.dat', format='fixed_width', overwrite=True)
 
 #Following tables are general output data of processed files.
 data = (Table([ID, redshift, R50, R90, starForm, galAreaKpc, sfrDens, angularDistKpc], 

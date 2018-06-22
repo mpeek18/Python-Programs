@@ -3,7 +3,7 @@
 Created on Sat Sep 30 20:26:38 2017
 
 @author: Matthew Peek
-Last Modified: 20 April 2018
+Last Modified: 21 June 2018
 """
 
 import numpy as np
@@ -24,6 +24,10 @@ field1zAbsorb = []
 field1zNoAbsorb = []
 field1AreaAbsorb = []
 field1AreaNoAbsorb = []
+field1angDist = []
+field1angDistAbsorber = []
+field1angDistNoAbsorber = []
+
 field1FileDensAbsorb = ascii.read('Field1_SFRDensAbsorb.dat')
 field1FileDensNoAbsorb = ascii.read('Field1_NoSFRDensAbsorb.dat')
 field1FileSFRNoAbsorb = ascii.read('Field1_SFRNoAbsorb.dat')
@@ -36,6 +40,9 @@ field1GalAreaAbsorb = ascii.read('Field1_galAreaAbsorb.dat')
 field1GalAreaNoAbsorb = ascii.read('Field1_galAreaNoAbsorb.dat')
 field1FileR50Absorb = ascii.read('Field1_r50Absorb.dat')
 field1FileR50NoAbsorb = ascii.read('Field1_r50NoAbsorb.dat')
+field1angularDist = ascii.read('Field1_AngularDistance.dat')
+field1angDistAbsorb = ascii.read('Field1_AbsorbAngularDistance.dat')
+field1angDistNoAbsorb = ascii.read('Field1_NoAbsorbAngularDistance.dat')
 
 sfrDensAbsorb = field1FileDensAbsorb['col2']
 sfrDensNoAbsorb = field1FileDensNoAbsorb['col2']
@@ -49,7 +56,9 @@ galArea1Absorb = field1GalAreaAbsorb['col2']
 galArea1NoAbsorb = field1GalAreaNoAbsorb['col2']
 R50Absorb = field1FileR50Absorb['col2']
 R50NoAbsorb = field1FileR50NoAbsorb['col2']
-
+angDist = field1angularDist['col3']
+angDistAbsorb = field1angDistAbsorb['col2']
+angDistNoAbsorb = field1angDistNoAbsorb['col2']
 
 #Append data to new lists.
 for i in range(1, len(sfrDensAbsorb)):
@@ -76,6 +85,12 @@ for i in range(1, len(R50Absorb)):
     field1R50Absorb.append(float(R50Absorb[i]))
 for i in range(1, len(R50NoAbsorb)):
     field1R50NoAbsorb.append(float(R50NoAbsorb[i]))
+for i in range(1, len(angDist)):
+    field1angDist.append(float(angDist[i]))
+for i in range(1, len(angDistAbsorb)):
+    field1angDistAbsorber.append(float(angDistAbsorb[i]))
+for i in range(1, len(angDistNoAbsorb)):
+    field1angDistNoAbsorber.append(float(angDistNoAbsorb[i]))
     
 print (field1DensAbsorb,'\n')
 print (field1DensNoAbsorb,'\n')
@@ -89,6 +104,9 @@ print (field1AreaAbsorb,'\n')
 print (field1AreaNoAbsorb,'\n')
 print (field1R50Absorb,'\n')
 print (field1R50NoAbsorb,'\n')
+print (field1angDist,'\n')
+print (field1angDistAbsorber,'\n')
+print (field1angDistNoAbsorber,'\n')
 print ("End field 1")
 print ("-------------------------------------------------------------------------")
 
@@ -106,6 +124,10 @@ field2AreaAbsorb = []
 field2AreaNoAbsorb = []
 field2R50Absorb = []
 field2R50NoAbsorb = []
+field2angDist = []
+field2angDistAbsorber = []
+field2angDistNoAbsorber = []
+
 field2FileDensAbsorb = ascii.read('Field2_SFRDensAbsorb.dat')
 field2FileDensNoAbsorb = ascii.read('Field2_NoSFRDensAbsorb.dat')
 field2FileSFRAbsorb = ascii.read('Field2_SFRAbsorb.dat')
@@ -118,6 +140,10 @@ field2GalAreaAbsorb = ascii.read('Field2_galAreaAbsorb.dat')
 field2GalAreaNoAbsorb = ascii.read('Field2_galAreaNoAbsorb.dat')
 field2FileR50Absorb = ascii.read('Field2_r50Absorb.dat')
 field2FileR50NoAbsorb = ascii.read('Field2_r50NoAbsorb.dat')
+field2angularDist = ascii.read('Field2_AngularDistance.dat')
+field2angDistAbsorb = ascii.read('Field2_AbsorbAngularDistance.dat')
+field2angDistNoAbsorb = ascii.read('Field2_NoAbsorbAngularDistance.dat')
+
 
 sfrDensAbsorb2 = field2FileDensAbsorb['col2']
 sfrDensNoAbsorb2 = field2FileDensNoAbsorb['col2']
@@ -131,6 +157,10 @@ galArea2Absorb = field2GalAreaAbsorb['col2']
 galArea2NoAbsorb = field2GalAreaNoAbsorb['col2']
 R50Absorb2 = field2FileR50Absorb['col2']
 R50NoAbsorb2 = field2FileR50NoAbsorb['col2']
+angDist = field2angularDist['col3']
+angDistAbsorb = field2angDistAbsorb['col2']
+angDistNoAbsorb = field2angDistNoAbsorb['col2']
+
 
 #Append data to new lists.
 for i in range(1, len(sfrDensAbsorb2)):
@@ -157,6 +187,13 @@ for i in range(1, len(R50Absorb2)):
     field2R50Absorb.append(float(R50Absorb2[i]))
 for i in range(1, len(R50NoAbsorb2)):
     field2R50NoAbsorb.append(float(R50NoAbsorb2[i]))
+for i in range(1, len(angDist)):
+    field2angDist.append(float(angDist[i]))
+for i in range(1, len(angDistAbsorb)):
+    field2angDistAbsorber.append(float(angDistAbsorb[i]))
+for i in range(1, len(angDistNoAbsorb)):
+    field2angDistNoAbsorber.append(float(angDistNoAbsorb[i]))
+
     
 print (field2DensAbsorb,'\n')
 print (field2DensNoAbsorb,'\n')
@@ -170,6 +207,9 @@ print (field2AreaAbsorb,'\n')
 print (field2AreaNoAbsorb,'\n')
 print (field2R50Absorb,'\n')
 print (field2R50NoAbsorb,'\n')
+print (field2angDist,'\n')
+print (field2angDistAbsorber,'\n')
+print (field2angDistNoAbsorber,'\n')
 print ("End field 2")
 print ("-------------------------------------------------------------------------")
 
@@ -187,6 +227,10 @@ field3AreaAbsorb = []
 field3AreaNoAbsorb = []
 field3R50Absorb = []
 field3R50NoAbsorb = []
+field3angDist = []
+field3angDistAbsorber = []
+field3angDistNoAbsorber = []
+
 field3FileDensAbsorb = ascii.read('Field3_SFRDensAbsorb.dat')
 field3FileDensNoAbsorb = ascii.read('Field3_NoSFRDensAbsorb.dat')
 field3FileSFRAbsorb = ascii.read('Field3_SFRAbsorb.dat')
@@ -199,6 +243,9 @@ field3GalAreaAbsorb = ascii.read('Field3_galAreaAbsorb.dat')
 field3GalAreaNoAbsorb = ascii.read('Field3_galAreaNoAbsorb.dat')
 field3FileR50Absorb = ascii.read('Field3_r50Absorb.dat')
 field3FileR50NoAbsorb = ascii.read('Field3_r50NoAbsorb.dat')
+field3angularDist = ascii.read('Field3_AngularDistance.dat')
+field3angDistAbsorb = ascii.read('Field3_AbsorbAngularDistance.dat')
+field3angDistNoAbsorb = ascii.read('Field3_NoAbsorbAngularDistance.dat')
 
 
 sfrDensAbsorb3 = field3FileDensAbsorb['col2']
@@ -213,6 +260,9 @@ galArea3Absorb = field3GalAreaAbsorb['col2']
 galArea3NoAbsorb = field3GalAreaNoAbsorb['col2']
 R50Absorb3 = field3FileR50Absorb['col2']
 R50NoAbsorb3 = field3FileR50NoAbsorb['col2']
+angDist = field3angularDist['col3']
+angDistAbsorb = field3angDistAbsorb['col2']
+angDistNoAbsorb = field3angDistNoAbsorb['col2']
 
 
 #Append data to new lists.
@@ -240,6 +290,12 @@ for i in range(1, len(R50Absorb3)):
     field3R50Absorb.append(float(R50Absorb3[i]))
 for i in range(1, len(R50NoAbsorb3)):
     field3R50NoAbsorb.append(float(R50NoAbsorb3[i]))
+for i in range(1, len(angDist)):
+    field3angDist.append(float(angDist[i]))
+for i in range(1, len(angDistAbsorb)):
+    field3angDistAbsorber.append(float(angDistAbsorb[i]))
+for i in range(1, len(angDistNoAbsorb)):
+    field3angDistNoAbsorber.append(float(angDistNoAbsorb[i]))
 
     
 print (field3DensAbsorb,'\n')
@@ -254,6 +310,9 @@ print (field3AreaAbsorb,'\n')
 print (field3AreaNoAbsorb,'\n')
 print (field3R50Absorb,'\n')
 print (field3R50NoAbsorb,'\n')
+print (field3angDist,'\n')
+print (field3angDistAbsorber,'\n')
+print (field3angDistNoAbsorber,'\n')
 print ("End field 3")
 print ("-------------------------------------------------------------------------")
 
@@ -271,6 +330,10 @@ field4AreaAbsorb = []
 field4AreaNoAbsorb = []
 field4R50Absorb = []
 field4R50NoAbsorb = []
+field4angDist = []
+field4angDistAbsorber = []
+field4angDistNoAbsorber = []
+
 field4FileDensAbsorb = ascii.read('Field4_SFRDensAbsorb.dat')
 field4FileDensNoAbsorb = ascii.read('Field4_NoSFRDensAbsorb.dat')
 field4FileSFRNoAbsorb = ascii.read('Field4_SFRNoAbsorb.dat')
@@ -283,6 +346,9 @@ field4GalAreaAbsorb = ascii.read('Field4_galAreaAbsorb.dat')
 field4GalAreaNoAbsorb = ascii.read('Field4_galAreaNoAbsorb.dat')
 field4FileR50Absorb = ascii.read('Field4_r50Absorb.dat')
 field4FileR50NoAbsorb = ascii.read('Field4_r50NoAbsorb.dat')
+field4angularDist = ascii.read('Field4_AngularDistance.dat')
+field4angDistAbsorb = ascii.read('Field4_AbsorbAngularDistance.dat')
+field4angDistNoAbsorb = ascii.read('Field4_NoAbsorbAngularDistance.dat')
 
 
 sfrDensAbsorb4 = field4FileDensAbsorb['col2']
@@ -297,6 +363,9 @@ galArea4Absorb = field4GalAreaAbsorb['col2']
 galArea4NoAbsorb = field4GalAreaNoAbsorb['col2']
 R50Absorb4 = field4FileR50Absorb['col2']
 R50NoAbsorb4 = field4FileR50NoAbsorb['col2']
+angDist = field4angularDist['col3']
+angDistAbsorb = field4angDistAbsorb['col2']
+angDistNoAbsorb = field4angDistNoAbsorb['col2']
 
 
 #Append data to new lists.
@@ -311,7 +380,7 @@ for i in range(1, len(sfrNoAbsorb4)):
 for i in range(1, len(R90Absorb4)):
     field4R90Absorb.append(float(R90Absorb4[i]))
 for i in range(1, len(R90NoAbsorb4)):
-    field4R90NoAbsorb.append(float(R90NoAbsorb[i]))
+    field4R90NoAbsorb.append(float(R90NoAbsorb4[i]))
 for i in range(1, len(zDistAbsorb4)):
     field4zAbsorb.append(float(zDistAbsorb4[i]))
 for i in range(1, len(zDistNoAbsorb4)):
@@ -324,6 +393,12 @@ for i in range(1, len(R50Absorb4)):
     field4R50Absorb.append(float(R50Absorb4[i]))
 for i in range(1, len(R50NoAbsorb4)):
     field4R50NoAbsorb.append(float(R50NoAbsorb4[i]))
+for i in range(1, len(angDist)):
+    field4angDist.append(float(angDist[i]))
+for i in range(1, len(angDistAbsorb)):
+    field4angDistAbsorber.append(float(angDistAbsorb[i]))
+for i in range(1, len(angDistNoAbsorb)):
+    field4angDistNoAbsorber.append(float(angDistNoAbsorb[i]))
 
     
 print (field4DensAbsorb,'\n')
@@ -338,6 +413,9 @@ print (field4AreaAbsorb,'\n')
 print (field4AreaNoAbsorb,'\n')
 print (field4R50Absorb,'\n')
 print (field4R50NoAbsorb,'\n')
+print (field4angDist,'\n')
+print (field4angDistAbsorber,'\n')
+print (field4angDistNoAbsorber,'\n')
 print ("End field 4")
 print ("-------------------------------------------------------------------------")
 
@@ -355,6 +433,10 @@ field5AreaAbsorb = []
 field5AreaNoAbsorb = []
 field5R50Absorb = []
 field5R50NoAbsorb = []
+field5angDist = []
+field5angDistAbsorber = []
+field5angDistNoAbsorber = []
+
 field5FileDensAbsorb = ascii.read('Field5_SFRDensAbsorb.dat')
 field5FileDensNoAbsorb = ascii.read('Field5_NoSFRDensAbsorb.dat')
 field5FileSFRNoAbsorb = ascii.read('Field5_SFRNoAbsorb.dat')
@@ -367,6 +449,9 @@ field5GalAreaAbsorb = ascii.read('Field5_galAreaAbsorb.dat')
 field5GalAreaNoAbsorb = ascii.read('Field5_galAreaNoAbsorb.dat')
 field5FileR50Absorb = ascii.read('Field5_r50Absorb.dat')
 field5FileR50NoAbsorb = ascii.read('Field5_r50NoAbsorb.dat')
+field5angularDist = ascii.read('Field5_AngularDistance.dat')
+field5angDistAbsorb = ascii.read('Field5_AbsorbAngularDistance.dat')
+field5angDistNoAbsorb = ascii.read('Field5_NoAbsorbAngularDistance.dat')
 
 
 sfrDensAbsorb5 = field5FileDensAbsorb['col2']
@@ -381,6 +466,9 @@ galArea5Absorb = field5GalAreaAbsorb['col2']
 galArea5NoAbsorb = field5GalAreaNoAbsorb['col2']
 R50Absorb5 = field5FileR50Absorb['col2']
 R50NoAbsorb5 = field5FileR50NoAbsorb['col2']
+angDist = field5angularDist['col3']
+angDistAbsorb = field5angDistAbsorb['col2']
+angDistNoAbsorb = field5angDistNoAbsorb['col2']
 
 
 #Append data to new lists.
@@ -408,6 +496,12 @@ for i in range(1, len(R50Absorb5)):
     field5R50Absorb.append(float(R50Absorb5[i]))
 for i in range(1, len(R50NoAbsorb5)):
     field5R50NoAbsorb.append(float(R50NoAbsorb5[i]))
+for i in range(1, len(angDist)):
+    field5angDist.append(float(angDist[i]))
+for i in range(1, len(angDistAbsorb)):
+    field5angDistAbsorber.append(float(angDistAbsorb[i]))
+for i in range(1, len(angDistNoAbsorb)):
+    field5angDistNoAbsorber.append(float(angDistNoAbsorb[i]))
 
     
 print (field5DensAbsorb,'\n')
@@ -422,6 +516,9 @@ print (field5AreaAbsorb,'\n')
 print (field5AreaNoAbsorb,'\n')
 print (field5R50Absorb,'\n')
 print (field5R50NoAbsorb,'\n')
+print (field5angDist,'\n')
+print (field5angDistAbsorber,'\n')
+print (field5angDistNoAbsorber,'\n')
 print ("End field 5")
 print ("-------------------------------------------------------------------------")
 
@@ -439,6 +536,10 @@ field7AreaAbsorb = []
 field7AreaNoAbsorb = []
 field7R50Absorb = []
 field7R50NoAbsorb = []
+field7angDist = []
+field7angDistAbsorber = []
+field7angDistNoAbsorber = []
+
 field7FileDensAbsorb = ascii.read('Field7_SFRDensAbsorb.dat')
 field7FileDensNoAbsorb = ascii.read('Field7_NoSFRDensAbsorb.dat')
 field7FileSFRNoAbsorb = ascii.read('Field7_SFRNoAbsorb.dat')
@@ -451,6 +552,9 @@ field7GalAreaAbsorb = ascii.read('Field7_galAreaAbsorb.dat')
 field7GalAreaNoAbsorb = ascii.read('Field7_galAreaNoAbsorb.dat')
 field7FileR50Absorb = ascii.read('Field7_r50Absorb.dat')
 field7FileR50NoAbsorb = ascii.read('Field7_r50NoAbsorb.dat')
+field7angularDist = ascii.read('Field7_AngularDistance.dat')
+field7angDistAbsorb = ascii.read('Field7_AbsorbAngularDistance.dat')
+field7angDistNoAbsorb = ascii.read('Field7_NoAbsorbAngularDistance.dat')
 
 
 sfrDensAbsorb7 = field7FileDensAbsorb['col2']
@@ -465,6 +569,9 @@ galArea7Absorb = field7GalAreaAbsorb['col2']
 galArea7NoAbsorb = field7GalAreaNoAbsorb['col2']
 R50Absorb7 = field7FileR50Absorb['col2']
 R50NoAbsorb7 = field7FileR50NoAbsorb['col2']
+angDist = field7angularDist['col3']
+angDistAbsorb = field7angDistAbsorb['col2']
+angDistNoAbsorb = field7angDistNoAbsorb['col2']
 
 
 #Append data to new lists.
@@ -492,6 +599,12 @@ for i in range(1, len(R50Absorb7)):
     field7R50Absorb.append(float(R50Absorb7[i]))
 for i in range(1, len(R50NoAbsorb7)):
     field7R50NoAbsorb.append(float(R50NoAbsorb7[i]))
+for i in range(1, len(angDist)):
+    field7angDist.append(float(angDist[i]))
+for i in range(1, len(angDistAbsorb)):
+    field7angDistAbsorber.append(float(angDistAbsorb[i]))
+for i in range(1, len(angDistNoAbsorb)):
+    field7angDistNoAbsorber.append(float(angDistNoAbsorb[i]))
 
     
 print (field7DensAbsorb,'\n')
@@ -506,6 +619,9 @@ print (field7AreaAbsorb,'\n')
 print (field7AreaNoAbsorb,'\n')
 print (field7R50Absorb,'\n')
 print (field7R50NoAbsorb,'\n')
+print (field7angDist,'\n')
+print (field7angDistAbsorber,'\n')
+print (field7angDistNoAbsorber,'\n')
 print ("End field 7")
 print ("-------------------------------------------------------------------------")
 
@@ -523,6 +639,10 @@ field8AreaAbsorb = []
 field8AreaNoAbsorb = []
 field8R50Absorb = []
 field8R50NoAbsorb = []
+field8angDist = []
+field8angDistAbsorber = []
+field8angDistNoAbsorber = []
+
 field8FileDensAbsorb = ascii.read('Field8_SFRDensAbsorb.dat')
 field8FileDensNoAbsorb = ascii.read('Field8_NoSFRDensAbsorb.dat')
 field8FileSFRNoAbsorb = ascii.read('Field8_SFRNoAbsorb.dat')
@@ -535,6 +655,9 @@ field8GalAreaAbsorb = ascii.read('Field8_galAreaAbsorb.dat')
 field8GalAreaNoAbsorb = ascii.read('Field8_galAreaNoAbsorb.dat')
 field8FileR50Absorb = ascii.read('Field8_r50Absorb.dat')
 field8FileR50NoAbsorb = ascii.read('Field8_r50NoAbsorb.dat')
+field8angularDist = ascii.read('Field8_AngularDistance.dat')
+field8angDistAbsorb = ascii.read('Field8_AbsorbAngularDistance.dat')
+field8angDistNoAbsorb = ascii.read('Field8_NoAbsorbAngularDistance.dat')
 
 
 sfrDensAbsorb8 = field8FileDensAbsorb['col2']
@@ -549,6 +672,9 @@ galArea8Absorb = field8GalAreaAbsorb['col2']
 galArea8NoAbsorb = field8GalAreaNoAbsorb['col2']
 R50Absorb8 = field8FileR50Absorb['col2']
 R50NoAbsorb8 = field8FileR50NoAbsorb['col2']
+angDist = field8angularDist['col3']
+angDistAbsorb = field8angDistAbsorb['col2']
+angDistNoAbsorb = field8angDistNoAbsorb['col2']
 
 
 #Append data to new lists.
@@ -576,6 +702,12 @@ for i in range(1, len(R50Absorb8)):
     field8R50Absorb.append(float(R50Absorb8[i]))
 for i in range(1, len(R50NoAbsorb8)):
     field8R50NoAbsorb.append(float(R50NoAbsorb8[i]))
+for i in range(1, len(angDist)):
+    field8angDist.append(float(angDist[i]))
+for i in range(1, len(angDistAbsorb)):
+    field8angDistAbsorber.append(float(angDistAbsorb[i]))
+for i in range(1, len(angDistNoAbsorb)):
+    field8angDistNoAbsorber.append(float(angDistNoAbsorb[i]))
 
     
 print (field8DensAbsorb,'\n')
@@ -590,6 +722,9 @@ print (field8AreaAbsorb,'\n')
 print (field8AreaNoAbsorb,'\n')
 print (field8R50Absorb,'\n')
 print (field8R50NoAbsorb,'\n')
+print (field8angDist,'\n')
+print (field8angDistAbsorber,'\n')
+print (field8angDistNoAbsorber,'\n')
 print ("End field 8")
 print ("-------------------------------------------------------------------------")
 
@@ -607,6 +742,10 @@ field9AreaAbsorb = []
 field9AreaNoAbsorb = []
 field9R50Absorb = []
 field9R50NoAbsorb = []
+field9angDist = []
+field9angDistAbsorber = []
+field9angDistNoAbsorber = []
+
 field9FileDensAbsorb = ascii.read('Field9_SFRDensAbsorb.dat')
 field9FileDensNoAbsorb = ascii.read('Field9_NoSFRDensAbsorb.dat')
 field9FileSFRNoAbsorb = ascii.read('Field9_SFRNoAbsorb.dat')
@@ -619,6 +758,9 @@ field9GalAreaAbsorb = ascii.read('Field9_galAreaAbsorb.dat')
 field9GalAreaNoAbsorb = ascii.read('Field9_galAreaNoAbsorb.dat')
 field9FileR50Absorb = ascii.read('Field9_r50Absorb.dat')
 field9FileR50NoAbsorb = ascii.read('Field9_r50NoAbsorb.dat')
+field9angularDist = ascii.read('Field9_AngularDistance.dat')
+field9angDistAbsorb = ascii.read('Field9_AbsorbAngularDistance.dat')
+field9angDistNoAbsorb = ascii.read('Field9_NoAbsorbAngularDistance.dat')
 
 
 sfrDensAbsorb9 = field9FileDensAbsorb['col2']
@@ -633,6 +775,9 @@ galArea9Absorb = field9GalAreaAbsorb['col2']
 galArea9NoAbsorb = field9GalAreaNoAbsorb['col2']
 R50Absorb9 = field9FileR50Absorb['col2']
 R50NoAbsorb9 = field9FileR50NoAbsorb['col2']
+angDist = field9angularDist['col3']
+angDistAbsorb = field9angDistAbsorb['col2']
+angDistNoAbsorb = field9angDistNoAbsorb['col2']
 
 
 #Append data to new lists.
@@ -660,6 +805,12 @@ for i in range(1, len(R50Absorb9)):
     field9R50Absorb.append(float(R50Absorb9[i]))
 for i in range(1, len(R50NoAbsorb9)):
     field9R50NoAbsorb.append(float(R50NoAbsorb9[i]))
+for i in range(1, len(angDist)):
+    field9angDist.append(float(angDist[i]))
+for i in range(1, len(angDistAbsorb)):
+    field9angDistAbsorber.append(float(angDistAbsorb[i]))
+for i in range(1, len(angDistNoAbsorb)):
+    field9angDistNoAbsorber.append(float(angDistNoAbsorb[i]))
 
     
 print (field9DensAbsorb,'\n')
@@ -674,6 +825,9 @@ print (field9AreaAbsorb,'\n')
 print (field9AreaNoAbsorb,'\n')
 print (field9R50Absorb,'\n')
 print (field9R50NoAbsorb,'\n')
+print (field9angDist,'\n')
+print (field9angDistAbsorber,'\n')
+print (field9angDistNoAbsorber,'\n')
 print ("End field 9")
 print ("-------------------------------------------------------------------------")
 
@@ -690,6 +844,10 @@ totalSFRDensNoAbsorb = (field1DensNoAbsorb + field2DensNoAbsorb + field3DensNoAb
 print (len(totalSFRDensNoAbsorb))
 print ("Combined SFR Density Non Absorb:", totalSFRDensNoAbsorb,'\n')
 
+totalSFRDens = (totalSFRDensAbsorb + totalSFRDensNoAbsorb)
+print (len(totalSFRDens))
+print ("Combined SFR Density:", totalSFRDens,'\n')
+
 totalSFRAbsorb = (field1Absorb + field2Absorb + field3Absorb + field4Absorb + 
                   field5Absorb + field7Absorb + field8Absorb +field9Absorb)
 print (len(totalSFRAbsorb))
@@ -699,6 +857,10 @@ totalSFRNoAbsorb = (field1NoAbsorb + field2NoAbsorb + field3NoAbsorb + field4NoA
                     field5NoAbsorb + field7NoAbsorb + field8NoAbsorb + field9NoAbsorb)
 print (len(totalSFRNoAbsorb))
 print ("Combined SFR Non Absorb:", totalSFRNoAbsorb,'\n')
+
+totalSFR = (totalSFRAbsorb + totalSFRNoAbsorb)
+print (len(totalSFR))
+print ("Combined SFR:", totalSFR,'\n')
 
 totalR90Absorb = (field1R90Absorb + field2R90Absorb + field3R90Absorb + field4R90Absorb + 
                   field5R90Absorb + field7R90Absorb + field8R90Absorb + field9R90Absorb)
@@ -744,17 +906,34 @@ totalGalAreaNoAbsorb = (field1AreaNoAbsorb + field2AreaNoAbsorb + field3AreaNoAb
 print (len(totalGalAreaNoAbsorb))
 print ("Combined galaxy area Non-Absorbers:", totalGalAreaNoAbsorb,'\n')
 
+totalAngDist = (field1angDist + field2angDist + field3angDist + field4angDist +
+                field5angDist + field7angDist + field8angDist + field9angDist)
+print (len(totalAngDist))
+print ("Combined Angular Distances:", totalAngDist,'\n')
+
+totalAngDistAbsorb = (field1angDistAbsorber + field2angDistAbsorber + field3angDistAbsorber +
+                      field4angDistAbsorber + field5angDistAbsorber + field7angDistAbsorber +
+                      field8angDistAbsorber + field9angDistAbsorber)
+print (len(totalAngDistAbsorb))
+print ("Combined Absorber Angular Distances:", totalAngDistAbsorb,'\n')
+
+totalAngDistNoAbsorb = (field1angDistNoAbsorber + field2angDistNoAbsorber + field3angDistNoAbsorber + 
+                        field4angDistNoAbsorber + field5angDistNoAbsorber + field7angDistNoAbsorber +
+                        field8angDistNoAbsorber + field9angDistNoAbsorber)
+print (len(totalAngDistNoAbsorb))
+print ("Combined Non-Absorber Angular Distances:", totalAngDistNoAbsorb,'\n')
+
 print ("--------------------------------------------------------------------------")
 print ("Statistics")
 
 #Statistics
 print ("Total SFR Density Absorbers / Non-Absorbers Statistics")
 print (stats.ks_2samp(totalSFRDensAbsorb, totalSFRDensNoAbsorb),'\n')
-print (totalSFRDensAbsorb,'\n')
+#print (totalSFRDensAbsorb,'\n')
 
 print ("Total SFR Absorbers / Non-Absorbers Statistics")
 print (stats.ks_2samp(totalSFRAbsorb, totalSFRNoAbsorb),'\n')
-print (totalSFRAbsorb,'\n')
+#print (totalSFRAbsorb,'\n')
 
 print ("Total R90 Absorbers / R90 Non-Absorbers Statistics")
 print (stats.ks_2samp(totalR90Absorb, totalR90NoAbsorb),'\n')
@@ -765,7 +944,7 @@ print ("------------------------------------------------------------------------
 
 #Plot histogram of combined sfr density data.
 #binArray local variable for histogram plots. Sets length and bin size.
-sfrDensBinArray = np.linspace(0, 1.2, 10)
+sfrDensBinArray = np.linspace(0, 3, 10)
 sfrBinArray = np.linspace(0, 40, 10)
 
 plt.hist(totalSFRDensAbsorb, bins=sfrDensBinArray, density=True, histtype='step', label= 'MgII Detection (%i)' %len(totalSFRDensAbsorb))
@@ -784,8 +963,8 @@ plt.legend()
 plt.savefig('Histogram_Combined_SfrDensity_NoBinArray')
 plt.show()
 
-print (totalSFRDensAbsorb,'\n')
-print (totalSFRDensNoAbsorb,'\n')
+#print (totalSFRDensAbsorb,'\n')
+#print (totalSFRDensNoAbsorb,'\n')
 
 fig, ax = plt.subplots()
 ax.hist(totalSFRDensAbsorb, bins=sfrDensBinArray, density=True, histtype='step', label= 'MgII Detection (%i)' %len(totalSFRDensAbsorb))
@@ -841,7 +1020,7 @@ plt.plot(np.unique(totalzNoAbsorb), np.poly1d(np.polyfit((totalzNoAbsorb), total
 plt.xlabel("Redshift Distance")
 plt.ylabel("Galaxy Area Kpc")
 plt.legend(loc='upper left')
-plt.savefig('HRedshift_vs_GalaxyArea') #Included 'H' in name to keep saved plots together in file.
+plt.savefig('Redshift_vs_GalaxyArea')
 plt.show()
 ########################################################################################
 
@@ -858,7 +1037,7 @@ plt.plot(np.unique(totalzNoAbsorb), np.poly1d(np.polyfit((totalzNoAbsorb), total
 plt.xlabel("Redshift Distance")
 plt.ylabel("50% Emission Enclosed")
 plt.legend(loc='upper left')
-plt.savefig('HRedshift_vs_Radius50') #Included 'H' in name to keep saved plots together in file.
+plt.savefig('Redshift_vs_Radius50')
 plt.show()
 
 #Go through totalzAbsorb list and remove galaxies with redshifts less than 0.8
@@ -896,5 +1075,39 @@ plt.plot(np.unique(totalzNoAbsorb), np.poly1d(np.polyfit((totalzNoAbsorb), total
 plt.xlabel("Redshift Distance")
 plt.ylabel("90% Emission Enclosed")
 plt.legend(loc='lower right')
-plt.savefig('HRedshift_vs_Radius90') #Included 'H' in name to keep saved plots together in file.
+plt.savefig('Redshift_vs_Radius90')
+plt.show()
+
+#Plot total Angular Distance vs. total SFR Densities
+plt.scatter(totalAngDist, totalSFRDens)
+plt.plot(np.unique(totalAngDist), np.poly1d(np.polyfit((totalAngDist), totalSFRDens, 2))(np.unique(totalAngDist)), c='r')
+plt.xlabel("Angular Distance from QSO (kpc)")
+plt.ylabel("SFR Densities")
+plt.savefig('totalAngDist_vs_totalSFRDens')
+plt.show()
+
+#Plot total Angular Distance vs. total SFR
+plt.scatter(totalAngDist, totalSFR)
+plt.plot(np.unique(totalAngDist), np.poly1d(np.polyfit((totalAngDist), totalSFR, 2))(np.unique(totalAngDist)), c='r')
+plt.xlabel("Angular Distance from QSO (kpc)")
+plt.ylabel("Star Formation Rates")
+plt.savefig('totalAngDist_vs_TotalSFR')
+plt.show()
+
+#Plot absorbers and non-absorbers angular distances vs. SFR Density absorbers and non-absorbers
+plt.scatter(totalAngDistAbsorb, totalSFRDensAbsorb, label='MgII Detection(%i)' % len(totalAngDistAbsorb), c='r', marker='^')
+plt.scatter(totalAngDistNoAbsorb, totalSFRDensNoAbsorb, label='MgII Detection(%i)' % len(totalAngDistNoAbsorb), c='b')
+plt.xlabel("Angular Distance from QSO (kpc)")
+plt.ylabel("SFR Densities")
+plt.legend(loc='upper left')
+plt.savefig('totalAngDistAbsorbers_vs_totalSFRDensAbsorbers')
+plt.show()
+
+#Plot absorbers and non-absorbers angular distances vs. SFR absorbers and non-absorbers
+plt.scatter(totalAngDistAbsorb, totalSFRAbsorb, label='MgII Detection(%i)' % len(totalAngDistAbsorb), c='r', marker='^')
+plt.scatter(totalAngDistNoAbsorb, totalSFRNoAbsorb, label='MgII Detection(%i)' % len(totalAngDistAbsorb), c='b')
+plt.xlabel("Angular Distance from QSO (kpc)")
+plt.ylabel("Star Formation Rates")
+plt.legend(loc='upper left')
+plt.savefig('totalAngDistAbsorbers_vs_totalSFRAbsorbers')
 plt.show()
