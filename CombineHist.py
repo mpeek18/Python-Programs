@@ -3,7 +3,7 @@
 Created on Sat Sep 30 20:26:38 2017
 
 @author: Matthew Peek
-Last Modified: 21 June 2018
+Last Modified: 22 June 2018
 """
 
 import numpy as np
@@ -944,7 +944,7 @@ print ("------------------------------------------------------------------------
 
 #Plot histogram of combined sfr density data.
 #binArray local variable for histogram plots. Sets length and bin size.
-sfrDensBinArray = np.linspace(0, 3, 10)
+sfrDensBinArray = np.linspace(0, 3.2, 10)
 sfrBinArray = np.linspace(0, 40, 10)
 
 plt.hist(totalSFRDensAbsorb, bins=sfrDensBinArray, density=True, histtype='step', label= 'MgII Detection (%i)' %len(totalSFRDensAbsorb))
@@ -1002,7 +1002,7 @@ plt.show()
 plt.hist(totalR50Absorb, bins=np.linspace(0, 7, 10), density=True, histtype='step', label='MgII Detection(%i)' % len(totalR50Absorb))
 plt.hist(totalR50NoAbsorb, bins=np.linspace(0, 8, 10), density=True, histtype='step', label='MgII Non-Detection(%i)' % len(totalR50NoAbsorb))
 plt.xlabel("Radius 50")
-plt.legend(loc='upper left')
+plt.legend(loc='upper right')
 plt.savefig('Histogram_Combined_R50')
 plt.show()
 ######################################################################################
@@ -1096,7 +1096,7 @@ plt.show()
 
 #Plot absorbers and non-absorbers angular distances vs. SFR Density absorbers and non-absorbers
 plt.scatter(totalAngDistAbsorb, totalSFRDensAbsorb, label='MgII Detection(%i)' % len(totalAngDistAbsorb), c='r', marker='^')
-plt.scatter(totalAngDistNoAbsorb, totalSFRDensNoAbsorb, label='MgII Detection(%i)' % len(totalAngDistNoAbsorb), c='b')
+plt.scatter(totalAngDistNoAbsorb, totalSFRDensNoAbsorb, label='MgII Non-Detection(%i)' % len(totalAngDistNoAbsorb), c='b')
 plt.xlabel("Angular Distance from QSO (kpc)")
 plt.ylabel("SFR Densities")
 plt.legend(loc='upper left')
@@ -1105,7 +1105,7 @@ plt.show()
 
 #Plot absorbers and non-absorbers angular distances vs. SFR absorbers and non-absorbers
 plt.scatter(totalAngDistAbsorb, totalSFRAbsorb, label='MgII Detection(%i)' % len(totalAngDistAbsorb), c='r', marker='^')
-plt.scatter(totalAngDistNoAbsorb, totalSFRNoAbsorb, label='MgII Detection(%i)' % len(totalAngDistAbsorb), c='b')
+plt.scatter(totalAngDistNoAbsorb, totalSFRNoAbsorb, label='MgII Non-Detection(%i)' % len(totalAngDistAbsorb), c='b')
 plt.xlabel("Angular Distance from QSO (kpc)")
 plt.ylabel("Star Formation Rates")
 plt.legend(loc='upper left')
