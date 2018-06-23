@@ -3,10 +3,13 @@
 Created on Fri Jun 15 17:45:25 2018
 
 @author: Matthew Peek
-Last Modified: 16 June 2018
+Last Modified: 22 June 2018
+Galaxy Simulator
 """
 import numpy as np
+from astropy.io import ascii
 import astropy.io.fits as fits
+from astropy.table import Table
 
 """
 makeCopy function makes copies of given image. Takes numpy array containing
@@ -50,7 +53,7 @@ try:
     print (imageData,'\n')
     
     #Call makeCopy function
-    makeCopy(imageData, 5)
+    makeCopy(imageData, 500)
     
 except IOError:
     print ("Image not found!")
@@ -61,6 +64,7 @@ Read in copied galaxy images, pass images to addNoise function.
 Keep count of which image is currently being processed and pass 
 to addNoise function.
 """
+galID = []
 count = 0
 for i in range(0, len(ID)):
     try:
@@ -72,7 +76,13 @@ for i in range(0, len(ID)):
         
         #Call addNoise function
         addNoise(imageCopy, count)
+        galID.append(ID[i])
         count += 1
         
     except IOError:
         print ("Galaxy_" + str(ID[i]) + " could not be found!")
+
+
+#Write galaxy ID's to ascii file
+data = (Table([galID], names=['Galaxy ID']))
+ascii.write(data, 'SimGalaxyID.dat', format='fixed_width', overwrite=True)
