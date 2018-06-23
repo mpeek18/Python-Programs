@@ -4,6 +4,7 @@ Created on Tue May 29 21:05:05 2018
 
 @author: Matthew Peek
 Last Modified: 22 June 2018
+Field 7 Image Stack
 """
 import numpy as np
 from astropy.io import ascii
@@ -56,7 +57,8 @@ def stack(fileList):
     plt.imshow(imageStack)
     plt.colorbar()
     print ("Stacking complete!")
-
+#End Stack function
+    
 
 #Open Absorber_Data.dat file and get galaxy id's, get image file name, open fits data.
 #Start program by reading in id's and appending them to new list.

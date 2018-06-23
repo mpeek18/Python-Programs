@@ -4,7 +4,7 @@ Created on Tue May 29 21:05:05 2018
 
 @author: Matthew Peek
 Last Modified: 22 June 2018
-Field 8 Image Stack
+Field 4 Image Stack
 """
 import numpy as np
 from astropy.io import ascii
@@ -37,9 +37,9 @@ def stack(fileList):
     medianImage = np.median(imageData, axis=0)
     imageStack = np.sum(imageData, axis=0)
     
-    fits.writeto('Field8_Stacked_Image_Mean.fits', meanImage, overwrite=True)
-    fits.writeto('Field8_Stacked_Image_Median.fits', medianImage, overwrite=True)
-    fits.writeto('Field8_Stacked_Image.fits', imageStack, overwrite=True)
+    fits.writeto('Field4_Stacked_Image_Mean.fits', meanImage, overwrite=True)
+    fits.writeto('Field4_Stacked_Image_Median.fits', medianImage, overwrite=True)
+    fits.writeto('Field4_Stacked_Image.fits', imageStack, overwrite=True)
     
     print ("Image Mean:", meanImage,'\n')
     print ("Image Median:", medianImage,'\n')
@@ -69,10 +69,10 @@ ID = absorberFile['col2']
 fileList = []
 for i in range(1, len(ID)):
     try:
-        fileName = 'CROP-SDSS-J120342.24+102831.8-G141_00' + ID[i] + '.2d.fits'
+        fileName = 'CROP-SDSS-J091730.18+324105.5-G141_00' + ID[i] + '.2d.fits'
         file = fits.open(fileName)
-        image = file[0].data
         fileList.append(fileName)
+        image = file[0].data
         file.close()
         
         print (ID[i])
