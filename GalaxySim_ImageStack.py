@@ -3,7 +3,7 @@
 Created on Tue May 29 21:05:05 2018
 
 @author: Matthew Peek
-Last Modified: 22 June 2018
+Last Modified: 26 June 2018
 Galaxy Simulator Image Stack
 """
 import numpy as np
@@ -60,8 +60,10 @@ def stack(fileList):
 #End Stack function
     
 
-#Open Absorber_Data.dat file and get galaxy id's, get image file name, open fits data.
-#Start program by reading in id's and appending them to new list.
+"""
+Open Absorber_Data.dat file and get galaxy id's, get image file name, open fits data.
+Start program by reading in id's and appending them to new list.
+"""
 count = 0
 absorberFile = ascii.read('SimGalaxyID.dat', delimiter='|')
 ID = absorberFile['col2']
@@ -70,8 +72,8 @@ fileList = []
 for i in range(1, len(ID)):
     try:
         fileName = 'Galaxy_noise_' + ID[i] + '.fits'
-        file = fits.open(fileName)
         fileList.append(fileName)
+        file = fits.open(fileName)
         image = file[0].data
         file.close()
         
