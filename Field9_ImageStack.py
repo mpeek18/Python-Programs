@@ -3,7 +3,7 @@
 Created on Tue May 29 21:05:05 2018
 
 @author: Matthew Peek
-Last Modified: 25 June 2018
+Last Modified: 27 June 2018
 Field 9 Image Stack
 """
 import numpy as np
@@ -27,14 +27,19 @@ Normalize image function, takes image as an argument, gets data and stores in
 numpy array. Sum all data in image then divides each pixel by image sum.
 returns normalized image as numpy array.
 """
+dataList = []
 def imageNorm(fileName):
     data = [fits.getdata(fileName)]
+    dataList.append(data)
     sumData = np.sum(data)
-    print ("Summed Image Data:", sumData)
+    print ("Summed Image Data:", sumData,'\n')
+    print ("Data:", data,'\n')
+        
+    for i in range(0, len(dataList)):
+        for j in range(0, len(dataList[0])):
+            normed = (dataList[i][j] / sumData)
     
-    for i in range(0, len(data)):
-        normed = (data[i] / sumData)
-   
+    print ("Normed:", normed)    
     print ("Normalization complete!")     
     return normed
 # End imageNorm function
