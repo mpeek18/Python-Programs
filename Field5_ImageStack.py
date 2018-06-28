@@ -3,7 +3,7 @@
 Created on Tue May 29 21:05:05 2018
 
 @author: Matthew Peek
-Last Modified: 22 June 2018
+Last Modified: 27 June 2018
 Field 5 Image Stack
 """
 import numpy as np
@@ -23,6 +23,29 @@ Algorithm:
 """
 
 """
+Normalize image function, takes image as an argument, gets data and stores in
+numpy array. Sum all data in image then divides each pixel by image sum.
+returns normalized image as numpy array.
+"""
+def imageNorm(fileName):
+    dataList = []
+    data = [fits.getdata(fileName)]
+    dataList.append(data)
+    sumData = np.sum(data)
+    print ("Summed Image Data:", sumData,'\n')
+    print ("Data:", data,'\n')
+        
+    for i in range(0, len(dataList)):
+        for j in range(0, len(dataList[0])):
+            normed = (dataList[i][j] / sumData)
+    
+    print ("Normed:", normed)    
+    print ("Normalization complete!")     
+    return normed
+#End imageNorm function
+
+
+"""
 Stack function, takes numpy array as argument, loops through array argument
 getting fits data and combining all image data into same array.
 
@@ -30,16 +53,16 @@ Stack image data standard, mean averaging, and median averaging, compare results
 Write results to new fits files.
 """
 def stack(fileList):
-    imageData = [fits.getdata(file) for file in fileList]
+    imageData = [file for file in fileList]
     
     print ("Total image data:", imageData,'\n')
     meanImage = np.mean(imageData, axis=0)
     medianImage = np.median(imageData, axis=0)
     imageStack = np.sum(imageData, axis=0)
     
-    fits.writeto('Field5_Stacked_Image_Mean.fits', meanImage, overwrite=True)
-    fits.writeto('Field5_Stacked_Image_Median.fits', medianImage, overwrite=True)
-    fits.writeto('Field5_Stacked_Image.fits', imageStack, overwrite=True)
+    fits.writeto('Field5_Stacked_Image_Mean_Normed.fits', meanImage, overwrite=True)
+    fits.writeto('Field5_Stacked_Image_Median_Normed.fits', medianImage, overwrite=True)
+    fits.writeto('Field5_Stacked_Image_Normed.fits', imageStack, overwrite=True)
     
     print ("Image Mean:", meanImage,'\n')
     print ("Image Median:", medianImage,'\n')
@@ -58,10 +81,12 @@ def stack(fileList):
     plt.colorbar()
     print ("Stacking complete!")
 #End Stack function
+   
     
-
-#Open Absorber_Data.dat file and get galaxy id's, get image file name, open fits data.
-#Start program by reading in id's and appending them to new list.
+"""
+Open Absorber_Data.dat file and get galaxy id's, get image file name, open fits data.
+Start program by reading in id's and appending them to new list.
+"""
 count = 0
 absorberFile = ascii.read('Absorption_Data.dat', delimiter='|')
 ID = absorberFile['col2']
@@ -70,8 +95,13 @@ fileList = []
 for i in range(1, len(ID)):
     try:
         fileName = 'CROP-SDSS-J095432.63+354027.7-G141_00' + ID[i] + '.2d.fits'
+        
+        #Call imageNorm function.
+        normed = imageNorm(fileName)
+        
+        #Append normalized image to fileList to pass as argument to stack function.
+        fileList.append(normed)
         file = fits.open(fileName)
-        fileList.append(fileName)
         image = file[0].data
         file.close()
         

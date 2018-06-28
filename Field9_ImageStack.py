@@ -27,8 +27,8 @@ Normalize image function, takes image as an argument, gets data and stores in
 numpy array. Sum all data in image then divides each pixel by image sum.
 returns normalized image as numpy array.
 """
-dataList = []
 def imageNorm(fileName):
+    dataList = []
     data = [fits.getdata(fileName)]
     dataList.append(data)
     sumData = np.sum(data)
@@ -42,7 +42,7 @@ def imageNorm(fileName):
     print ("Normed:", normed)    
     print ("Normalization complete!")     
     return normed
-# End imageNorm function
+#End imageNorm function
     
 
 """
