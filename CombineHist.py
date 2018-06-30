@@ -3,7 +3,7 @@
 Created on Sat Sep 30 20:26:38 2017
 
 @author: Matthew Peek
-Last Modified: 22 June 2018
+Last Modified: 30 June 2018
 """
 
 import numpy as np
@@ -876,13 +876,13 @@ print ("Combined R90 Non-Absorbers:", totalR90NoAbsorb,'\n')
 totalR50Absorb = (field1R50Absorb + field2R50Absorb + field3R50Absorb + field4R50Absorb +
                   field5R50Absorb + field7R50Absorb + field8R50Absorb + field9R50Absorb)
 print (len(totalR50Absorb))
-print ("Combined R50 Absorbers:", totalR50Absorb)
+print ("Combined R50 Absorbers:", totalR50Absorb,'\n')
 
 totalR50NoAbsorb = (field1R50NoAbsorb + field2R50NoAbsorb + field3R50NoAbsorb + 
                     field4R50NoAbsorb + field5R50NoAbsorb + field7R50NoAbsorb + 
                     field8R50NoAbsorb + field9R50NoAbsorb)
 print (len(totalR50NoAbsorb))
-print ("Combined R50 Non-Absorbers:", totalR50NoAbsorb)
+print ("Combined R50 Non-Absorbers:", totalR50NoAbsorb,'\n')
 
 totalzAbsorb = (field1zAbsorb + field2zAbsorb + field3zAbsorb + field4zAbsorb + 
                 field5zAbsorb + field7zAbsorb + field8zAbsorb + field9zAbsorb)
@@ -1111,3 +1111,40 @@ plt.ylabel("Star Formation Rates")
 plt.legend(loc='upper left')
 plt.savefig('totalAngDistAbsorbers_vs_totalSFRAbsorbers')
 plt.show()
+
+#Plot radius 90 abosrbers & non-absorbers vs. SFR absorbers & non-absorbers
+plt.scatter(totalR90Absorb, totalSFRAbsorb, label='MgII Detection(%i)' % len(totalAngDistAbsorb), c='r', marker='^')
+plt.scatter(totalR90NoAbsorb, totalSFRNoAbsorb, label='MgII Non-Detection(%i)' % len(totalAngDistAbsorb), c='b')
+plt.xlabel("Radius 90%")
+plt.ylabel("SFR Absorbers & Non-Absorbers")
+plt.legend(loc='upper left')
+plt.savefig('R90Absorb_R90Non-Absorb_vs_SFRAbsorb_SFRNoAbsorb')
+plt.show()
+
+#Plot radius 90 abosrbers & non-absorbers vs. SFR Density absorbers & non-absorbers
+plt.scatter(totalR90Absorb, totalSFRDensAbsorb, label='MgII Detection(%i)' % len(totalAngDistAbsorb), c='r', marker='^')
+plt.scatter(totalR90NoAbsorb, totalSFRDensNoAbsorb, label='MgII Non-Detection(%i)' % len(totalAngDistAbsorb), c='b')
+plt.xlabel("Radius 90%")
+plt.ylabel("SFR Density Absorbers & Non-Absorbers")
+plt.legend(loc='upper right')
+plt.savefig('R90Absorb_R90Non-Absorb_vs_SFRDensAbsorb_SFRDensNoAbsorb')
+plt.show()
+
+#Plot radius 50 abosrbers & non-absorbers vs. SFR absorbers & non-absorbers
+plt.scatter(totalR50Absorb, totalSFRAbsorb, label='MgII Detection(%i)' % len(totalAngDistAbsorb), c='r', marker='^')
+plt.scatter(totalR50NoAbsorb, totalSFRNoAbsorb, label='MgII Non-Detection(%i)' % len(totalAngDistAbsorb), c='b')
+plt.xlabel("Radius 50%")
+plt.ylabel("SFR Absorbers & Non-Absorbers")
+plt.legend(loc='upper right')
+plt.savefig('R50Absorb_R50Non-Absorb_vs_SFRAbsorb_SFRNoAbsorb')
+plt.show()
+
+#Plot radius 50 abosrbers & non-absorbers vs. SFR Density absorbers & non-absorbers
+plt.scatter(totalR50Absorb, totalSFRDensAbsorb, label='MgII Detection(%i)' % len(totalAngDistAbsorb), c='r', marker='^')
+plt.scatter(totalR50NoAbsorb, totalSFRDensNoAbsorb, label='MgII Non-Detection(%i)' % len(totalAngDistAbsorb), c='b')
+plt.xlabel("Radius 50%")
+plt.ylabel("SFR Density Absorbers & Non-Absorbers")
+plt.legend(loc='upper right')
+plt.savefig('R50Absorb_R50Non-Absorb_vs_SFRADensitybsorb_SFRDensityNoAbsorb')
+plt.show()
+
