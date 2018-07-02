@@ -3,7 +3,7 @@
 Created on Tue May 29 21:05:05 2018
 
 @author: Matthew Peek
-Last Modified: 26 June 2018
+Last Modified: 2 July 2018
 Galaxy Simulator Image Stack
 """
 import numpy as np
@@ -27,7 +27,9 @@ Normalize image function, takes image as an argument, gets data and stores in
 numpy array. Sum all data in image then divides each pixel by image sum.
 returns normalized image as numpy array.
 """
-"""
+#Try making new copy of image and normalizing it. 
+#Possible problem with changing pixel values but never writing new data
+#back into normalized image.
 def imageNorm(fileName):
     dataList = []
     data = [fits.getdata(fileName)]
@@ -35,17 +37,22 @@ def imageNorm(fileName):
     sumData = np.sum(data)
     print ("Summed Image Data:", sumData,'\n')
     print ("Data:", data,'\n')
-        
+       
     for i in range(0, len(dataList)):
         for j in range(0, len(dataList[0])):
             print ("Before:", dataList[i][j])
-            normed = (dataList[i][j] / sumData)
+            dataList[i][j] = (dataList[i][j] / sumData)
+            print ()
+            print ("After:", dataList[i][j])
+            print ()
     
-    print ("Normed:", normed)    
+    print ("Normed:", dataList)  
+    normData = np.sum(dataList)
+    print ("Normed Sum:", normData)
     print ("Normalization complete!")     
-    return normed
+    return dataList
 #End imageNorm function
-"""
+
 
 """
 Stack function, takes numpy array as argument, loops through array argument
@@ -55,22 +62,22 @@ Stack image data standard, mean averaging, and median averaging, compare results
 Write results to new fits files.
 """
 def stack(fileList):
-    imageData = [fits.getdata(file) for file in fileList]
-    #imageData = [file for file in fileList]
+    #imageData = [fits.getdata(file) for file in fileList]
+    imageData = [file for file in fileList]
     
     #print ("Total image data:", imageData,'\n')
     meanImage = np.mean(imageData, axis=0)
     medianImage = np.median(imageData, axis=0)
     imageStack = np.sum(imageData, axis=0)
     
-    fits.writeto('GalSim_Stacked_Image_Mean.fits', meanImage, overwrite=True)
-    fits.writeto('GalSim_Stacked_Image_Median.fits', medianImage, overwrite=True)
-    fits.writeto('GalSim_Stacked_Image.fits', imageStack, overwrite=True)
-    """
+    #fits.writeto('GalSim_Stacked_Image_Mean.fits', meanImage, overwrite=True)
+    #fits.writeto('GalSim_Stacked_Image_Median.fits', medianImage, overwrite=True)
+    #fits.writeto('GalSim_Stacked_Image.fits', imageStack, overwrite=True)
+    
     fits.writeto('GalSim_Stacked_Image_Mean_Normed.fits', meanImage, overwrite=True)
     fits.writeto('GalSim_Stacked_Image_Median_Normed.fits', medianImage, overwrite=True)
     fits.writeto('GalSim_Stacked_Image_Normed.fits', imageStack, overwrite=True)
-    """
+    
     print ("Image Mean:", meanImage,'\n')
     print ("Image Median:", medianImage,'\n')
     print ("Image Sum:", imageStack,'\n')
@@ -104,11 +111,12 @@ for i in range(1, len(ID)):
         fileName = 'Galaxy_noise_' + ID[i] + '.fits'
         
         #Call imageNorm function.
-        #normed = imageNorm(fileName)
+        dataList = imageNorm(fileName)
+        newImage = np.concatenate(np.concatenate(dataList))
+        print ("newImage:", newImage)
         
         #Append normalized image to fileList to pass as argument to stack function.
-        fileList.append(fileName)
-        #fileList.append(normed)
+        fileList.append(newImage)
         file = fits.open(fileName)
         image = file[0].data
         file.close()
