@@ -23,6 +23,31 @@ Algorithm:
 """
 
 """
+Normalize image function, takes image as an argument, gets data and stores in
+numpy array. Sum all data in image then divides each pixel by image sum.
+returns normalized image as numpy array.
+"""
+"""
+def imageNorm(fileName):
+    dataList = []
+    data = [fits.getdata(fileName)]
+    dataList.append(data)
+    sumData = np.sum(data)
+    print ("Summed Image Data:", sumData,'\n')
+    print ("Data:", data,'\n')
+        
+    for i in range(0, len(dataList)):
+        for j in range(0, len(dataList[0])):
+            print ("Before:", dataList[i][j])
+            normed = (dataList[i][j] / sumData)
+    
+    print ("Normed:", normed)    
+    print ("Normalization complete!")     
+    return normed
+#End imageNorm function
+"""
+
+"""
 Stack function, takes numpy array as argument, loops through array argument
 getting fits data and combining all image data into same array.
 
@@ -31,6 +56,7 @@ Write results to new fits files.
 """
 def stack(fileList):
     imageData = [fits.getdata(file) for file in fileList]
+    #imageData = [file for file in fileList]
     
     #print ("Total image data:", imageData,'\n')
     meanImage = np.mean(imageData, axis=0)
@@ -40,7 +66,11 @@ def stack(fileList):
     fits.writeto('GalSim_Stacked_Image_Mean.fits', meanImage, overwrite=True)
     fits.writeto('GalSim_Stacked_Image_Median.fits', medianImage, overwrite=True)
     fits.writeto('GalSim_Stacked_Image.fits', imageStack, overwrite=True)
-    
+    """
+    fits.writeto('GalSim_Stacked_Image_Mean_Normed.fits', meanImage, overwrite=True)
+    fits.writeto('GalSim_Stacked_Image_Median_Normed.fits', medianImage, overwrite=True)
+    fits.writeto('GalSim_Stacked_Image_Normed.fits', imageStack, overwrite=True)
+    """
     print ("Image Mean:", meanImage,'\n')
     print ("Image Median:", medianImage,'\n')
     print ("Image Sum:", imageStack,'\n')
@@ -72,7 +102,13 @@ fileList = []
 for i in range(1, len(ID)):
     try:
         fileName = 'Galaxy_noise_' + ID[i] + '.fits'
+        
+        #Call imageNorm function.
+        #normed = imageNorm(fileName)
+        
+        #Append normalized image to fileList to pass as argument to stack function.
         fileList.append(fileName)
+        #fileList.append(normed)
         file = fits.open(fileName)
         image = file[0].data
         file.close()
