@@ -3,13 +3,15 @@
 Created on Tue May 29 21:05:05 2018
 
 @author: Matthew Peek
-Last Modified: 2 July 2018
+Last Modified: 4 July 2018
 Galaxy Simulator Image Stack
 """
 import numpy as np
 from astropy.io import ascii
 import astropy.io.fits as fits
 from matplotlib import pyplot as plt
+from sklearn.preprocessing import normalize
+
 """
 Algorithm:
     read in Absorption_Data.dat file
@@ -32,25 +34,30 @@ returns normalized image as numpy array.
 #back into normalized image.
 def imageNorm(fileName):
     dataList = []
-    data = [fits.getdata(fileName)]
+    data = fits.getdata(fileName)
     dataList.append(data)
     sumData = np.sum(data)
     print ("Summed Image Data:", sumData,'\n')
     print ("Data:", data,'\n')
-       
-    for i in range(0, len(dataList)):
-        for j in range(0, len(dataList[0])):
-            print ("Before:", dataList[i][j])
-            dataList[i][j] = (dataList[i][j] / sumData)
+    """
+    for i in range(0, len(data)):
+        for j in range(0, len(data[0])):
+            ("Before:", data[i][j])
+            data[i][j] = (data[i][j] / sumData)
             print ()
-            print ("After:", dataList[i][j])
+            print ("After:", data[i][j])
             print ()
-    
-    print ("Normed:", dataList)  
-    normData = np.sum(dataList)
+    print ("Normed:", data)  
+    normData = np.sum(data)
     print ("Normed Sum:", normData)
     print ("Normalization complete!")     
     return dataList
+    """
+    
+    normed = normalize(data, axis=1, norm='l1')
+    print ("Normed Sum:", np.sum(normed),'\n')
+    print ("Normed Data:", normed)
+    return normed
 #End imageNorm function
 
 
@@ -112,11 +119,11 @@ for i in range(1, len(ID)):
         
         #Call imageNorm function.
         dataList = imageNorm(fileName)
-        newImage = np.concatenate(np.concatenate(dataList))
-        print ("newImage:", newImage)
+        #newImage = np.concatenate(dataList)
+        #print ("New Image:", newImage)
         
         #Append normalized image to fileList to pass as argument to stack function.
-        fileList.append(newImage)
+        fileList.append(dataList)
         file = fits.open(fileName)
         image = file[0].data
         file.close()
