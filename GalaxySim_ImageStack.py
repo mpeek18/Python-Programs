@@ -42,16 +42,16 @@ def imageNorm(fileName):
     """
     for i in range(0, len(data)):
         for j in range(0, len(data[0])):
-            ("Before:", data[i][j])
+            #("Before:", data[i][j])
             data[i][j] = (data[i][j] / sumData)
-            print ()
-            print ("After:", data[i][j])
-            print ()
+            #print ()
+            #print ("After:", data[i][j])
+            #print ()
     print ("Normed:", data)  
     normData = np.sum(data)
     print ("Normed Sum:", normData)
     print ("Normalization complete!")     
-    return dataList
+    return data
     """
     
     normed = normalize(data, axis=1, norm='l1')
