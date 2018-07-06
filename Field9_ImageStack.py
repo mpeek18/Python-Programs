@@ -188,8 +188,11 @@ for i in range(1, len(ID)):
         except IOError:
                 print ("Image ID " + ID[i] + " not found!")
         
-#Call stack functions
+#print ("Number of images processed:", count,'\n')
 stackAbsorber(fileListAbsorb)
 stackNonAbsorber(fileListNonAbsorb)
 print ("Number of Absorbers Processed:", countAbsorber)
 print ("Number of Non-Absorbers Processed:", countNonAbsorber)
+
+#Call Stack function
+#stackAbsorber(fileList) 
