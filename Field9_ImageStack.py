@@ -3,7 +3,7 @@
 Created on Tue May 29 21:05:05 2018
 
 @author: Matthew Peek
-Last Modified: 5 July 2018
+Last Modified: 6 July 2018
 Field 9 Image Stack
 """
 import numpy as np
@@ -188,11 +188,8 @@ for i in range(1, len(ID)):
         except IOError:
                 print ("Image ID " + ID[i] + " not found!")
         
-#print ("Number of images processed:", count,'\n')
+#Call stack functions
 stackAbsorber(fileListAbsorb)
 stackNonAbsorber(fileListNonAbsorb)
 print ("Number of Absorbers Processed:", countAbsorber)
 print ("Number of Non-Absorbers Processed:", countNonAbsorber)
-
-#Call Stack function
-#stackAbsorber(fileList) 
