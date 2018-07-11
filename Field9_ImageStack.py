@@ -3,7 +3,7 @@
 Created on Tue May 29 21:05:05 2018
 
 @author: Matthew Peek
-Last Modified: 6 July 2018
+Last Modified: 11 July 2018
 Field 9 Image Stack
 """
 import numpy as np
@@ -73,9 +73,9 @@ getting fits data and combining all image data into same array.
 Stack image data standard, mean averaging, and median averaging, compare results.
 Write results to new fits files.
 """
-def stackAbsorber(fileList):
+def stackAbsorber(fileListAbsorb):
     #imageData = [fits.getdata(file) for file in fileList]
-    imageData = [file for file in fileList]
+    imageData = [file for file in fileListAbsorb]
     
     print ("Total Absorber image data:", imageData,'\n')
     meanImage = np.mean(imageData, axis=0)
@@ -102,12 +102,12 @@ def stackAbsorber(fileList):
     plt.imshow(imageStack)
     plt.colorbar()
     
-    print ("Stacking Absorbers complete!")
+    print ("Stacking Absorbers Complete!")
 #End Absorber Stack function
 
-def stackNonAbsorber(fileList):
+def stackNonAbsorber(fileListNonAbsorb):
     #imageData = [fits.getdata(file) for file in fileList]
-    imageData = [file for file in fileList]
+    imageData = [file for file in fileListNonAbsorb]
     
     print ("Total Non-Absorber image data:", imageData,'\n')
     meanImage = np.mean(imageData, axis=0)
@@ -134,9 +134,40 @@ def stackNonAbsorber(fileList):
     plt.imshow(imageStack)
     plt.colorbar()
     
-    print ("Stacking Non-Absorbers complete!")
+    print ("Stacking Non-Absorbers Complete!")
 #End Non-Absorber Stack function
 
+def stackAll(fileListAll):
+    imageData = [file for file in fileListAll]
+    
+    print ("Total Non-Absorber image data:", imageData,'\n')
+    meanImage = np.mean(imageData, axis=0)
+    medianImage = np.median(imageData, axis=0)
+    imageStack = np.sum(imageData, axis=0)
+    
+    fits.writeto('Field9_Stacked_Image_Mean_Normed_All.fits', meanImage, overwrite=True)
+    fits.writeto('Field9_Stacked_Image_Median_Normed_All.fits', medianImage, overwrite=True)
+    fits.writeto('Field9_Stacked_Image_Normed_All.fits', imageStack, overwrite=True)
+    
+    print ("Image Mean:", meanImage,'\n')
+    print ("Image Median:", medianImage,'\n')
+    print ("Image Sum:", imageStack,'\n')
+    
+    plt.clf()
+    plt.imshow(meanImage)
+    plt.colorbar()
+    
+    plt.clf()
+    plt.imshow(medianImage)
+    plt.colorbar()
+    
+    plt.clf()
+    plt.imshow(imageStack)
+    plt.colorbar()
+    
+    print ("Stacking All Complete!")
+#End stackAll function
+    
     
 """
 Open Absorber_Data.dat file and get galaxy id's, get image file name, open fits data.
@@ -145,8 +176,10 @@ Start program by reading in id's and appending them to new list.
 absorberFile = ascii.read('Absorption_Data.dat', delimiter='|')
 ID = absorberFile['col2']
 absorber = absorberFile['col7']
+totalCount = 0
 countAbsorber = 0
 countNonAbsorber = 0
+fileListAll = []
 fileListAbsorb = []
 fileListNonAbsorb = []
 for i in range(1, len(ID)):
@@ -172,7 +205,8 @@ for i in range(1, len(ID)):
     else:
         try:
             fileName = 'CROP-SDSS-J120639.85+025308.3-G141_00' + ID[i] + '.2d.fits'
-            #Call imageNorm function.
+            
+            #Call imageNormNonAbsorb function.
             normed = imageNormNonAbsorber(fileName)
         
             #Append normalized image to fileList to pass as argument to stack function.
@@ -187,9 +221,15 @@ for i in range(1, len(ID)):
             countNonAbsorber += 1
         except IOError:
                 print ("Image ID " + ID[i] + " not found!")
-        
+    totalCount += 1    
+
+#Combine both lists to stack all images
+fileListAll = fileListAbsorb + fileListNonAbsorb
+
 #Call stack functions
 stackAbsorber(fileListAbsorb)
 stackNonAbsorber(fileListNonAbsorb)
+stackAll(fileListAll)
 print ("Number of Absorbers Processed:", countAbsorber)
 print ("Number of Non-Absorbers Processed:", countNonAbsorber)
+print ("Total Number of Galaxies Processed:", totalCount)
