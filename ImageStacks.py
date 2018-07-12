@@ -3,7 +3,7 @@
 Created on Tue May 29 21:05:05 2018
 
 @author: Matthew Peek
-Last Modified: 28 June 2018
+Last Modified: 12 July 2018
 All Fields Image Stack
 """
 import numpy as np
@@ -44,22 +44,21 @@ def imageNorm(fileName):
     print ("Normalization complete!")     
     return normed
 #End imageNorm function
-
-
+    
 """
-Stack function, takes numpy array as argument, loops through array argument
+StackAll function, takes numpy array as argument, loops through array argument
 getting fits data and combining all image data into same array.
 
 Stack image data standard, write results to new fits files.
 """
-def stack(fileList):
-    imageData = [fits.getdata(file) for file in fileList]
+def stackAll(fileListAll):
+    imageData = [fits.getdata(file) for file in fileListAll]
     #imageData = [file for file in fileList]
     
     print ("Total image data:", imageData,'\n')
     imageStack = np.sum(imageData, axis=0)
     
-    fits.writeto('Stacked_Image.fits', imageStack, overwrite=True)
+    fits.writeto('Stacked_Image_All.fits', imageStack, overwrite=True)
     
     print ("Image Sum:", imageStack,'\n')
     
@@ -74,28 +73,29 @@ def stack(fileList):
     plt.clf()
     betterImage = ndimage.gaussian_filter(imageStack, sigma=(2,2), order=0)
     plt.imshow(betterImage)
-    plt.savefig('Stacked_Image_Blur', dpi=100)
+    plt.savefig('Stacked_Image_All_Blur', dpi=100)
     plt.subplots_adjust(right=2.0)
     plt.subplots_adjust(top=1.0)
     plt.colorbar()
     plt.show()
     
-    print ("Stacking complete!", '\n')
+    print ("StackAll Function Complete!", '\n')
 #End Stack function
     
 
 """
-StackMean function, takes numpy array as argument, loops through array argument
+StackMeanAll function, takes numpy array as argument, loops through array argument
 getting fits data and combining all image data into same array.
 
 Stack image data mean, write results to new fits files.
-"""    
-def stackMean(fileListMean):
-    imageData = [fits.getdata(file) for file in fileList]
+
+""" 
+def stackMeanAll(fileListMeanAll):
+    imageData = [fits.getdata(file) for file in fileListMeanAll]
     print ("Total image data:", imageData,'\n')
     meanImage = np.mean(imageData, axis=0)
     
-    fits.writeto('Stacked_Image_Mean.fits', meanImage, overwrite=True)
+    fits.writeto('Stacked_Image_Mean_All.fits', meanImage, overwrite=True)
     
     print ("Image Mean:", meanImage,'\n')
     
@@ -110,28 +110,28 @@ def stackMean(fileListMean):
     plt.clf()
     betterImage = ndimage.gaussian_filter(meanImage, sigma=(2,2), order=0)
     plt.imshow(betterImage)
-    plt.savefig('Stacked_Image_Mean_Blur', dpi=100)
+    plt.savefig('Stacked_Image_Mean_All_Blur', dpi=100)
     plt.subplots_adjust(right=2.0)
     plt.subplots_adjust(top=1.0)
     plt.colorbar()
     plt.show()
     
-    print ("Mean Stacking Complete!", '\n')
+    print ("stackMeanAll Function Complete!", '\n')
 #End stackMean function
     
 
 """
-StackMedian function, takes numpy array as argument, loops through array argument
+StackMedianAll function, takes numpy array as argument, loops through array argument
 getting fits data and combining all image data into same array.
 
 Stack image data median, write results to new fits files.
 """    
-def stackMedian(fileListMedian):
-    imageData = [fits.getdata(file) for file in fileList]
+def stackMedianAll(fileListMedianAll):
+    imageData = [fits.getdata(file) for file in fileListMedianAll]
     print ("Total image data:", imageData,'\n')
     medianImage = np.median(imageData, axis=0)
     
-    fits.writeto('Stacked_Image_Median.fits', medianImage, overwrite=True)
+    fits.writeto('Stacked_Image_Median_All.fits', medianImage, overwrite=True)
     
     print ("Image Median:", medianImage,'\n')
     
@@ -146,50 +146,108 @@ def stackMedian(fileListMedian):
     plt.clf()
     betterImage = ndimage.gaussian_filter(medianImage, sigma=(2,2), order=0)
     plt.imshow(betterImage)
-    plt.savefig('Stacked_Image_Median_Blur', dpi=100)
+    plt.savefig('Stacked_Image_Median_All_Blur', dpi=100)
     plt.subplots_adjust(right=2.0)
     plt.subplots_adjust(top=1.0)
     plt.colorbar()
     plt.show()
     
-    print ("Median Stacking Complete!")
+    print ("stackMedianAll Function Complete!")
 #End stackMedian function
+
+"""
+StackMeanAbsorb function, takes numpy array as argument, loops through array argument
+getting fits data and combining all image data into same array.
+
+Stack image data median, write results to new fits files.
+"""    
+def stackMeanAbsorb(fileListMeanAbsorb):
+    imageData = [fits.getdata(file) for file in fileListMeanAbsorb]
+    print ("Total image data:", imageData,'\n')
+    meanAbsorbImage = np.mean(imageData, axis=0)
     
+    fits.writeto('Stacked_Image_Mean_Absorb.fits', meanAbsorbImage, overwrite=True)
     
+    print ("Image Mean Absorb:", meanAbsorbImage,'\n')
+    
+    plt.clf()
+    plt.imshow(meanAbsorbImage)
+    plt.subplots_adjust(right=2.0)
+    plt.subplots_adjust(top=1.0)
+    plt.colorbar()
+    plt.show()
+    
+    #Gaussian Blur
+    plt.clf()
+    betterImage = ndimage.gaussian_filter(meanAbsorbImage, sigma=(2,2), order=0)
+    plt.imshow(betterImage)
+    plt.savefig('Stacked_Image_Mean_Absorb_Blur', dpi=100)
+    plt.subplots_adjust(right=2.0)
+    plt.subplots_adjust(top=1.0)
+    plt.colorbar()
+    plt.show()
+    
+    print ("stackMeanAbsorb Function Complete!")
+#End stackMedian function
+
+
 """
 Define list containing field numbers, go through list and read in fields. Call
 stack function to stack all fields. 
 """
-count = 0
-fileList = []
-fileListMean = []
-fileListMedian = []
+fileListAll = []
+fileListMeanAll = []
+fileListMedianAll = []
+fileListMeanAbsorb = []
+fileListMedianAbsorb = []
+fileListMeanNonAbsorb = []
+fileListMedianNonAbsorb = []
+fileListStandardAbsorb = []
+fileListStandardNonAbsorb = []
 galList = [1, 2, 3, 4, 5, 7, 8, 9]
 
 for i in range(0, len(galList)):
     try:
-        fileName = 'Field' + str(galList[i]) + '_Stacked_Image_Normed.fits'
-        fileMean = 'Field' + str(galList[i]) + '_Stacked_Image_Mean_Normed.fits'
-        fileMedian = 'Field' + str(galList[i]) + '_Stacked_Image_Median_Normed.fits'
+        fileNameAll = 'Field' + str(galList[i]) + '_Stacked_Image_Normed_All.fits'
+        fileMeanAll = 'Field' + str(galList[i]) + '_Stacked_Image_Mean_Normed_All.fits'
+        fileMedianAll = 'Field' + str(galList[i]) + '_Stacked_Image_Median_Normed_All.fits'
+        fileMeanAbsorb = 'Field' + str(galList[i]) + '_Stacked_Image_Mean_Normed_Absorber.fits'
+        fileNameStandAbsorb = 'Field' + str(galList[i]) + '_Stacked_Image_Normed_Absorber.fits'
+        fileNameStandNonAbsorb = 'Field' + str(galList[i]) + '_Stacked_Image_Normed_NonAbsorber.fits'
+        fileNameMedianAbsorb = 'Field' + str(galList[i]) + '_Stacked_Image_Median_Normed_Absorber.fits'
+        fileNameMeanNonAbsorb = 'Field' + str(galList[i]) + '_Stacked_Image_Mean_Normed_NonAbsorber.fits'
+        fileNameMedianNonAbsorb = 'Field' + str(galList[i]) + '_Stacked_Image_Median_Normed_NonAbsorber.fits'
+        
         
         #Append normalized image to fileList to pass as argument to stack function.
-        fileList.append(fileName)
-        fileListMean.append(fileMean)
-        fileListMedian.append(fileMedian)
+        fileListAll.append(fileNameAll)
+        fileListMeanAll.append(fileMeanAll)
+        fileListMedianAll.append(fileMedianAll)
+        fileListMeanAbsorb.append(fileMeanAbsorb)
+        fileListMedianAbsorb.append(fileNameMedianAbsorb)
+        fileListMeanNonAbsorb.append(fileNameMeanNonAbsorb)
+        fileListMedianNonAbsorb.append(fileNameMedianNonAbsorb)
+        fileListStandardAbsorb.append(fileNameStandAbsorb)
+        fileListStandardNonAbsorb.append(fileNameStandNonAbsorb)
         
-        file = fits.open(fileName)
-        image = file[0].data
-        file.close()
-        
-        print (galList[i])
-        print (image.shape,'\n')
-        
-        count += 1
     except IOError:
         print ("Image ID " + str(galList[i]) + " not found!")
-print ("Number of images processed:", count,'\n')
 
+print (len(fileListAll))
+print (len(fileListMeanAll))
+print (len(fileListMedianAll))
+print (len(fileListMeanAbsorb))
+print (len(fileListMedianAbsorb))
+print (len(fileListMeanNonAbsorb))
+print (len(fileListMedianNonAbsorb))
+print (len(fileListStandardAbsorb))
+print (len(fileListStandardNonAbsorb))
+    
 #Call Stack functions
-stack(fileList)
-stackMean(fileListMean)
-stackMedian(fileListMedian) 
+stackAll(fileListAll)
+stackMeanAll(fileListMeanAll)
+stackMedianAll(fileListMedianAll)
+stackMeanAbsorb(fileListMeanAbsorb)
+#stack(fileList)
+#stackMean(fileListMean)
+#stackMedian(fileListMedian) 
