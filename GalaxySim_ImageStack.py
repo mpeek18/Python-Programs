@@ -39,20 +39,19 @@ def imageNorm(fileName):
     sumData = np.sum(data)
     print ("Summed Image Data:", sumData,'\n')
     print ("Data:", data,'\n')
-    """
+    
     for i in range(0, len(data)):
         for j in range(0, len(data[0])):
             #("Before:", data[i][j])
             data[i][j] = (data[i][j] / sumData)
-            #print ()
-            #print ("After:", data[i][j])
-            #print ()
-    print ("Normed:", data)  
-    normData = np.sum(data)
-    print ("Normed Sum:", normData)
-    print ("Normalization complete!")     
-    return data
-    """
+    print ("Loop Summed Data:", np.sum(data[i][j]))
+            
+    #print ("Normed:", data)  
+    #normData = np.sum(data)
+    #print ("Normed Sum:", normData)
+    #print ("Normalization complete!")     
+    #return data
+    
     
     normed = normalize(data, axis=1, norm='l1')
     print ("Normed Sum:", np.sum(normed),'\n')
