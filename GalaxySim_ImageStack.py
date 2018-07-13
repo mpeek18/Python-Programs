@@ -34,6 +34,7 @@ returns normalized image as numpy array.
 #back into normalized image.
 def imageNorm(fileName):
     dataList = []
+    sumCheck = 0.0
     data = fits.getdata(fileName)
     dataList.append(data)
     sumData = np.sum(data)
@@ -43,12 +44,15 @@ def imageNorm(fileName):
     for i in range(0, len(data)):
         for j in range(0, len(data[0])):
             #("Before:", data[i][j])
+            sumCheck += data[i][j]
             data[i][j] = (data[i][j] / sumData)
-    print ("Loop Summed Data:", np.sum(data[i][j]))
+            #data = data[i][j]
+    print ("Sum Check:", sumCheck)       
+    #print ("Loop Summed Data:", np.sum(data[i][j]))
             
     #print ("Normed:", data)  
-    #normData = np.sum(data)
-    #print ("Normed Sum:", normData)
+    normData = np.sum(data[i][j])
+    print ("Normed Sum:", normData)
     #print ("Normalization complete!")     
     #return data
     
