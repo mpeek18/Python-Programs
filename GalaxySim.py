@@ -3,7 +3,7 @@
 Created on Fri Jun 15 17:45:25 2018
 
 @author: Matthew Peek
-Last Modified: 22 June 2018
+Last Modified: 13 July 2018
 Galaxy Simulator
 """
 import numpy as np
@@ -33,7 +33,7 @@ Parameters take a fits image and the current count which image is being
 processed.
 """
 def addNoise(imageCopy, count):
-    noise = np.random.randn(34, 34)
+    noise = (0.01 * np.random.randn(34, 34))
     imageNoise = imageCopy + noise
     fits.writeto('Galaxy_noise_' + str(count) + '.fits', imageNoise, overwrite=True)
     print ("Adding noise to image complete!", '\n')
@@ -53,7 +53,7 @@ try:
     print (imageData,'\n')
     
     #Call makeCopy function
-    makeCopy(imageData, 500)
+    makeCopy(imageData, 800)
     
 except IOError:
     print ("Image not found!")

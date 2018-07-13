@@ -3,7 +3,7 @@
 Created on Tue May 29 21:05:05 2018
 
 @author: Matthew Peek
-Last Modified: 4 July 2018
+Last Modified: 13 July 2018
 Galaxy Simulator Image Stack
 """
 import numpy as np
@@ -41,7 +41,7 @@ def imageNorm(fileName):
     print ("Summed Image Data:", sumData,'\n')
     print ("Data:", data,'\n')
     
-    data2 = (data / sumData)
+    normed = (data / sumData)
     """
     for i in range(0, len(data)):
         for j in range(0, len(data[0])):
@@ -58,14 +58,14 @@ def imageNorm(fileName):
     #print ("Normalization complete!")     
     #return data
     """
-    print ("Data 2", data2)
-    print ("Summed data 2:", np.sum(data2))
-    data3 = data / data2
-    print ("Data3:", data3)
+    print ("Normed:", normed)
+    print ("Normed Sum:", np.sum(normed))
+    #data3 = data / data2
+    #print ("Data3:", data3)
     #normed = normalize(data, axis=1, norm='l1')
     #print ("Normed Sum:", np.sum(normed),'\n')
     #print ("Normed Data:", normed)
-    return data2
+    return normed
 #End imageNorm function
 
 
