@@ -34,13 +34,15 @@ returns normalized image as numpy array.
 #back into normalized image.
 def imageNorm(fileName):
     dataList = []
-    sumCheck = 0.0
+    #sumCheck = 0.0
     data = fits.getdata(fileName)
     dataList.append(data)
     sumData = np.sum(data)
     print ("Summed Image Data:", sumData,'\n')
     print ("Data:", data,'\n')
     
+    data2 = (data / sumData)
+    """
     for i in range(0, len(data)):
         for j in range(0, len(data[0])):
             #("Before:", data[i][j])
@@ -55,12 +57,15 @@ def imageNorm(fileName):
     print ("Normed Sum:", normData)
     #print ("Normalization complete!")     
     #return data
-    
-    
-    normed = normalize(data, axis=1, norm='l1')
-    print ("Normed Sum:", np.sum(normed),'\n')
-    print ("Normed Data:", normed)
-    return normed
+    """
+    print ("Data 2", data2)
+    print ("Summed data 2:", np.sum(data2))
+    data3 = data / data2
+    print ("Data3:", data3)
+    #normed = normalize(data, axis=1, norm='l1')
+    #print ("Normed Sum:", np.sum(normed),'\n')
+    #print ("Normed Data:", normed)
+    return data2
 #End imageNorm function
 
 
