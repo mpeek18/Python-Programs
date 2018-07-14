@@ -33,7 +33,7 @@ Parameters take a fits image and the current count which image is being
 processed.
 """
 def addNoise(imageCopy, count):
-    noise = (0.01 * np.random.randn(34, 34))
+    noise = (0.1 * np.random.randn(34, 34))
     imageNoise = imageCopy + noise
     fits.writeto('Galaxy_noise_' + str(count) + '.fits', imageNoise, overwrite=True)
     print ("Adding noise to image complete!", '\n')

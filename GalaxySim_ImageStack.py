@@ -6,6 +6,7 @@ Created on Tue May 29 21:05:05 2018
 Last Modified: 14 July 2018
 Galaxy Simulator Image Stack
 """
+import timeit
 import numpy as np
 from astropy.io import ascii
 import astropy.io.fits as fits
@@ -27,28 +28,39 @@ Algorithm:
 Normalize image function, takes image as an argument, gets data and stores in
 numpy array. Sum all data in image then divides each pixel by image sum.
 returns normalized image as numpy array.
+
+Imported timeit module to compare efficiency of one liner normalizing data and 
+nested loops as normalizing data.
 """
-#Try making new copy of image and normalizing it. 
-#Possible problem with changing pixel values but never writing new data
-#back into normalized image.
 def imageNorm(fileName):
     data = fits.getdata(fileName)
     sumData = np.sum(data)
     print ("Summed Image Data:", sumData,'\n')
     print ("Data:", data,'\n')
     
+    startNormed = timeit.default_timer()
     normed = (data / sumData)
+    print ("Normed:", normed)
+    print ("Normed Sum:", np.sum(normed))
+    stopNormed = timeit.default_timer()
     
+    startLoop = timeit.default_timer()
     for i in range(0, len(data)):
         for j in range(0, len(data[0])):
             data[i][j] = (data[i][j] / sumData)
     print ("Loop Data:", data)
     print ("Loop Summed Data:", np.sum(data))
-            
+    stopLoop = timeit.default_timer()
     
-    print ("Normed:", normed)
-    print ("Normed Sum:", np.sum(normed))
+    totalNormed = stopNormed - startNormed
+    totalLoop = stopLoop - startLoop
+    print ("Normed time elapsed:", totalNormed)
+    print ("Loop time elapsed:", totalLoop)
     
+    if (totalNormed < totalLoop):
+        print ("One liner normed is faster!")
+    else:
+        print ("Nested loops are faster!")
     return normed
 #End imageNorm function
 
