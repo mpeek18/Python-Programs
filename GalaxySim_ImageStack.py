@@ -3,14 +3,13 @@
 Created on Tue May 29 21:05:05 2018
 
 @author: Matthew Peek
-Last Modified: 13 July 2018
+Last Modified: 14 July 2018
 Galaxy Simulator Image Stack
 """
 import numpy as np
 from astropy.io import ascii
 import astropy.io.fits as fits
 from matplotlib import pyplot as plt
-from sklearn.preprocessing import normalize
 
 """
 Algorithm:
@@ -33,38 +32,23 @@ returns normalized image as numpy array.
 #Possible problem with changing pixel values but never writing new data
 #back into normalized image.
 def imageNorm(fileName):
-    dataList = []
-    #sumCheck = 0.0
     data = fits.getdata(fileName)
-    dataList.append(data)
     sumData = np.sum(data)
     print ("Summed Image Data:", sumData,'\n')
     print ("Data:", data,'\n')
     
     normed = (data / sumData)
-    """
+    
     for i in range(0, len(data)):
         for j in range(0, len(data[0])):
-            #("Before:", data[i][j])
-            sumCheck += data[i][j]
             data[i][j] = (data[i][j] / sumData)
-            #data = data[i][j]
-    print ("Sum Check:", sumCheck)       
-    #print ("Loop Summed Data:", np.sum(data[i][j]))
+    print ("Loop Data:", data)
+    print ("Loop Summed Data:", np.sum(data))
             
-    #print ("Normed:", data)  
-    normData = np.sum(data[i][j])
-    print ("Normed Sum:", normData)
-    #print ("Normalization complete!")     
-    #return data
-    """
+    
     print ("Normed:", normed)
     print ("Normed Sum:", np.sum(normed))
-    #data3 = data / data2
-    #print ("Data3:", data3)
-    #normed = normalize(data, axis=1, norm='l1')
-    #print ("Normed Sum:", np.sum(normed),'\n')
-    #print ("Normed Data:", normed)
+    
     return normed
 #End imageNorm function
 
