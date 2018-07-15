@@ -3,47 +3,13 @@
 Created on Tue May 29 21:05:05 2018
 
 @author: Matthew Peek
-Last Modified: 12 July 2018
+Last Modified: 15 July 2018
 All Fields Image Stack
 """
 import numpy as np
 import astropy.io.fits as fits
 import scipy.ndimage as ndimage
 from matplotlib import pyplot as plt
-"""
-Algorithm:
-    read in Absorption_Data.dat file
-    get galID column
-    
-    for i in galID:
-        fileName = 'CROP-SDSS-J120639.85+025308.3-G141_' + str(ID).zfill(5) + '.2d.fits'
-        fitsImage = fits file data
-        finalImage = numpy 2d image sum
-        fits.writeto(image name)   
-"""
-
-"""
-Normalize image function, takes image as an argument, gets data and stores in
-numpy array. Sum all data in image then divides each pixel by image sum.
-returns normalized image as numpy array.
-"""
-def imageNorm(fileName):
-    dataList = []
-    data = [fits.getdata(fileName)]
-    dataList.append(data)
-    sumData = np.sum(data)
-    print ("Summed Image Data:", sumData,'\n')
-    print ("Data:", data,'\n')
-        
-    for i in range(0, len(dataList)):
-        for j in range(0, len(dataList[0])):
-            print ("Before:", dataList[i][j])
-            normed = (dataList[i][j] / sumData)
-    
-    print ("Normed:", normed)    
-    print ("Normalization complete!")     
-    return normed
-#End imageNorm function
     
 """
 StackAll function, takes numpy array as argument, loops through array argument
@@ -80,7 +46,7 @@ def stackAll(fileListAll):
     plt.show()
     
     print ("StackAll Function Complete!", '\n')
-#End Stack function
+#End StackAll function
     
 
 """
@@ -117,7 +83,7 @@ def stackMeanAll(fileListMeanAll):
     plt.show()
     
     print ("stackMeanAll Function Complete!", '\n')
-#End stackMean function
+#End stackMeanAll function
     
 
 """
@@ -153,7 +119,8 @@ def stackMedianAll(fileListMedianAll):
     plt.show()
     
     print ("stackMedianAll Function Complete!")
-#End stackMedian function
+#End stackMedianAll function
+
 
 """
 StackMeanAbsorb function, takes numpy array as argument, loops through array argument
@@ -188,7 +155,187 @@ def stackMeanAbsorb(fileListMeanAbsorb):
     plt.show()
     
     print ("stackMeanAbsorb Function Complete!")
-#End stackMedian function
+#End stackMeanAbsorb function
+    
+    
+"""
+StackMeanNonAbsorb function, takes numpy array as argument, loops through array argument
+getting fits data and combining all image data into same array.
+
+Stack image data median, write results to new fits files.
+"""    
+def stackMeanNonAbsorb(fileListMeanNonAbsorb):
+    imageData = [fits.getdata(file) for file in fileListMeanNonAbsorb]
+    print ("Total image data:", imageData,'\n')
+    meanNonAbsorbImage = np.mean(imageData, axis=0)
+    
+    fits.writeto('Stacked_Image_Mean_NonAbsorb.fits', meanNonAbsorbImage, overwrite=True)
+    
+    print ("Image Mean Non-Absorb:", meanNonAbsorbImage,'\n')
+    
+    plt.clf()
+    plt.imshow(meanNonAbsorbImage)
+    plt.subplots_adjust(right=2.0)
+    plt.subplots_adjust(top=1.0)
+    plt.colorbar()
+    plt.show()
+    
+    #Gaussian Blur
+    plt.clf()
+    betterImage = ndimage.gaussian_filter(meanNonAbsorbImage, sigma=(2,2), order=0)
+    plt.imshow(betterImage)
+    plt.savefig('Stacked_Image_Mean_NonAbsorb_Blur', dpi=100)
+    plt.subplots_adjust(right=2.0)
+    plt.subplots_adjust(top=1.0)
+    plt.colorbar()
+    plt.show()
+    
+    print ("stackMeanNonAbsorb Function Complete!")
+#End stackMeanNonAbsorb function
+
+    
+"""
+StackMedianAbsorb function, takes numpy array as argument, loops through array argument
+getting fits data and combining all image data into same array.
+
+Stack image data median, write results to new fits files.
+"""    
+def stackMedianAbsorb(fileListMedianAbsorb):
+    imageData = [fits.getdata(file) for file in fileListMedianAbsorb]
+    print ("Total image data:", imageData,'\n')
+    medianAbsorbImage = np.median(imageData, axis=0)
+    
+    fits.writeto('Stacked_Image_Median_Absorb.fits', medianAbsorbImage, overwrite=True)
+    
+    print ("Image Median Absorb:", medianAbsorbImage,'\n')
+    
+    plt.clf()
+    plt.imshow(medianAbsorbImage)
+    plt.subplots_adjust(right=2.0)
+    plt.subplots_adjust(top=1.0)
+    plt.colorbar()
+    plt.show()
+    
+    #Gaussian Blur
+    plt.clf()
+    betterImage = ndimage.gaussian_filter(medianAbsorbImage, sigma=(2,2), order=0)
+    plt.imshow(betterImage)
+    plt.savefig('Stacked_Image_Median_Absorb_Blur', dpi=100)
+    plt.subplots_adjust(right=2.0)
+    plt.subplots_adjust(top=1.0)
+    plt.colorbar()
+    plt.show()
+    
+    print ("stackMedianAbsorb Function Complete!")
+#End stackMedianAbsorb function
+
+
+"""
+StackMedianNonAbsorb function, takes numpy array as argument, loops through array argument
+getting fits data and combining all image data into same array.
+
+Stack image data median, write results to new fits files.
+"""    
+def stackMedianNonAbsorb(fileListMedianNonAbsorb):
+    imageData = [fits.getdata(file) for file in fileListMedianNonAbsorb]
+    print ("Total image data:", imageData,'\n')
+    medianNonAbsorbImage = np.median(imageData, axis=0)
+    
+    fits.writeto('Stacked_Image_Median_NonAbsorb.fits', medianNonAbsorbImage, overwrite=True)
+    
+    print ("Image Median Non-Absorb:", medianNonAbsorbImage,'\n')
+    
+    plt.clf()
+    plt.imshow(medianNonAbsorbImage)
+    plt.subplots_adjust(right=2.0)
+    plt.subplots_adjust(top=1.0)
+    plt.colorbar()
+    plt.show()
+    
+    #Gaussian Blur
+    plt.clf()
+    betterImage = ndimage.gaussian_filter(medianNonAbsorbImage, sigma=(2,2), order=0)
+    plt.imshow(betterImage)
+    plt.savefig('Stacked_Image_Median_NonAbsorb_Blur', dpi=100)
+    plt.subplots_adjust(right=2.0)
+    plt.subplots_adjust(top=1.0)
+    plt.colorbar()
+    plt.show()
+    
+    print ("stackMedianNonAbsorb Function Complete!")
+#End stackMedianNonAbsorb function
+
+
+"""
+StackStandardAbsorb function, takes numpy array as argument, loops through array argument
+getting fits data and combining all image data into same array.
+
+Stack image data median, write results to new fits files.
+"""    
+def stackStandardAbsorb(fileListStandardAbsorb):
+    imageData = [fits.getdata(file) for file in fileListStandardAbsorb]
+    print ("Total image data:", imageData,'\n')
+    standardAbsorbImage = np.sum(imageData, axis=0)
+    
+    fits.writeto('Stacked_Image_Standard_Absorb.fits', standardAbsorbImage, overwrite=True)
+    
+    print ("Image Standard Absorb:", standardAbsorbImage,'\n')
+    
+    plt.clf()
+    plt.imshow(standardAbsorbImage)
+    plt.subplots_adjust(right=2.0)
+    plt.subplots_adjust(top=1.0)
+    plt.colorbar()
+    plt.show()
+    
+    #Gaussian Blur
+    plt.clf()
+    betterImage = ndimage.gaussian_filter(standardAbsorbImage, sigma=(2,2), order=0)
+    plt.imshow(betterImage)
+    plt.savefig('Stacked_Image_Standard_Absorb_Blur', dpi=100)
+    plt.subplots_adjust(right=2.0)
+    plt.subplots_adjust(top=1.0)
+    plt.colorbar()
+    plt.show()
+    
+    print ("stackStandardAbsorb Function Complete!")
+#End stackStandardAbsorb function
+
+
+"""
+StackStandardNonAbsorb function, takes numpy array as argument, loops through array argument
+getting fits data and combining all image data into same array.
+
+Stack image data median, write results to new fits files.
+"""    
+def stackStandardNonAbsorb(fileListStandardNonAbsorb):
+    imageData = [fits.getdata(file) for file in fileListStandardNonAbsorb]
+    print ("Total image data:", imageData,'\n')
+    standardNonAbsorbImage = np.sum(imageData, axis=0)
+    
+    fits.writeto('Stacked_Image_Standard_NonAbsorb.fits', standardNonAbsorbImage, overwrite=True)
+    
+    print ("Image Standard Non-Absorb:", standardNonAbsorbImage,'\n')
+    
+    plt.clf()
+    plt.imshow(standardNonAbsorbImage)
+    plt.subplots_adjust(right=2.0)
+    plt.subplots_adjust(top=1.0)
+    plt.colorbar()
+    plt.show()
+    
+    #Gaussian Blur
+    plt.clf()
+    betterImage = ndimage.gaussian_filter(standardNonAbsorbImage, sigma=(2,2), order=0)
+    plt.imshow(betterImage)
+    plt.savefig('Stacked_Image_Standard_NonAbsorb_Blur', dpi=100)
+    plt.subplots_adjust(right=2.0)
+    plt.subplots_adjust(top=1.0)
+    plt.colorbar()
+    plt.show()
+    
+    print ("stackStandardNonAbsorb Function Complete!")
+#End stackStandardNonAbsorb function
 
 
 """
@@ -217,8 +364,7 @@ for i in range(0, len(galList)):
         fileNameMedianAbsorb = 'Field' + str(galList[i]) + '_Stacked_Image_Median_Normed_Absorber.fits'
         fileNameMeanNonAbsorb = 'Field' + str(galList[i]) + '_Stacked_Image_Mean_Normed_NonAbsorber.fits'
         fileNameMedianNonAbsorb = 'Field' + str(galList[i]) + '_Stacked_Image_Median_Normed_NonAbsorber.fits'
-        
-        
+               
         #Append normalized image to fileList to pass as argument to stack function.
         fileListAll.append(fileNameAll)
         fileListMeanAll.append(fileMeanAll)
@@ -248,6 +394,8 @@ stackAll(fileListAll)
 stackMeanAll(fileListMeanAll)
 stackMedianAll(fileListMedianAll)
 stackMeanAbsorb(fileListMeanAbsorb)
-#stack(fileList)
-#stackMean(fileListMean)
-#stackMedian(fileListMedian) 
+stackMedianAbsorb(fileListMedianAbsorb)
+stackMeanNonAbsorb(fileListMeanNonAbsorb)
+stackMedianNonAbsorb(fileListMedianNonAbsorb)
+stackStandardAbsorb(fileListStandardAbsorb)
+stackStandardNonAbsorb(fileListStandardNonAbsorb)

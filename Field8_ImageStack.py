@@ -3,7 +3,7 @@
 Created on Tue May 29 21:05:05 2018
 
 @author: Matthew Peek
-Last Modified: 11 July 2018
+Last Modified: 15 July 2018
 Field 8 Image Stack
 """
 import numpy as np
@@ -28,18 +28,19 @@ numpy array. Sum all data in image then divides each pixel by image sum.
 returns normalized image as numpy array.
 """
 def imageNormAbsorber(fileName):
-    dataList = []
-    data = [fits.getdata(fileName)]
-    dataList.append(data)
+    data = fits.getdata(fileName)
     sumData = np.sum(data)
     print ("Summed Image Data:", sumData,'\n')
     print ("Data:", data,'\n')
         
-    for i in range(0, len(dataList)):
-        for j in range(0, len(dataList[0])):
-            print ("Before:", dataList[i][j],'\n')
-            normed = (dataList[i][j] / sumData)
-    
+    normed = (data / sumData)
+    """
+    for i in range(0, len(data)):
+        for j in range(0, len(data[0])):
+            data[i][j] = (data[i][j] / sumData)
+    print ("Loop Data:", data)
+    print ("Loop Summed Data:", np.sum(data))
+    """
     print ("Normed:", normed)   
     print ("Normed Sum:", np.sum(normed))
     print ("Normalization complete!")     
@@ -47,18 +48,19 @@ def imageNormAbsorber(fileName):
 #End imageNormAbsorb function
 
 def imageNormNonAbsorber(fileName):
-    dataList = []
-    data = [fits.getdata(fileName)]
-    dataList.append(data)
+    data = fits.getdata(fileName)
     sumData = np.sum(data)
     print ("Summed Image Data:", sumData,'\n')
     print ("Data:", data,'\n')
         
-    for i in range(0, len(dataList)):
-        for j in range(0, len(dataList[0])):
-            print ("Before:", dataList[i][j],'\n')
-            normed = (dataList[i][j] / sumData)
-    
+    normed = (data / sumData)
+    """
+    for i in range(0, len(data)):
+        for j in range(0, len(data[0])):
+            data[i][j] = (data[i][j] / sumData)
+    print ("Loop Data:", data)
+    print ("Loop Summed Data:", np.sum(data))
+    """
     print ("Normed:", normed)   
     print ("Normed Sum:", np.sum(normed))
     print ("Normalization complete!")     
