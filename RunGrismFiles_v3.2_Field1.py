@@ -412,6 +412,7 @@ Below this line read in best_redux and absorber csv files and
 call functions to process grism files.
 """
 ###############################################################################
+
 csvFile = open('best_redux_Target1.csv')
 with open('Best_redux_Target1.csv') as csvFile:
     readCSV = csv.reader(csvFile, delimiter=',')
@@ -469,12 +470,17 @@ print (galQsoID,'\n')
 with open('field0_matching.csv') as csvFile:
     readCSV = csv.reader(csvFile, delimiter=',')
     definiteZ = []
-    count = -1
+    zBest = []
     
+    count = -1
+    index = 0
     for col in readCSV:
         count += 1
-        if (count > 0):
+        if (count > 12 and index < 67):
             definiteZ.append(col[0])
+            zBest.append(col[2])
+            index += 1
+   
 csvFile.close()
 #################################################################################
 #Read in RaDecData.dat file and get galaxy id's and angular distance calculations
@@ -702,7 +708,9 @@ print (sfrDensAbsorb,'\n')
 print (sfrDensNoAbsorb,'\n')
 print ("Id galaxy absorbers:", galIDAbsorb,'\n')
 print ("Id galaxy non-absorbers:", galIDNoAbsorb, '\n')
-print ("Definite Z:", definiteZ)
+print ("Definite Z:", definiteZ,'\n')
+print ("Galaxy ID:", galaxyID,'\n')
+print ("Z Best:", zBest)
 
 
 
