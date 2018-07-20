@@ -408,13 +408,11 @@ def convertDist(zGal, arcsecDist):
 #End convertDist function    
 ###############################################################################
 """
-Below this line read in best_redux and absorber csv files and 
+Below this line read in field0_matching csv file and 
 call functions to process grism files.
 """
 ###############################################################################
-
-csvFile = open('best_redux_Target1.csv')
-with open('Best_redux_Target1.csv') as csvFile:
+with open('field0_matching.csv') as csvFile:
     readCSV = csv.reader(csvFile, delimiter=',')
     galaxyID = []
     orient = []
@@ -423,62 +421,27 @@ with open('Best_redux_Target1.csv') as csvFile:
     zQual = []
     fluxHa = []
     fluxErrHa = []
-    counter = -1
-     
-    for col in readCSV:
-        counter += 1
-        if (counter > 0): 
-            galaxyID.append(col[0])
-            orient.append(col[6])
-            galRedshift.append(float(col[2]))
-            zQual.append(col[7])
-            fluxHa.append(float(col[4]))
-            fluxErrHa.append(float(col[5]))
-            
-            if (col[6] == '0'):
-                orientName.append('-08-064-') #Orientation 0
-                
-            elif (col[6] == '1'):
-                orientName.append('-17-084-') #Orientation 1
-                
-            elif (col[6] == '2'): 
-                orientName.append('-') #Orientation 2
-csvFile.close()
-
-#################################################################################
-#Read quasar absorber file, read rows galaxy ID's, galaxy redshifts, and mgII
-with open('Quasar_0_absorber_redshifts.csv') as csvFile:
-    readCSV = csv.reader(csvFile, delimiter=',')
-    galQsoID = []
-    galZQso = []
-    mgII = []
-    count = -1
-    
-    for col in readCSV:
-        count += 1
-        if (count > 0):
-            galZQso.append(col[0])
-            mgII.append(col[1])
-            galQsoID.append(col[16])
-   
-csvFile.close()         
-print (galZQso,'\n')
-print (mgII,'\n')
-print (galQsoID,'\n')
-#################################################################################
-#Read in Field0_Matching file
-with open('field0_matching.csv') as csvFile:
-    readCSV = csv.reader(csvFile, delimiter=',')
-    definiteZ = []
-    zBest = []
     
     count = -1
     index = 0
     for col in readCSV:
         count += 1
         if (count > 12 and index < 67):
-            definiteZ.append(col[0])
-            zBest.append(col[2])
+            galaxyID.append(col[0])
+            galRedshift.append(float(col[2]))
+            fluxHa.append(float(col[5]))
+            fluxErrHa.append(float(col[6]))
+            orient.append(col[8])
+            zQual.append(col[9])
+            
+            if (col[8] == '0'):
+                orientName.append('-08-064-') #Orientation 0
+                
+            elif (col[8] == '1'):
+                orientName.append('-17-084-') #Orientation 1
+                
+            elif (col[8] == '2'): 
+                orientName.append('-') #Orientation 2
             index += 1
    
 csvFile.close()
@@ -708,10 +671,6 @@ print (sfrDensAbsorb,'\n')
 print (sfrDensNoAbsorb,'\n')
 print ("Id galaxy absorbers:", galIDAbsorb,'\n')
 print ("Id galaxy non-absorbers:", galIDNoAbsorb, '\n')
-print ("Definite Z:", definiteZ,'\n')
-print ("Galaxy ID:", galaxyID,'\n')
-print ("Z Best:", zBest)
-
 
 
 totalAngDist = []
