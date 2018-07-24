@@ -3,7 +3,7 @@
 Created on Mon Feb 23 22:07:40 2017
 
 @author: Matthew Peek
-Last Modified: 20 July 2018
+Last Modified: 24 July 2018
 Field 3
 
 Algorithm:
@@ -411,60 +411,6 @@ Below this line read in best_redux and absorber csv files and
 call functions to process grism files.
 """
 ###############################################################################
-"""
-csvFile = open('Best_redux_Target2.csv')
-with open('Best_redux_Target2.csv') as csvFile:
-    readCSV = csv.reader(csvFile, delimiter=',')
-    galaxyID = []
-    orient = []
-    orientName = []
-    galRedshift = []
-    zQual = []
-    fluxHa = []
-    fluxErrHa = []
-    counter = -1
-     
-    for row in readCSV:
-        counter += 1
-        if (counter > 0): 
-            galaxyID.append(row[0])
-            orient.append(row[6])
-            galRedshift.append(float(row[2]))
-            zQual.append(row[7])
-            fluxHa.append(float(row[4]))
-            fluxErrHa.append(float(row[5]))
-            
-            if (row[6] == '0'):
-                orientName.append('-05-251-') #Orientation 0
-                
-            elif (row[6] == '1'):
-                orientName.append('-14-274-') #Orientation 1
-                
-            elif (row[6] == '2'): 
-                orientName.append('-') #Orientation 2
-csvFile.close()
-
-#################################################################################
-#Read quasar absorber file, read rows galaxy ID's, galaxy redshifts, and mgII
-with open('Abs_data_Target2.csv') as csvFile:
-    readCSV = csv.reader(csvFile, delimiter=',')
-    galQsoID = []
-    galZQso = []
-    mgII = []
-    count = -1
-    
-    for row in readCSV:
-        count += 1
-        if (count > 0):
-            galZQso.append(row[0])
-            mgII.append(row[1])
-            galQsoID.append(row[16])
-csvFile.close()           
-print (galZQso,'\n')
-print (mgII,'\n')
-print (galQsoID,'\n')
-"""
-#################################################################################
 with open('field2_matching.csv') as csvFile:
     readCSV = csv.reader(csvFile, delimiter=',')
     galaxyID = []
@@ -529,7 +475,7 @@ for i in range(0, len(galaxyID)): #Loop through Galaxy ID #'s.
     print ()    
     
     if (zQual[i] == 'likely' or zQual[i] == 'good' or zQual[i] == 'probable' 
-        and galRedshift[i] < 1.6 and galRedshift[i] > 0.7 
+        and galRedshift[i] < 1.6 and galRedshift[i] > 0.65 
         and fluxHa[i] > 0 and fluxErrHa[i] > 0 and (fluxHa[i] / fluxErrHa[i]) > 3):
         
         galID = galaxyID[i]
@@ -686,7 +632,7 @@ angDistAbsorb = []
 angDistNoAbsorb = []
 
 for i in range(0, len(sfrDens)):
-    if (sfrDens[i] >= 0 and angularDistKpc[i] < 100):   #If sfr surface density is >= 0 and,
+    if (sfrDens[i] >= 0 and angularDistKpc[i] < 150):   #If sfr surface density is >= 0 and,
         totalID.append(ID[i])                           #Angular distance in Kpc < 120.
         totalSFR.append(starForm[i])
         totalSFRDens.append(float(sfrDens[i]))

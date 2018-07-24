@@ -3,7 +3,7 @@
 Created on Mon Feb 23 22:07:40 2017
 
 @author: Matthew Peek
-Last Modified: 20 July 2018
+Last Modified: 24 July 2018
 Field 5
 
 Algorithm:
@@ -478,7 +478,7 @@ for i in range(0, len(galaxyID)): #Loop through Galaxy ID #'s.
     print ()    
     
     if (zQual[i] == 'likely' or zQual[i] == 'good' or zQual[i] == 'probable' 
-        and galRedshift[i] < 1.6 and galRedshift[i] > 0.7 
+        and galRedshift[i] < 1.6 and galRedshift[i] > 0.65 
         and fluxHa[i] > 0 and fluxErrHa[i] > 0 and (fluxHa[i] / fluxErrHa[i]) > 3):
         
         galID = galaxyID[i]
@@ -622,7 +622,7 @@ angDistAbsorb = []
 angDistNoAbsorb = []
 
 for i in range(0, len(sfrDens)):
-    if (sfrDens[i] >= 0 and angularDistKpc[i] < 100):   #If sfr surface density is >= 0 and,
+    if (sfrDens[i] >= 0 and angularDistKpc[i] < 150):   #If sfr surface density is >= 0 and,
         totalID.append(ID[i])                           #Angular distance in Kpc < 120.
         totalSFR.append(starForm[i])
         totalSFRDens.append(float(sfrDens[i]))
