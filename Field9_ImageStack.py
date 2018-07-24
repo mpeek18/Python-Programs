@@ -3,7 +3,7 @@
 Created on Tue May 29 21:05:05 2018
 
 @author: Matthew Peek
-Last Modified: 11 July 2018
+Last Modified: 24 July 2018
 Field 9 Image Stack
 """
 import numpy as np
@@ -186,45 +186,46 @@ fileListAll = []
 fileListAbsorb = []
 fileListNonAbsorb = []
 for i in range(1, len(ID)):
-    if (absorber[i] == 'Yes'):
-        try:
-            fileName = 'CROP-SDSS-J120639.85+025308.3-G141_00' + ID[i] + '.2d.fits'
-            #Call imageNorm function.
-            normed = imageNormAbsorber(fileName)
+    if (ID[i] != '371' and ID[i] != '377'): #Exclude galaxy ID's 371 & 377 due to grism over subtraction.
+        if (absorber[i] == 'Yes'):
+            try:
+                fileName = 'CROP-SDSS-J120639.85+025308.3-G141_00' + ID[i] + '.2d.fits'
+                #Call imageNorm function.
+                normed = imageNormAbsorber(fileName)
         
-            #Append normalized image to fileList to pass as argument to stack function.
-            fileListAbsorb.append(normed)
-            file = fits.open(fileName)
-            image = file[0].data
-            file.close()
+                #Append normalized image to fileList to pass as argument to stack function.
+                fileListAbsorb.append(normed)
+                file = fits.open(fileName)
+                image = file[0].data
+                file.close()
+                
+                print (ID[i])
+                print (image.shape,'\n')
         
-            print (ID[i])
-            print (image.shape,'\n')
-        
-            countAbsorber += 1
-        except IOError:
+                countAbsorber += 1
+            except IOError:
                 print ("Image ID " + ID[i] + " not found!")
 
-    else:
-        try:
-            fileName = 'CROP-SDSS-J120639.85+025308.3-G141_00' + ID[i] + '.2d.fits'
+        else:
+            try:
+                fileName = 'CROP-SDSS-J120639.85+025308.3-G141_00' + ID[i] + '.2d.fits'
             
-            #Call imageNormNonAbsorb function.
-            normed = imageNormNonAbsorber(fileName)
+                #Call imageNormNonAbsorb function.
+                normed = imageNormNonAbsorber(fileName)
         
-            #Append normalized image to fileList to pass as argument to stack function.
-            fileListNonAbsorb.append(normed)
-            file = fits.open(fileName)
-            image = file[0].data
-            file.close()
+                #Append normalized image to fileList to pass as argument to stack function.
+                fileListNonAbsorb.append(normed)
+                file = fits.open(fileName)
+                image = file[0].data
+                file.close()
         
-            print (ID[i])
-            print (image.shape,'\n')
+                print (ID[i])
+                print (image.shape,'\n')
         
-            countNonAbsorber += 1
-        except IOError:
+                countNonAbsorber += 1
+            except IOError:
                 print ("Image ID " + ID[i] + " not found!")
-    totalCount += 1    
+        totalCount += 1    
 
 #Combine both lists to stack all images
 fileListAll = fileListAbsorb + fileListNonAbsorb
