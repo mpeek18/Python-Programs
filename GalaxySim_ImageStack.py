@@ -3,14 +3,16 @@
 Created on Tue May 29 21:05:05 2018
 
 @author: Matthew Peek
-Last Modified: 14 July 2018
+Last Modified: 27 July 2018
 Galaxy Simulator Image Stack
 """
 import timeit
 import numpy as np
 from astropy.io import ascii
+import scipy.ndimage as image
 import astropy.io.fits as fits
 from matplotlib import pyplot as plt
+from skimage.transform import rotate, resize
 
 """
 Algorithm:
@@ -64,6 +66,21 @@ def imageNorm(fileName):
     return normed
 #End imageNorm function
 
+
+"""
+RotateImage function takes normed image and rotates by user defined degrees.
+Returns rotated fits image.
+"""
+def rotateImage(dataList):
+    rotated = image.rotate(dataList, 25.0)
+    rotated = rotate(dataList, 25.0, True)
+    print ("Image Rotated!")
+    #derotate = image.rotate(rotated, -25.0)
+    #rescaled = resize(derotate, (34,34))
+    #print ("Image Derotated!")
+    return rotated
+#End rotateImage function
+    
 
 """
 Stack function, takes numpy array as argument, loops through array argument
@@ -126,14 +143,17 @@ for i in range(1, len(ID)):
         #newImage = np.concatenate(dataList)
         #print ("New Image:", newImage)
         
+        #Call rotateImage function.
+        rotatedImage = rotateImage(dataList)
+        
         #Append normalized image to fileList to pass as argument to stack function.
-        fileList.append(dataList)
+        fileList.append(rotatedImage)
         file = fits.open(fileName)
-        image = file[0].data
+        fitsImage = file[0].data
         file.close()
         
         print (ID[i])
-        print (image.shape)
+        print (fitsImage.shape)
         
         count += 1
     except IOError:
