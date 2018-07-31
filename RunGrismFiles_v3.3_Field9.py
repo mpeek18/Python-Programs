@@ -3,7 +3,7 @@
 Created on Mon Feb 23 22:07:40 2017
 
 @author: Matthew Peek
-Last Modified: 24 July 2018
+Last Modified: 31 July 2018
 Field 9
 
 Algorithm:
@@ -539,7 +539,8 @@ for i in range(0, len(galaxyID)): #Loop through Galaxy ID #'s.
     print ("BEGIN NEW FITS IMAGE PROCESS")
     print ()    
     
-    if (zQual[i] == 'likely' or zQual[i] == 'good' or zQual[i] == 'probable'): 
+    if (zQual[i] != 'unsure' and zQual[i] != 'uncertain' and zQual[i] != 'unlikely'):
+        redshiftQual.append(zQual[i])
         if (galRedshift[i] < 1.6 and galRedshift[i] > 0.65):
             if (fluxHa[i] > 0 and fluxErrHa[i] > 0):
                 if ((fluxHa[i] / fluxErrHa[i]) > 3):
@@ -599,6 +600,7 @@ for i in range(0, len(galaxyID)): #Loop through Galaxy ID #'s.
                     print ("END OF FITS FILE")
                     print ("------------------------------------------------------------------------")
                     print ("------------------------------------------------------------------------")
+print ("Redshift Quality:", redshiftQual,'\n')                
 print ("H-Alpha Flux List:", flux)        
 #End Main section
 ################################################################################
@@ -606,8 +608,8 @@ print ("H-Alpha Flux List:", flux)
 
 newGalID = ['331', '377', '371', '360', '207', '341', '352',
             '333', '336', '391', '396', '316', '389', '326']
-print ("newGalID array length:", len(newGalID))
-print ("ID array length:", len(ID))
+#print ("newGalID array length:", len(newGalID))
+#print ("ID array length:", len(ID))
 
 #List of galaxy ID's with associated absorption that are closest to quasar from absorber csv file.
 newAbsorberGalID = ['331', '377', '360', '341', '352', '333', '336']
@@ -664,46 +666,50 @@ angDistNoAbsorb = []
 
 for i in range(0, len(sfrDens)):
     if (sfrDens[i] >= 0 and angularDistKpc[i] < 150):   #If sfr surface density is >= 0 and, Angular distance in Kpc < 120.
-        totalID.append(ID[i])                           
-        totalSFR.append(starForm[i])
-        totalSFRDens.append(float(sfrDens[i]))
-        totalZQual.append(zQual[i])
-        totalZDist.append(redshift[i])
-        angDistQSO.append(angularDistKpc[i])
+        if (not(zQual[i] == 'unsure') and not(zQual[i] == 'uncertain') and not(zQual[i] == 'unlikely')):
+            totalID.append(ID[i])                           
+            totalSFR.append(starForm[i])
+            totalSFRDens.append(float(sfrDens[i]))
+            totalZQual.append(zQual[i])
+            totalZDist.append(redshift[i])
+            angDistQSO.append(angularDistKpc[i])
         
-        if (ID[i] in newAbsorberGalID): #If galaxy ID in ID array is also in newAbsorberGalID array
-            sfrDensAbsorb.append(sfrDens[i])
-            galIDAbsorb.append(ID[i])
-            areaKpcAbsorb.append(galAreaKpc[i])
-            distAbsorb.append(lumDistance[i])
-            SFRAbsorb.append(starForm[i])
-            zDistAbsorb.append(redshift[i])
-            zQualAbsorb.append(zQual[i])
-            r90Absorb.append(R90[i])
-            r50Absorb.append(R50[i])
-            galAreaAbsorb.append(galAreaKpc[i])
-            angDistAbsorb.append(angularDistKpc[i])
-            absorb = 'Yes'
+            if (ID[i] in newAbsorberGalID): #If galaxy ID in ID array is also in newAbsorberGalID array
+            #if (zQual[i] != 'unsure' and zQual[i] != 'uncertain' and zQual[i] != 'unlikely'):    
+                sfrDensAbsorb.append(sfrDens[i])
+                galIDAbsorb.append(ID[i])
+                areaKpcAbsorb.append(galAreaKpc[i])
+                distAbsorb.append(lumDistance[i])
+                SFRAbsorb.append(starForm[i])
+                zDistAbsorb.append(redshift[i])
+                zQualAbsorb.append(zQual[i])
+                r90Absorb.append(R90[i])
+                r50Absorb.append(R50[i])
+                galAreaAbsorb.append(galAreaKpc[i])
+                angDistAbsorb.append(angularDistKpc[i])
+                absorb = 'Yes'
             
-        else:   #If galaxy ID in ID array is not also in newAbsorberGalID array
-            sfrDensNoAbsorb.append(sfrDens[i])
-            galIDNoAbsorb.append(ID[i])
-            areaKpcNoAbsorb.append(galAreaKpc[i])
-            distNoAbsorb.append(lumDistance[i])
-            SFRNoAbsorb.append(starForm[i])
-            zDistNonAbsorb.append(redshift[i])
-            zQualNonAbsorb.append(zQual[i])
-            r90NoAbsorb.append(R90[i])
-            r50NoAbsorb.append(R50[i])
-            galAreaNoAbsorb.append(galAreaKpc[i])
-            angDistNoAbsorb.append(angularDistKpc[i])
-            absorb = 'No'
-        
-        galAbsorption.append(absorb)
+            else:   #If galaxy ID in ID array is not also in newAbsorberGalID array
+            #if (zQual[i] != 'unsure' and zQual[i] != 'uncertain' and zQual[i] != 'unlikely'):
+                sfrDensNoAbsorb.append(sfrDens[i])
+                galIDNoAbsorb.append(ID[i])
+                areaKpcNoAbsorb.append(galAreaKpc[i])
+                distNoAbsorb.append(lumDistance[i])
+                SFRNoAbsorb.append(starForm[i])
+                zDistNonAbsorb.append(redshift[i])
+                zQualNonAbsorb.append(zQual[i])
+                r90NoAbsorb.append(R90[i])
+                r50NoAbsorb.append(R50[i])
+                galAreaNoAbsorb.append(galAreaKpc[i])
+                angDistNoAbsorb.append(angularDistKpc[i])
+                absorb = 'No'
+                
+            galAbsorption.append(absorb)
 
 print ("sfr density absorption:", len(sfrDensAbsorb))
 print ("sfr density no absorption:", len(sfrDensNoAbsorb))
 print ("sfr density array:", len(sfrDens))
+print ("Total zQual:", totalZQual)
 print ()
 print (sfrDensAbsorb,'\n')
 print (sfrDensNoAbsorb,'\n')
