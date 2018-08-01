@@ -475,7 +475,6 @@ redshiftQual = []
 
 for i in range(0, len(galaxyID)): #Loop through Galaxy ID #'s.    
     print ("BEGIN NEW FITS IMAGE PROCESS")
-    print ()    
     
     if (zQual[i] != 'unsure' and zQual[i] != 'uncertain' and zQual[i] != 'unlikely'):
         #redshiftQual.append(zQual[i])
@@ -538,7 +537,20 @@ for i in range(0, len(galaxyID)): #Loop through Galaxy ID #'s.
                     print ("END OF FITS FILE")
                     print ("------------------------------------------------------------------------")
                     print ("------------------------------------------------------------------------")
-    
+
+                else:
+                    print ("Invalid flux HA / flux ErrHa > 3")
+                    print ("Process Terminated",'\n')
+            else:
+                print ("flux HA or flux Err HA error")
+                print ("Process Terminated",'\n')
+        else:
+            print ("Invalid Redshift")
+            print ("Process Terminated",'\n')
+    else:
+        print ("Invalid Redshift Quality")
+        print ("Process Terminated",'\n')
+            
 print ("Redshift Quality:", redshiftQual,'\n')       
 #End Main section
 ################################################################################

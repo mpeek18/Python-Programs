@@ -3,8 +3,8 @@
 Created on Mon Feb 23 22:07:40 2017
 
 @author: Matthew Peek
-Last Modified: 31 July 2018
-Field 8
+Last Modified: 1 August 2018
+Field 4
 
 Algorithm:
     open grism files, get hdu info
@@ -149,7 +149,7 @@ def analyzeFits(finalName, fitsName, zGal, sciHeight, hAlphaFlux):
         
         newImage = newData[:,xAxisMin:xAxisMax]
         #print ("newImage", newImage)
-               
+                
     elif (zGal > 1.60):  #If zGal is greater than z=1.6, check O-III lines
         OIIIGal = (zGal+1) * OIIIWavelength
         print ("O-III:", OIIIGal)
@@ -235,7 +235,7 @@ def analyzeFits(finalName, fitsName, zGal, sciHeight, hAlphaFlux):
                                   [0], [0], [0], [0]])
                     newImage = np.append(newImage, d, axis=1)
         
-    fits.writeto('CROP-SDSS-J120342.24+102831.8-G141_00' + str(galID) + '.2D.fits', newImage, f[0].header, overwrite=True)
+    fits.writeto('CROP-SDSS-J091730.18+324105.5-G141_00' + str(galID) + '.2D.fits', newImage, f[0].header, overwrite=True)
     f.close()
     
     """
@@ -320,7 +320,7 @@ def analyzeFits(finalName, fitsName, zGal, sciHeight, hAlphaFlux):
     ax.add_patch(circle90) #90% enclosed
     #ax.text(left, top, galRedshift, horizontalalignment='left', verticalalignment='top', fontsize=12, color='red')
     #ax.text(left, bottom, hFlux, horizontalalignment='left', verticalalignment='bottom', fontsize=14, color='green')
-    plt.savefig('CROP-J120342.24+102831.8-G141_00' + str(galID) + '.png', dpi=100)
+    plt.savefig('CROP-J091730.18+324105.5-G141_00' + str(galID) + '.png', dpi=100)
     plt.show()
     
     """
@@ -410,7 +410,7 @@ Below this line read in best_redux and absorber csv files and
 call functions to process grism files.
 """
 ###############################################################################
-with open('field7_matching.csv') as csvFile:
+with open('field3_matching.csv') as csvFile:
     readCSV = csv.reader(csvFile, delimiter=',')
     galaxyID = []
     orient = []
@@ -424,7 +424,7 @@ with open('field7_matching.csv') as csvFile:
     index = 0
     for col in readCSV:
         count += 1
-        if (count > 10 and index < 46):
+        if (count > 8 and index < 41):
             galaxyID.append(col[0])
             galRedshift.append(float(col[2]))
             fluxHa.append(float(col[5]))
@@ -433,17 +433,17 @@ with open('field7_matching.csv') as csvFile:
             zQual.append(col[9])
             
             if (col[8] == '0'):
-                orientName.append('-02-122-') #Orientation 0
+                orientName.append('-01-312-') #Orientation 0
                 
             elif (col[8] == '1'):
-                orientName.append('-11-275-') #Orientation 1
+                orientName.append('-10-078-') #Orientation 1
                 
             elif (col[8] == '2'): 
                 orientName.append('-') #Orientation 2
             index += 1
    
 csvFile.close()
-#################################################################################
+###########################################d######################################
 
 #Read in RaDecData.dat file and get galaxy id's and angular distance calculations
 radecGal = [] #galaxy id's in RaDecData.dat file
@@ -483,10 +483,10 @@ for i in range(0, len(galaxyID)): #Loop through Galaxy ID #'s.
             if (fluxHa[i] > 0 and fluxErrHa[i] > 0):
                 if ((fluxHa[i] / fluxErrHa[i]) > 3): 
                     redshiftQual.append(zQual[i])
-                    
+        
                     galID = galaxyID[i]
                     frame = orientName[i]
-
+        
                     #Get H-Alpha flux from Best_Redux file and calculate flux * 10 ^ -17
                     hAlphaFlux = fluxHa[i] * math.pow(10, -17)
                     hAlphaFluxErr = fluxErrHa[i]
@@ -494,19 +494,19 @@ for i in range(0, len(galaxyID)): #Loop through Galaxy ID #'s.
                     print ("HAlpha Flux Error:", hAlphaFluxErr)
         
                     #zfits.dat file
-                    zFits = ascii.read('SDSS-J120342.24+102831.8' + str(frame) + 'G141_' + str(galID).zfill(5) + '.zfit.dat')     
+                    zFits = ascii.read('SDSS-J091730.18+324105.5' + str(frame) + 'G141_' + str(galID).zfill(5) + '.zfit.dat')     
                     zGal = zFits['z_max_spec']
                     print (zGal)
         
                     #Hubble fits image
-                    fitsName = 'SDSS-J120342.24+102831.8' + str(frame) + 'G141_' + str(galID).zfill(5) + '.2D.fits'
+                    fitsName = 'SDSS-J091730.18+324105.5' + str(frame) + 'G141_' + str(galID).zfill(5) + '.2D.fits'
                     finalName = 'FINAL-' + fitsName
                     print ("Fits Name:",fitsName)
                     print ("Final Name:", finalName)
         
                     #zfits.fits file has data for model subtraction in processFits function
                     try:
-                        fitsModel = 'SDSS-J120342.24+102831.8' + str(frame) + 'G141_' + str(galID).zfill(5) + '.zfit.fits'
+                        fitsModel = 'SDSS-J091730.18+324105.5' + str(frame) + 'G141_' + str(galID).zfill(5) + '.zfit.fits'
                         print ("Continuum model:", fitsModel)
             
                     except IOError:
@@ -534,12 +534,11 @@ for i in range(0, len(galaxyID)): #Loop through Galaxy ID #'s.
                     sfrDens.append(sfrSurfaceDens)
                     distance.append(lumDist)
                     angularDistKpc.append(angDistKpc)
-            
-                    print ("Redshifts:", redshift)
+        
                     print ("END OF FITS FILE")
                     print ("------------------------------------------------------------------------")
                     print ("------------------------------------------------------------------------")
- 
+
                 else:
                     print ("Invalid flux HA / flux ErrHa > 3")
                     print ("Process Terminated",'\n')
@@ -552,18 +551,18 @@ for i in range(0, len(galaxyID)): #Loop through Galaxy ID #'s.
     else:
         print ("Invalid Redshift Quality")
         print ("Process Terminated",'\n')
-                   
-print ("Redshift Quality:", redshiftQual,'\n')   
+        
+print ("Redshift Quality:", redshiftQual,'\n')                    
 #End Main section
 ################################################################################
 #List of galaxy ID's with associated absorption, from absorber csv file.
 
-newGalID = ['322', '426', '332', '470', '418']
+newGalID = ['427', '413', '452', '380', '445', '417', '343', '306']
 #print ("newGalID array length:", len(newGalID))
 #print ("ID array length:", len(ID))
 
 #List of galaxy ID's with associated absorption that are closest to quasar from absorber csv file.
-newAbsorberGalID = ['322', '426', '332', '470', '418']
+newAbsorberGalID = ['427', '413', '452', '380', '445']
 
 #Find how many sfrDens are zero and non-zero.
 count = 0
@@ -616,8 +615,8 @@ angDistAbsorb = []
 angDistNoAbsorb = []
 
 for i in range(0, len(sfrDens)):
-    if (sfrDens[i] >= 0 and angularDistKpc[i] < 150):   #If sfr surface density is >= 0 and Angular distance in Kpc < 120.
-        totalID.append(ID[i])                           
+    if (sfrDens[i] >= 0 and angularDistKpc[i] < 150):   #If sfr surface density is >= 0 and,
+        totalID.append(ID[i])                           #Angular distance in Kpc < 120.
         totalSFR.append(starForm[i])
         totalSFRDens.append(float(sfrDens[i]))
         totalZQual.append(redshiftQual[i])
@@ -657,13 +656,12 @@ for i in range(0, len(sfrDens)):
 print ("sfr density absorption:", len(sfrDensAbsorb))
 print ("sfr density no absorption:", len(sfrDensNoAbsorb))
 print ("sfr density array:", len(sfrDens))
-print ("Total zQual:", totalZQual)
 print ()
 print (sfrDensAbsorb,'\n')
 print (sfrDensNoAbsorb,'\n')
 print (galIDAbsorb,'\n')
 print (galIDNoAbsorb,'\n')
-print ("Galaxy ID:", galaxyID)
+print ("Galaxy ID:", galaxyID,'\n')
 
 
 totalAngDist = []
@@ -685,10 +683,10 @@ for i in range(0, len(SFRAbsorb)):
 
 #binArray local variable for histogram plots. Sets length and bin size.
 sfrBinArray = np.linspace(0, 30, 10)
-sfrDensBinArray = np.linspace(0, 0.2, 10)
+sfrDensBinArray = np.linspace(0, 2, 10)
 
-plt.hist(sfrDensAbsorb, bins=sfrDensBinArray, density=True, histtype='step', label= 'MgII Detection (%i)' %len(sfrDensAbsorb))
-plt.hist(sfrDensNoAbsorb, bins=sfrDensBinArray, density=True, histtype='step', label = 'MgII Non-Detection (%i)' %len(sfrDensNoAbsorb))
+plt.hist(sfrDensAbsorb, bins=np.linspace(0, 0.4, 10), density=True, histtype='step', label= 'MgII Detection (%i)' %len(sfrDensAbsorb))
+plt.hist(sfrDensNoAbsorb, bins=np.linspace(0, 0.4, 10), density=True, histtype='step', label = 'MgII Non-Detection (%i)' %len(sfrDensNoAbsorb))
 plt.xlabel("SFR Surface Density $(M_{Sun} yr^{-1} Kpc^{-2})$")
 plt.ylabel("Normalized Number")
 plt.legend()
@@ -722,7 +720,6 @@ plt.legend()
 plt.savefig('Histogram_Sfr')
 plt.show()
 
-"""
 #Histogram plot 90% enclosed H-Alpha emission line map mgII detection only.
 plt.hist(r90Absorb, histtype="step")
 plt.xlabel("90% enclosed")
@@ -777,7 +774,6 @@ plt.ylabel("Galaxy Area (Kpc)")
 plt.legend(loc='upper left')
 plt.savefig('Absorber_Distance_vs_Area')
 plt.show()
-"""
 
 #Scatter plot total galaxy angular distance vs. total sfr densities. Line of best fit included.
 plt.scatter(totalAngDist, totalSFRDens)
@@ -795,68 +791,68 @@ print ()
 
 #Table for combining r90 absorption data.
 zDistAbsorbData = (Table([zDistAbsorb], names=['Redshift']))
-ascii.write(zDistAbsorbData, 'Field8_zDistAbsorb.dat', format='fixed_width', overwrite=True)
+ascii.write(zDistAbsorbData, 'Field4_zDistAbsorb.dat', format='fixed_width', overwrite=True)
 
 zDistNoAbsorbData = (Table([zDistNonAbsorb], names=['Redshift']))
-ascii.write(zDistNoAbsorbData, 'Field8_zDistNoAbsorb.dat', format='fixed_width', overwrite=True)
+ascii.write(zDistNoAbsorbData, 'Field4_zDistNoAbsorb.dat', format='fixed_width', overwrite=True)
 
 r90AbsorbData = (Table([r90Absorb], names=['Radius 90']))
-ascii.write(r90AbsorbData, 'Field8_r90Absorb.dat', format='fixed_width', overwrite=True)
+ascii.write(r90AbsorbData, 'Field4_r90Absorb.dat', format='fixed_width', overwrite=True)
 
 #Table for combining r90 non-absroption data.
 r90NoAbsorbData = (Table([r90NoAbsorb], names=['Radius 90']))
-ascii.write(r90NoAbsorbData, 'Field8_r90NoAbsorb.dat', format='fixed_width', overwrite=True)
+ascii.write(r90NoAbsorbData, 'Field4_r90NoAbsorb.dat', format='fixed_width', overwrite=True)
 
 #Table for combining r50 absorption data.
 r50AbsorbData = (Table([r50Absorb,], names=['Radius 50']))
-ascii.write(r50AbsorbData, 'Field8_r50Absorb.dat', format='fixed_width', overwrite=True)
+ascii.write(r50AbsorbData, 'Field4_r50Absorb.dat', format='fixed_width', overwrite=True)
 
 #Table for combining r50 non-absroption data.
 r50NoAbsorbData = (Table([r50NoAbsorb], names=['Radius 50']))
-ascii.write(r50NoAbsorbData, 'Field8_r50NoAbsorb.dat', format='fixed_width', overwrite=True)
+ascii.write(r50NoAbsorbData, 'Field4_r50NoAbsorb.dat', format='fixed_width', overwrite=True)
 
 #Table for combining Galaxy areas for absorbers
 galAreaAbsorbData = (Table([galAreaAbsorb], names=['Galaxy Area']))
-ascii.write(galAreaAbsorbData, 'Field8_galAreaAbsorb.dat', format='fixed_width', overwrite=True)
+ascii.write(galAreaAbsorbData, 'Field4_galAreaAbsorb.dat', format='fixed_width', overwrite=True)
 
 #Table for combining Galaxy areas for non-absorbers
 galAreaNoAbsorbData = (Table([galAreaNoAbsorb], names=['Galaxy Area']))
-ascii.write(galAreaNoAbsorbData, 'Field8_galAreaNoAbsorb.dat', format='fixed_width', overwrite=True)
+ascii.write(galAreaNoAbsorbData, 'Field4_galAreaNoAbsorb.dat', format='fixed_width', overwrite=True)
 
 #Table for combining sfrDensity data.
 sfrAbsorbData = (Table([sfrDensAbsorb], names=['SFR Density Absorber']))
-ascii.write(sfrAbsorbData, 'Field8_SFRDensAbsorb.dat', format='fixed_width', overwrite=True)
+ascii.write(sfrAbsorbData, 'Field4_SFRDensAbsorb.dat', format='fixed_width', overwrite=True)
 
 #Table for combining sfrDensity data.
 sfrNoAbsorbData = (Table([sfrDensNoAbsorb], names=['SFR Density No Absorber']))
-ascii.write(sfrNoAbsorbData, 'Field8_NoSFRDensAbsorb.dat', format='fixed_width', overwrite=True)
+ascii.write(sfrNoAbsorbData, 'Field4_NoSFRDensAbsorb.dat', format='fixed_width', overwrite=True)
 
 #Table for combining sfr data.
 sfrAbsorbData = (Table([SFRAbsorb], names=['SFR Absorber']))
-ascii.write(sfrAbsorbData, 'Field8_SFRAbsorb.dat', format='fixed_width', overwrite=True)
+ascii.write(sfrAbsorbData, 'Field4_SFRAbsorb.dat', format='fixed_width', overwrite=True)
 
 #Table for combining sfr data.
 sfrNoAbsorbData = (Table([SFRNoAbsorb], names=['SFR Non Absorber']))
-ascii.write(sfrNoAbsorbData, 'Field8_SFRNoAbsorb.dat', format='fixed_width', overwrite=True)
+ascii.write(sfrNoAbsorbData, 'Field4_SFRNoAbsorb.dat', format='fixed_width', overwrite=True)
 
 #Table for combining angular distance from QSO and sfr Density
 angDistData = (Table([totalSFRDens, angDistQSO], names=['SFR Density', 'Angular Distance (kpc)']))
-ascii.write(angDistData, 'Field8_AngularDistance.dat', format='fixed_width', overwrite=True)
+ascii.write(angDistData, 'Field4_AngularDistance.dat', format='fixed_width', overwrite=True)
 
 #Table for combining Absorber galaxies angular distance
 angDistAbsorbData = (Table([angDistAbsorb], names=['Absorbers Angular Distance']))
-ascii.write(angDistAbsorbData, 'Field8_AbsorbAngularDistance.dat', format='fixed_width', overwrite=True)
+ascii.write(angDistAbsorbData, 'Field4_AbsorbAngularDistance.dat', format='fixed_width', overwrite=True)
 
 #Table for combining Non-Absorber galaxies angular distance
 angDistNoAbsorbData = (Table([angDistNoAbsorb], names=['Non-Absorbers Angular Distance']))
-ascii.write(angDistNoAbsorbData, 'Field8_NoAbsorbAngularDistance.dat', format='fixed_width', overwrite=True)
+ascii.write(angDistNoAbsorbData, 'Field4_NoAbsorbAngularDistance.dat', format='fixed_width', overwrite=True)
 
 #Following tables are general output data of processed files.
 data = (Table([ID, redshift, R50, R90, starForm, galAreaKpc, sfrDens, angularDistKpc], 
        names=['Galaxy ID', 'zGals', 'R50', 'R90', 'Star Formation Rate',
               'Galaxy Area (Kpc)', 'Sfr Surface Density', 'Angular Distance Kpc']))
 
-ascii.write(data, 'HSTData8.dat', format='fixed_width', overwrite=True)
+ascii.write(data, 'HSTData4.dat', format='fixed_width', overwrite=True)
 print ("HSTData.dat file has been written")
 
 #Write absorber data to ascii table
