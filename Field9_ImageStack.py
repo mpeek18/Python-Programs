@@ -3,7 +3,7 @@
 Created on Tue May 29 21:05:05 2018
 
 @author: Matthew Peek
-Last Modified: 30 July 2018
+Last Modified: 2 August 2018
 Field 9 Image Stack
 """
 import numpy as np
@@ -127,10 +127,117 @@ def alignImages(normed, ID):
         print ("Image " + ID + " Rotated!")
         print ("Image shape:", rotImage.shape)
         return rotImage
+    elif (ID == '396'):
+        rotImage = rotate(normed, 45.1241, True)
+        print ("Image " + ID + " Rotated!")
+        print ("Image shape:", rotImage.shape)
+        return rotImage
+    elif (ID == '391'):
+        rotImage = rotate(normed, -35.4654, True)
+        print ("Image " + ID + " Rotated!")
+        print ("Image shape:", rotImage.shape)
+        return rotImage
+    elif (ID == '207'):
+        rotImage = rotate(normed, -30.6527, True)
+        print ("Image " + ID + " Rotated!")
+        print ("Image shape:", rotImage.shape)
+        return rotImage
+    elif (ID == '370'):
+        rotImage = rotate(normed, -60.7307, True)
+        print ("Image " + ID + " Rotated!")
+        print ("Image shape:", rotImage.shape)
+        return rotImage
+    elif (ID == '416'):
+        rotImage = rotate(normed, 55.9022, True)
+        print ("Image " + ID + " Rotated!")
+        print ("Image shape:", rotImage.shape)
+        return rotImage
+    elif (ID == '421'):
+        rotImage = rotate(normed, -29.1317, True)
+        print ("Image " + ID + " Rotated!")
+        print ("Image shape:", rotImage.shape)
+        return rotImage
+    elif (ID == '363'):
+        rotImage = rotate(normed, 61.1025, True)
+        print ("Image " + ID + " Rotated!")
+        print ("Image shape:", rotImage.shape)
+        return rotImage
+    elif (ID == '409'):
+        rotImage = rotate(normed, -35.5607, True)
+        print ("Image " + ID + " Rotated!")
+        print ("Image shape:", rotImage.shape)
+        return rotImage
+    elif (ID == '439'):
+        rotImage = rotate(normed, 63.9652, True)
+        print ("Image " + ID + " Rotated!")
+        print ("Image shape:", rotImage.shape)
+        return rotImage
+    elif (ID == '342'):
+        rotImage = rotate(normed, 78.592, True)
+        print ("Image " + ID + " Rotated!")
+        print ("Image shape:", rotImage.shape)
+        return rotImage
+    elif (ID == '295'):
+        rotImage = rotate(normed, 19.1239, True)
+        print ("Image " + ID + " Rotated!")
+        print ("Image shape:", rotImage.shape)
+        return rotImage
+    elif (ID == '247'):
+        rotImage = rotate(normed, 24.3813, True)
+        print ("Image " + ID + " Rotated!")
+        print ("Image shape:", rotImage.shape)
+        return rotImage
+    elif (ID == '373'):
+        rotImage = rotate(normed, -7.7152, True)
+        print ("Image " + ID + " Rotated!")
+        print ("Image shape:", rotImage.shape)
+        return rotImage
+    elif (ID == '322'):
+        rotImage = rotate(normed, -70.9729, True)
+        print ("Image " + ID + " Rotated!")
+        print ("Image shape:", rotImage.shape)
+        return rotImage
+    elif (ID == '484'):
+        rotImage = rotate(normed, 37.7005, True)
+        print ("Image " + ID + " Rotated!")
+        print ("Image shape:", rotImage.shape)
+        return rotImage
+    elif (ID == '383'):
+        rotImage = rotate(normed, 52.4581, True)
+        print ("Image " + ID + " Rotated!")
+        print ("Image shape:", rotImage.shape)
+        return rotImage
+    elif (ID == '435'):
+        rotImage = rotate(normed, -72.0903, True)
+        print ("Image " + ID + " Rotated!")
+        print ("Image shape:", rotImage.shape)
+        return rotImage
+    elif (ID == '355'):
+        rotImage = rotate(normed, -58.5689, True)
+        print ("Image " + ID + " Rotated!")
+        print ("Image shape:", rotImage.shape)
+        return rotImage
+    elif (ID == '314'):
+        rotImage = rotate(normed, -16.5677, True)
+        print ("Image " + ID + " Rotated!")
+        print ("Image shape:", rotImage.shape)
+        return rotImage
+    elif (ID == '434'):
+        rotImage = rotate(normed, 51.9941, True)
+        print ("Image " + ID + " Rotated!")
+        print ("Image shape:", rotImage.shape)
+        return rotImage
+    elif (ID == '384'):
+        rotImage = rotate(normed, -85.0748, True)
+        print ("Image " + ID + " Rotated!")
+        print ("Image shape:", rotImage.shape)
+        return rotImage
     
-    return str("Align IMages Function Error")
+    else:    
+        return str("Align Images Function Error")
 #End alignAbsorber function
-        
+  
+      
 """
 Stack function, takes numpy array as argument, loops through array argument
 getting fits data and combining all image data into same array.
