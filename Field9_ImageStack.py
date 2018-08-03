@@ -70,6 +70,12 @@ def imageNormNonAbsorber(fileName):
     return normed
 #End Non-Absorber imageNorm function
 
+
+"""
+alignImages function takes normed numpy array and image ID number and rotates
+numpy array using rotate function. Returns rotated numpy image. Else, returns
+error statement.
+"""
 shape = []
 def alignImages(normed, ID):
     if (ID == '336'):
