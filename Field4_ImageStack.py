@@ -3,13 +3,14 @@
 Created on Tue May 29 21:05:05 2018
 
 @author: Matthew Peek
-Last Modified: 15 July 2018
+Last Modified: 5 August 2018
 Field 4 Image Stack
 """
 import numpy as np
 from astropy.io import ascii
 import astropy.io.fits as fits
 from matplotlib import pyplot as plt
+from skimage.transform import rotate, resize
 """
 Algorithm:
     read in Absorption_Data.dat file
@@ -66,6 +67,114 @@ def imageNormNonAbsorber(fileName):
     print ("Normalization complete!")     
     return normed
 #End imageNormNonAbsorber function
+
+
+"""
+alignImages function takes normed numpy array and image ID number and rotates
+numpy array using rotate function. Returns rotated numpy image. Else, returns
+error statement.
+"""
+shape = []
+def alignImages(normed, ID):
+    if (ID == '427'):
+        rotImage = rotate(normed, -45.7301, True)
+        print ("Image " + ID + " Rotated!")
+        print ("Image shape:", rotImage.shape)
+        return rotImage
+    elif (ID == '413'):
+        rotImage = rotate(normed, -18.434, True)
+        print ("Image " + ID + " Rotated!")
+        print ("Image shape:", rotImage.shape)
+        return rotImage
+    elif (ID == '452'):
+        rotImage = rotate(normed, -52.5584, True)
+        print ("Image " + ID + " Rotated!")
+        print ("Image shape:", rotImage.shape)
+        return rotImage
+    elif (ID == '428'):
+        rotImage = rotate(normed, -6.5608, True)
+        print ("Image " + ID + " Rotated!")
+        print ("Image shape:", rotImage.shape)
+        return rotImage
+    elif (ID == '404'):
+        rotImage = rotate(normed, 16.3298, True)
+        print ("Image " + ID + " Rotated!")
+        print ("Image shape:", rotImage.shape)
+        return rotImage
+    elif (ID == '417'):
+        rotImage = rotate(normed, -59.7914, True)
+        print ("Image " + ID + " Rotated!")
+        print ("Image shape:", rotImage.shape)
+        return rotImage
+    elif (ID == '343'):
+        rotImage = rotate(normed, -86.3324, True)
+        print ("Image " + ID + " Rotated!")
+        print ("Image shape:", rotImage.shape)
+        return rotImage
+    elif (ID == '461'):
+        rotImage = rotate(normed, -82.6544, True)
+        print ("Image " + ID + " Rotated!")
+        print ("Image shape:", rotImage.shape)
+        return rotImage
+    elif (ID == '428'):
+        rotImage = rotate(normed, 26.9037, True)
+        print ("Image " + ID + " Rotated!")
+        print ("Image shape:", rotImage.shape)
+        return rotImage
+    elif (ID == '380'):
+        rotImage = rotate(normed, 37.7994, True)
+        print ("Image " + ID + " Rotated!")
+        print ("Image shape:", rotImage.shape)
+        return rotImage
+    elif (ID == '427'):
+        rotImage = rotate(normed, -45.7301, True)
+        print ("Image " + ID + " Rotated!")
+        print ("Image shape:", rotImage.shape)
+        return rotImage
+    elif (ID == '413'):
+        rotImage = rotate(normed, -18.434, True)
+        print ("Image " + ID + " Rotated!")
+        print ("Image shape:", rotImage.shape)
+        return rotImage
+    elif (ID == '452'):
+        rotImage = rotate(normed, -52.5584, True)
+        print ("Image " + ID + " Rotated!")
+        print ("Image shape:", rotImage.shape)
+        return rotImage
+    elif (ID == '404'):
+        rotImage = rotate(normed, 16.3298, True)
+        print ("Image " + ID + " Rotated!")
+        print ("Image shape:", rotImage.shape)
+        return rotImage
+    elif (ID == '417'):
+        rotImage = rotate(normed, -59.7914, True)
+        print ("Image " + ID + " Rotated!")
+        print ("Image shape:", rotImage.shape)
+        return rotImage
+    elif (ID == '343'):
+        rotImage = rotate(normed, -86.3324, True)
+        print ("Image " + ID + " Rotated!")
+        print ("Image shape:", rotImage.shape)
+        return rotImage
+    elif (ID == '461'):
+        rotImage = rotate(normed, -82.6544, True)
+        print ("Image " + ID + " Rotated!")
+        print ("Image shape:", rotImage.shape)
+        return rotImage
+    elif (ID == '428'):
+        rotImage = rotate(normed, 26.9037, True)
+        print ("Image " + ID + " Rotated!")
+        print ("Image shape:", rotImage.shape)
+        return rotImage
+    elif (ID == '380'):
+        rotImage = rotate(normed, 37.7994, True)
+        print ("Image " + ID + " Rotated!")
+        print ("Image shape:", rotImage.shape)
+        return rotImage
+    
+    else:
+        print ("Align Images Function Error!",'\n',"Image " + ID + " Not Found!")
+#End alignImages Function
 
 
 """
@@ -180,46 +289,55 @@ fileListAll = []
 fileListAbsorb = []
 fileListNonAbsorb = []
 for i in range(1, len(ID)):
-    if (absorber[i] == 'Yes'):
-        try:
-            fileName = 'CROP-SDSS-J091730.18+324105.5-G141_00' + ID[i] + '.2d.fits'
+    if (ID[i] != '445' and ID[i] != '548' and ID[i] != '360'):
+        if (absorber[i] == 'Yes'):
+            try:
+                fileName = 'CROP-SDSS-J091730.18+324105.5-G141_00' + ID[i] + '.2d.fits'
         
-            #Call imageNorm function.
-            normed = imageNormAbsorber(fileName)
-        
-            #Append normalized image to fileList to pass as argument to stack function.
-            fileListAbsorb.append(normed)
-            file = fits.open(fileName)
-            image = file[0].data
-            file.close()
-        
-            print (ID[i])
-            print (image.shape)
-        
-            countAbsorber += 1
-        except IOError:
-            print ("Image ID " + ID[i] + " not found!")
+                #Call imageNorm function.
+                normed = imageNormAbsorber(fileName)
             
-    else:
-        try:
-            fileName = 'CROP-SDSS-J091730.18+324105.5-G141_00' + ID[i] + '.2d.fits'
-            
-            #Call imageNormNonAbsorb function.
-            normed = imageNormNonAbsorber(fileName)
+                #Call alignImages function and resize to stack.
+                rotImage = alignImages(normed, ID[i])
+                resized = resize(rotImage, (48,48))
         
-            #Append normalized image to fileList to pass as argument to stack function.
-            fileListNonAbsorb.append(normed)
-            file = fits.open(fileName)
-            image = file[0].data
-            file.close()
+                #Append normalized image to fileList to pass as argument to stack function.
+                fileListAbsorb.append(resized)
+                file = fits.open(fileName)
+                image = file[0].data
+                file.close()
         
-            print (ID[i])
-            print (image.shape)
+                print (ID[i])
+                print (image.shape)
+        
+                countAbsorber += 1
+            except IOError:
+                print ("Image ID " + ID[i] + " not found!")
             
-            countNonAbsorber += 1
-        except IOError:
-            print ("Image ID " + ID[i] + " not found!")
-    totalCount += 1
+        else:
+            try:
+                fileName = 'CROP-SDSS-J091730.18+324105.5-G141_00' + ID[i] + '.2d.fits'
+                
+                #Call imageNormNonAbsorb function.
+                normed = imageNormNonAbsorber(fileName)
+                
+                #Call alignImages function and resize to stack.
+                rotImage = alignImages(normed, ID[i])
+                resized = resize(rotImage, (48,48))
+        
+                #Append normalized image to fileList to pass as argument to stack function.
+                fileListNonAbsorb.append(resized)
+                file = fits.open(fileName)
+                image = file[0].data
+                file.close()
+        
+                print (ID[i])
+                print (image.shape)
+            
+                countNonAbsorber += 1
+            except IOError:
+                print ("Image ID " + ID[i] + " not found!")
+        totalCount += 1
 
 #Combine both lists to stack all images
 fileListAll = fileListAbsorb + fileListNonAbsorb

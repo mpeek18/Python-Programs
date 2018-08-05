@@ -3,13 +3,14 @@
 Created on Tue May 29 21:05:05 2018
 
 @author: Matthew Peek
-Last Modified: 24 July 2018
+Last Modified: 5 August 2018
 Field 3 Image Stack
 """
 import numpy as np
 from astropy.io import ascii
 import astropy.io.fits as fits
 from matplotlib import pyplot as plt
+from skimage.transform import rotate, resize
 """
 Algorithm:
     read in Absorption_Data.dat file
@@ -66,6 +67,39 @@ def imageNormNonAbsorber(fileName):
     print ("Normalization complete!")     
     return normed
 #End imageNormNonAbsorber function
+
+
+"""
+alignImages function takes normed numpy array and image ID number and rotates
+numpy array using rotate function. Returns rotated numpy image. Else, returns
+error statement.
+"""
+shape = []
+def alignImages(normed, ID):
+    if (ID == '370'):
+        rotImage = rotate(normed, 33.7443, True)
+        print ("Image " + ID + " Rotated!")
+        print ("Image shape:", rotImage.shape)
+        return rotImage
+    elif (ID == '305'):
+        rotImage = rotate(normed, 79.965, True)
+        print ("Image " + ID + " Rotated!")
+        print ("Image shape:", rotImage.shape)
+        return rotImage
+    elif (ID == '275'):
+        rotImage = rotate(normed, 70.5928, True)
+        print ("Image " + ID + " Rotated!")
+        print ("Image shape:", rotImage.shape)
+        return rotImage
+    elif (ID == '282'):
+        rotImage = rotate(normed, 82.2546, True)
+        print ("Image " + ID + " Rotated!")
+        print ("Image shape:", rotImage.shape)
+        return rotImage
+    
+    else:
+        print ("Align Images Function Error!",'\n',"Image " + ID + " Not Found!")
+#End alignImages Function
 
 
 """
@@ -180,16 +214,20 @@ fileListAll = []
 fileListAbsorb = []
 fileListNonAbsorb = []
 for i in range(1, len(ID)):
-    if (ID[i] != '256'):    #Exclude this galaxy due to grism over subtraction.
+    if (ID[i] != '256' and ID[i] != '316' and ID[i] != '381' and ID[i] != '386'):    #Exclude this galaxy due to grism over subtraction.
         if (absorber[i] == 'Yes'):
             try:
                 fileName = 'CROP-SDSS-J083852.05+025703.7-G141_00' + ID[i] + '.2d.fits'
         
                 #Call imageNorm function.
                 normed = imageNormAbsorber(fileName)
+                
+                #Call alignImages function and resize to stack.
+                rotImage = alignImages(normed, ID[i])
+                resized = resize(rotImage, (48,48))
         
                 #Append normalized image to fileList to pass as argument to stack function.
-                fileListAbsorb.append(normed)
+                fileListAbsorb.append(resized)
                 file = fits.open(fileName)
                 image = file[0].data
                 file.close()
@@ -207,9 +245,13 @@ for i in range(1, len(ID)):
             
                 #Call imageNormNonAbsorb function.
                 normed = imageNormNonAbsorber(fileName)
+                
+                #Call alignImages function and resize to stack.
+                rotImage = alignImages(normed, ID[i])
+                resized = resize(rotImage, (48,48))
         
                 #Append normalized image to fileList to pass as argument to stack function.
-                fileListNonAbsorb.append(normed)
+                fileListNonAbsorb.append(resized)
                 file = fits.open(fileName)
                 image = file[0].data
                 file.close()
