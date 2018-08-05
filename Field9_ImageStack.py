@@ -240,7 +240,7 @@ def alignImages(normed, ID):
         return rotImage
     
     else:    
-        return str("Align Images Function Error")
+        print ("Align Images Function Error!",'\n',"Image " + ID + " Not Found!")
 #End alignAbsorber function
   
       
