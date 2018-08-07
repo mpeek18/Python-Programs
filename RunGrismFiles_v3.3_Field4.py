@@ -3,7 +3,7 @@
 Created on Mon Feb 23 22:07:40 2017
 
 @author: Matthew Peek
-Last Modified: 1 August 2018
+Last Modified: 6 August 2018
 Field 4
 
 Algorithm:
@@ -472,7 +472,7 @@ R90 = []
 errorFile = []
 angularDistKpc = []
 redshiftQual = []
-#countError = 0
+invalidGalaxies = []
 
 for i in range(0, len(galaxyID)): #Loop through Galaxy ID #'s.    
     print ("BEGIN NEW FITS IMAGE PROCESS")
@@ -481,7 +481,7 @@ for i in range(0, len(galaxyID)): #Loop through Galaxy ID #'s.
         #redshiftQual.append(zQual[i])
         if (galRedshift[i] < 1.6 and galRedshift[i] > 0.65):
             if (fluxHa[i] > 0 and fluxErrHa[i] > 0):
-                if ((fluxHa[i] / fluxErrHa[i]) > 3): 
+                if ((fluxHa[i] / fluxErrHa[i]) > 1): 
                     redshiftQual.append(zQual[i])
         
                     galID = galaxyID[i]
@@ -540,17 +540,21 @@ for i in range(0, len(galaxyID)): #Loop through Galaxy ID #'s.
                     print ("------------------------------------------------------------------------")
 
                 else:
-                    print ("Invalid flux HA / flux ErrHa > 3")
+                    print (galaxyID[i] + " Invalid flux HA / flux ErrHa > 1")
                     print ("Process Terminated",'\n')
+                    invalidGalaxies.append(galaxyID[i])
             else:
-                print ("flux HA or flux Err HA error")
+                print (galaxyID[i] + " flux HA or flux Err HA error")
                 print ("Process Terminated",'\n')
+                invalidGalaxies.append(galaxyID[i])
         else:
-            print ("Invalid Redshift")
+            print (galaxyID[i] + " Invalid Redshift")
             print ("Process Terminated",'\n')
+            invalidGalaxies.append(galaxyID[i])
     else:
-        print ("Invalid Redshift Quality")
+        print (galaxyID[i] + " Invalid Redshift Quality")
         print ("Process Terminated",'\n')
+        invalidGalaxies.append(galaxyID[i])
         
 print ("Redshift Quality:", redshiftQual,'\n')                    
 #End Main section
@@ -662,6 +666,15 @@ print (sfrDensNoAbsorb,'\n')
 print (galIDAbsorb,'\n')
 print (galIDNoAbsorb,'\n')
 print ("Galaxy ID:", galaxyID,'\n')
+print ("Galaxies That Did Not Make Cut:", invalidGalaxies,'\n')
+
+
+#Check if galaxies in newAbsorberGalID were excluded from processing.
+excludedGals = []
+for i in range(0, len(invalidGalaxies)):
+    if (invalidGalaxies[i] in newAbsorberGalID):
+        excludedGals.append(invalidGalaxies[i])
+print ("Conflicting Galaxies:", excludedGals,'\n')
 
 
 totalAngDist = []
@@ -859,7 +872,7 @@ print ("HSTData.dat file has been written")
 absorberData = (Table([totalID, totalZDist, totalZQual, totalSFR, totalSFRDens, galAbsorption, totalAngDist],
                 names=['Galaxy ID', 'Z Dist', 'Z Qual', 'Star Formation Rate',
                        'SFR Surface Density', 'Absorber', 'Angular Distance']))
-ascii.write(absorberData, 'Absorption_Data.dat', format='fixed_width', overwrite=True)
+ascii.write(absorberData, 'Absorption_Data_Field3.dat', format='fixed_width', overwrite=True)
 
 print ("Absorption_Data.dat file has been written")
 #print ("Non-existant linefit.dat files:", countError)
