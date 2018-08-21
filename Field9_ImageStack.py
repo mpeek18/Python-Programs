@@ -3,7 +3,7 @@
 Created on Tue May 29 21:05:05 2018
 
 @author: Matthew Peek
-Last Modified: 2 August 2018
+Last Modified: 21 August 2018
 Field 9 Image Stack
 """
 import numpy as np
@@ -36,14 +36,7 @@ def imageNormAbsorber(fileName):
     print ("Data:", data,'\n')
         
     normed = (data / sumData)
-    """
-    for i in range(0, len(data)):
-        for j in range(0, len(data[0])):
-            #print ("Before:", data[i][j],'\n')
-            data[i][j] = (data[i][j] / sumData)
-    print ("Loop Data:", data)
-    print ("Summed Loop Data:", np.sum(data))
-    """
+    
     print ("Normed:", normed)   
     print ("Normed Sum:", np.sum(normed))
     print ("Normalization complete!")     
@@ -57,13 +50,7 @@ def imageNormNonAbsorber(fileName):
     print ("Data:", data,'\n')
         
     normed = (data / sumData)
-    """
-    for i in range(0, len(data)):
-        for j in range(0, len(data[0])):
-            data[i][j] = (data[i][j] / sumData)
-    print ("Loop Data:", data)
-    print ("Loop Summed Data:", np.sum(data))
-    """
+    
     print ("Normed:", normed)   
     print ("Normed Sum:", np.sum(normed))
     print ("Normalization complete!")     
@@ -245,10 +232,10 @@ def alignImages(normed, ID):
   
       
 """
-Stack function, takes numpy array as argument, loops through array argument
+Stack functions, takes numpy array as argument, loops through array argument
 getting fits data and combining all image data into same array.
 
-Stack image data standard, mean averaging, and median averaging, compare results.
+Stack image data standard, mean averaging, and median averaging.
 Write results to new fits files.
 """
 def stackAbsorber(fileListAbsorb):
@@ -283,6 +270,7 @@ def stackAbsorber(fileListAbsorb):
     print ("Stacking Absorbers Complete!")
 #End Absorber Stack function
 
+
 def stackNonAbsorber(fileListNonAbsorb):
     #imageData = [fits.getdata(file) for file in fileList]
     imageData = [file for file in fileListNonAbsorb]
@@ -315,6 +303,7 @@ def stackNonAbsorber(fileListNonAbsorb):
     print ("Stacking Non-Absorbers Complete!")
 #End Non-Absorber Stack function
 
+
 def stackAll(fileListAll):
     imageData = [file for file in fileListAll]
     
@@ -346,7 +335,11 @@ def stackAll(fileListAll):
     print ("Stacking All Complete!")
 #End stackAll function
     
-    
+#################################################################################
+"""
+Program's Main Begins Here.
+"""    
+#################################################################################
 """
 Open Absorber_Data.dat file and get galaxy id's, get image file name, open fits data.
 Start program by reading in id's and appending them to new list.
@@ -362,11 +355,12 @@ fileListAbsorb = []
 fileListNonAbsorb = []
 for i in range(1, len(ID)):
     #Exclude galaxy ID's 325, 371, & 377 due to grism over subtraction.
-    if (ID[i] != '371' and ID[i] != '377' and ID[i] != '325' and ID[i] != '347'): 
+    if (ID[i] != '377'): 
         if (absorber[i] == 'Yes'):
             try:
                 fileName = 'CROP-SDSS-J120639.85+025308.3-G141_00' + ID[i] + '.2d.fits'
-                #Call imageNorm function.
+                
+                #Call imageNormAbsorber function.
                 normed = imageNormAbsorber(fileName)
         
                 #Call alignImages function and resize to stack.
@@ -411,7 +405,7 @@ for i in range(1, len(ID)):
                 print ("Image ID " + ID[i] + " not found!")
         totalCount += 1    
 
-#Combine both lists to stack all images
+#Combine absorber and non-absorber lists to stack all images
 fileListAll = fileListAbsorb + fileListNonAbsorb
 
 #Call stack functions
