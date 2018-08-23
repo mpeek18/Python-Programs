@@ -3,7 +3,7 @@
 Created on Tue May 29 21:05:05 2018
 
 @author: Matthew Peek
-Last Modified: 21 August 2018
+Last Modified: 22 August 2018
 Field 9 Image Stack
 """
 import numpy as np
@@ -37,13 +37,14 @@ def imageNormAbsorber(fileName):
         
     normed = (data / sumData)
     
-    print ("Normed:", normed)   
-    print ("Normed Sum:", np.sum(normed))
-    print ("Normalization complete!")     
+    #print ("Normed:", normed)   
+    #print ("Normed Sum:", np.sum(normed))
+    print ("Normalization complete!")
+        
     return normed
 #End Absorber imageNorm function
 
-def imageNormNonAbsorber(fileName):
+def imageNormNonAbsorber(fileName, galID):
     data = fits.getdata(fileName)
     sumData = np.sum(data)
     print ("Summed Image Data:", sumData,'\n')
@@ -51,9 +52,10 @@ def imageNormNonAbsorber(fileName):
         
     normed = (data / sumData)
     
-    print ("Normed:", normed)   
-    print ("Normed Sum:", np.sum(normed))
-    print ("Normalization complete!")     
+    #print ("Normed:", normed)   
+    #print ("Normed Sum:", np.sum(normed))
+    print ("Normalization complete!")
+        
     return normed
 #End Non-Absorber imageNorm function
 
@@ -354,7 +356,7 @@ fileListAll = []
 fileListAbsorb = []
 fileListNonAbsorb = []
 for i in range(1, len(ID)):
-    #Exclude galaxy ID's 325, 371, & 377 due to grism over subtraction.
+    #Exclude galaxy 377 due to grism over subtraction.
     if (ID[i] != '377'): 
         if (absorber[i] == 'Yes'):
             try:
@@ -363,7 +365,11 @@ for i in range(1, len(ID)):
                 #Call imageNormAbsorber function.
                 normed = imageNormAbsorber(fileName)
         
-                #Call alignImages function and resize to stack.
+                """
+                Call alignImages function and resize to stack.
+                Note, images are not all the same size after rotating them, must resize
+                in order to stack images.
+                """
                 rotImage = alignImages(normed, ID[i])
                 resized = resize(rotImage, (48,48))
                 
@@ -385,7 +391,7 @@ for i in range(1, len(ID)):
                 fileName = 'CROP-SDSS-J120639.85+025308.3-G141_00' + ID[i] + '.2d.fits'
             
                 #Call imageNormNonAbsorb function.
-                normed = imageNormNonAbsorber(fileName)
+                normed = imageNormNonAbsorber(fileName, ID[i])
         
                 #Call alignImages function and resize to stack.
                 rotImage = alignImages(normed, ID[i])
