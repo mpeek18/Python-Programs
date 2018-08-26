@@ -3,7 +3,7 @@
 Created on Tue May 29 21:05:05 2018
 
 @author: Matthew Peek
-Last Modified: 5 August 2018
+Last Modified: 26 August 2018
 Field 4 Image Stack
 """
 import numpy as np
@@ -35,13 +35,7 @@ def imageNormAbsorber(fileName):
     print ("Data:", data,'\n')
         
     normed = (data / sumData)
-    """
-    for i in range(0, len(data)):
-        for j in range(0, len(data[0])):
-            data[i][j] = (data[i][j] / sumData)
-    print ("Loop Data:", data)
-    print ("Loop Summed Data:", np.sum(data))
-    """
+   
     print ("Normed:", normed)   
     print ("Normed Sum:", np.sum(normed))
     print ("Normalization complete!")     
@@ -55,13 +49,7 @@ def imageNormNonAbsorber(fileName):
     print ("Data:", data,'\n')
         
     normed = (data / sumData)
-    """
-    for i in range(0, len(data)):
-        for j in range(0, len(data[0])):
-            data[i][j] = (data[i][j] / sumData)
-    print ("Loop Data:", data)
-    print ("Loop Summed Data:", np.sum(data))
-    """
+    
     print ("Normed:", normed)   
     print ("Normed Sum:", np.sum(normed))
     print ("Normalization complete!")     
@@ -274,12 +262,16 @@ def stackAll(fileListAll):
     print ("Stacking All Complete!")
 #End StackAll function
    
-    
+#################################################################################
+"""
+Program's Main Begins Here.
+"""    
+#################################################################################
 """
 Open Absorber_Data.dat file and get galaxy id's, get image file name, open fits data.
 Start program by reading in id's and appending them to new list.
 """
-absorberFile = ascii.read('Absorption_Data.dat', delimiter='|')
+absorberFile = ascii.read('Absorption_Data_Field3.dat', delimiter='|')
 ID = absorberFile['col2']
 absorber = absorberFile['col7']
 totalCount = 0
@@ -289,7 +281,7 @@ fileListAll = []
 fileListAbsorb = []
 fileListNonAbsorb = []
 for i in range(1, len(ID)):
-    if (ID[i] != '445' and ID[i] != '548' and ID[i] != '360'):
+    if (ID[i] != '445' and ID[i] != '360' and ID[i] != '352' and ID[i] != '513' and ID[i] != '540'):
         if (absorber[i] == 'Yes'):
             try:
                 fileName = 'CROP-SDSS-J091730.18+324105.5-G141_00' + ID[i] + '.2d.fits'
@@ -297,10 +289,14 @@ for i in range(1, len(ID)):
                 #Call imageNorm function.
                 normed = imageNormAbsorber(fileName)
             
-                #Call alignImages function and resize to stack.
+                """
+                Call alignImages function and resize to stack.
+                Note, images are not all the same size after rotating them, must resize
+                in order to stack images.
+                """
                 rotImage = alignImages(normed, ID[i])
                 resized = resize(rotImage, (48,48))
-        
+            
                 #Append normalized image to fileList to pass as argument to stack function.
                 fileListAbsorb.append(resized)
                 file = fits.open(fileName)
@@ -320,11 +316,15 @@ for i in range(1, len(ID)):
                 
                 #Call imageNormNonAbsorb function.
                 normed = imageNormNonAbsorber(fileName)
-                
-                #Call alignImages function and resize to stack.
+                    
+                """
+                Call alignImages function and resize to stack.
+                Note, images are not all the same size after rotating them, must resize
+                in order to stack images.
+                """
                 rotImage = alignImages(normed, ID[i])
                 resized = resize(rotImage, (48,48))
-        
+                
                 #Append normalized image to fileList to pass as argument to stack function.
                 fileListNonAbsorb.append(resized)
                 file = fits.open(fileName)

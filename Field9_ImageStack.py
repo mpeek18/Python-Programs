@@ -3,7 +3,7 @@
 Created on Tue May 29 21:05:05 2018
 
 @author: Matthew Peek
-Last Modified: 22 August 2018
+Last Modified: 26 August 2018
 Field 9 Image Stack
 """
 import numpy as np
@@ -346,7 +346,7 @@ Program's Main Begins Here.
 Open Absorber_Data.dat file and get galaxy id's, get image file name, open fits data.
 Start program by reading in id's and appending them to new list.
 """
-absorberFile = ascii.read('Absorption_Data.dat', delimiter='|')
+absorberFile = ascii.read('Absorption_Data_Field8.dat', delimiter='|')
 ID = absorberFile['col2']
 absorber = absorberFile['col7']
 totalCount = 0
@@ -393,7 +393,11 @@ for i in range(1, len(ID)):
                 #Call imageNormNonAbsorb function.
                 normed = imageNormNonAbsorber(fileName, ID[i])
         
-                #Call alignImages function and resize to stack.
+                """
+                Call alignImages function and resize to stack.
+                Note, images are not all the same size after rotating them, must resize
+                in order to stack images.
+                """
                 rotImage = alignImages(normed, ID[i])
                 resized = resize(rotImage, (48,48))
                 
