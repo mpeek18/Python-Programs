@@ -1,0 +1,37 @@
+This READ ME coveres all RunGrismFile programs for fields 1-9, or zero indexed fields 0-8. 
+
+These programs are dependant on the following Python library modules:
+csv
+math
+numpy
+astropy.io -> ascii
+astropy.io.fits -> fits
+astropy.table -> Table
+scipy.ndimage -> ndimage
+matplotlib -> pyplot
+photutils -> CircularAnnulus
+astropy.cosmology -> FlatLambdaCDM
+astropy.units -> u
+photutils -> CircularAperture, aperture_photometry
+
+These programs are dependant on csv files supplied by Dr. Lundgren and contain data for galaxy ID's, redshifts, HAlpha flux, HALpha flux error, best image orientations, and redshift qualities. There are individual files for each independant field and match the following name (except different field numbers): 'field8_matching.csv'.
+
+Beginning on approximately line #465 is the program's main. It begins by declaring several lists that will be needed to store data. Following these the program initiates a loop through all galaxy ID's and checks several restrictions that have been placed on the quality of galaxy samples such as their redshifts, HAlpha flux and flux error, and redshift quality. Galaxies that have passed these constraints have the HAlpha flux units converted and the program then reads in files associated with each candidate galaxy based from the ID number. The files read in are zfit.dat, 2D.fits, and zfit.fits files. Inside the loop the 'main' section then begins calling functions that process the gathered data. Finally, all relevent data is written to the declared empty lists.
+
+The first function called is 'processFits'. this functions takes the arguments fitsName, finalName, and fitsModel. This function begins by opening the fits header and getting the fits dimensions for the science of the image and image contamination. From the fitsModel file this function gets the image model. This function then subtracts the science from the contamination and model producing a clean image. Next a blank fits image is created and the clean image is written to it and returned by the function.
+
+Next is the 'analyzeFits' function. There is a lot going on here so study this function closely to understand what it is doing. analyzeFits takes the following arguments: finalName (does nothing at the moment), fitsName (for the wave length), zGal (galaxy redshift), sciHeight (cleaned up image from processFits function), and hAlphaFlux (the HAlpha flux for each galaxy). First, each image redshift is checked to determine if the redshift is less then 1.60, this correlates to hydrogen alpha emission that we are interested in. If the redshift is higher than 1.60 than 1.60 it correlates to Oxygen III and is not processed by this function. If the redshift is less than 1.60 a loop begins that measures where HAlpha is first detected and where it ends along the x-axis of the image. These measurments are then used to make a HAlpha emission line maps.
+
+The x,y centerpoint of HAlpha emission is then calculated in the image and phot_table module functions begin placing aperture and annuli in the image. Using aperture and annuli a loop measures out the flux emission mean from the galaxy. 
+
+Next, some images are not of the same size. It is desirable for each image to be of dimensions (34,34). A shape function is used to check the image size and add additional columns until it is of size (34,34). This section is specifically for later image stacking programs.
+
+Immediatly after this the emission line map measured earlier is written to a new fits file image. This line is a bit confusing and could be refactored to occur immediatly after the map cutout is measured. 
+
+From the x,y centerpoint fluxArray list, the percentage of the HAlpha contained within the aperture and annuli is measured to get calculate 50% and 90% enclosed. 
+
+Finally, several png images are made to show the HAlpha emission line map image with the standard image and one with a gaussian filter applied to blur the image and make features more noticable. Note: these blurred images are for human eyes only and should NOT BE USED for data analysis. The last image this function writes places the annuli for both 50% and 90% HAlpha emission enclosed that was measured in the galaxy. These annuli are centered in the exact position that HAlpha is detected in the galaxy.
+
+AnalyzeFits function only returns the radius50 and radius90 of the enclosed emission for later functions to use.
+
+ 
