@@ -3,7 +3,7 @@
 Created on Mon Feb 23 22:07:40 2017
 
 @author: Matthew Peek
-Last Modified: 8 August 2018
+Last Modified: 21 September 2018
 Field 9
 
 Algorithm:
@@ -52,6 +52,7 @@ def processFits(fitsName, finalName, fitsModel):
     sci, header = hdulist[5].data, hdulist[5].header
     sciHeight = header['NAXIS2']
     """
+    Can run this to see sci image.
     plt.clf()
     plt.imshow(sci, cmap='gray', norm=LogNorm())
     plt.colorbar()
@@ -60,6 +61,7 @@ def processFits(fitsName, finalName, fitsModel):
     contam, header = hdulist[8].data, hdulist[8].header
     hdulist.close()
     """
+    Can run this to see contamination image.
     plt.clf()
     plt.imshow(contam, cmap='gray', norm=LogNorm())
     plt.colorbar()
@@ -68,6 +70,7 @@ def processFits(fitsName, finalName, fitsModel):
     model = zFitsModel[1].data
     zFitsModel.close()
     """
+    Can run this to see model image.
     plt.clf()
     plt.imshow(model, cmap='gray', norm=LogNorm())
     plt.colorbar()
@@ -75,12 +78,14 @@ def processFits(fitsName, finalName, fitsModel):
     """
     final = sci-contam-model
     """
+    Can run this to see final image.
     plt.clf()
     plt.imshow(final, cmap='gray', norm=LogNorm())
     plt.colorbar()
     plt.savefig('Final')
     """
     """
+    Can run this to see final image with gaussian blur applied.
     #Gaussian Blur  
     imgBlur = ndimage.gaussian_filter(final, sigma=(2,2), order=0)
     plt.imshow(imgBlur, interpolation='nearest')
@@ -368,7 +373,7 @@ def starFormation(hAlphaFlux, zGal, radius50):
     #Convert resolution from degrees to radians
     radian = (degree * (2 * math.pi)) / 360
    
-    #Find radius of galaxy = angular_diameter_distance * radius90, (in radians)
+    #Find radius of galaxy = angular_diameter_distance * radius50, (in radians)
     #Convert from Mpc to Kpc
     #Find area of radius90 = pi * radius^2
     radiusCircle = angDiameterDist * radian
@@ -409,8 +414,8 @@ def convertDist(zGal, arcsecDist):
 #End convertDist function    
 ###############################################################################
 """
-Below this line read in best_redux and absorber csv files and 
-call functions to process grism files.
+Below this line read in field8_matching.csv files and 
+get necessary data from file.
 """
 ###############################################################################
 with open('field8_matching.csv') as csvFile:
@@ -422,7 +427,7 @@ with open('field8_matching.csv') as csvFile:
     zQual = []
     fluxHa = []
     fluxErrHa = []
-    
+
     count = -1
     index = 0
     for col in readCSV:
@@ -479,6 +484,7 @@ col = []
 flux = []
 redshiftQual = []
 invalidGalaxies = []
+positionAngle = []
 
 for i in range(0, len(galaxyID)): #Loop through Galaxy ID #'s.    
     print ("BEGIN NEW FITS IMAGE PROCESS")
@@ -492,7 +498,15 @@ for i in range(0, len(galaxyID)): #Loop through Galaxy ID #'s.
                     
                     galID = galaxyID[i]
                     frame = orientName[i]
-        
+                    
+                    #Get position angle of frame galaxy is contained in.
+                    if (frame == '-09-293-'):
+                        positionAngle.append(293)
+                    elif (frame == '-18-313-'):
+                        positionAngle.append(313)
+                    else:
+                        positionAngle.append(313)
+                    
                     #Get H-Alpha flux from Best_Redux file and calculate flux * 10 ^ -17
                     hAlphaFlux = fluxHa[i] * math.pow(10, -17)
                     hAlphaFluxErr = fluxErrHa[i]
@@ -563,18 +577,11 @@ for i in range(0, len(galaxyID)): #Loop through Galaxy ID #'s.
         print (galaxyID[i] + " Invalid Redshift Quality")
         print ("Process Terminated",'\n')
         invalidGalaxies.append(galaxyID[i])
-           
+        
 print ("Redshift Quality:", redshiftQual,'\n')                
 print ("H-Alpha Flux List:", flux)        
 #End Main section
 ################################################################################
-#List of galaxy ID's with associated absorption, from absorber csv file.
-
-newGalID = ['331', '377', '371', '360', '207', '341', '352',
-            '333', '336', '391', '396', '316', '389', '326']
-#print ("newGalID array length:", len(newGalID))
-#print ("ID array length:", len(ID))
-
 #List of galaxy ID's with associated absorption that are closest to quasar from absorber csv file.
 newAbsorberGalID = ['331', '377', '360', '341', '352', '333', '336']
 
@@ -627,6 +634,7 @@ galAbsorption = []
 angDistQSO = []
 angDistAbsorb = []
 angDistNoAbsorb = []
+totalPositionAngles = []
 
 for i in range(0, len(sfrDens)):
     if (sfrDens[i] >= 0 and angularDistKpc[i] < 150):   #If sfr surface density is >= 0 and, Angular distance in Kpc < 120.
@@ -636,6 +644,7 @@ for i in range(0, len(sfrDens)):
         totalZQual.append(redshiftQual[i])
         totalZDist.append(redshift[i])
         angDistQSO.append(angularDistKpc[i])
+        totalPositionAngles.append(positionAngle[i])
         
         if (ID[i] in newAbsorberGalID): #If galaxy ID in ID array is also in newAbsorberGalID array
             sfrDensAbsorb.append(sfrDens[i])
@@ -891,9 +900,9 @@ ascii.write(data, 'HSTData9.dat', format='fixed_width', overwrite=True)
 print ("HSTData.dat file has been written")
 
 #Write absorber data to ascii table
-absorberData = (Table([totalID, totalZDist, totalZQual, totalSFR, totalSFRDens, galAbsorption, totalAngDist],
+absorberData = (Table([totalID, totalZDist, totalZQual, totalSFR, totalSFRDens, galAbsorption, totalAngDist, totalPositionAngles],
                 names=['Galaxy ID', 'Z Dist', 'Z Qual', 'Star Formation Rate',
-                       'SFR Surface Density', 'Absorber', 'Angular Distance']))
+                       'SFR Surface Density', 'Absorber', 'Angular Distance', 'Position Angle']))
 ascii.write(absorberData, 'Absorption_Data_Field8.dat', format='fixed_width', overwrite=True)
 
 print ("Absorption_Data.dat file has been written")

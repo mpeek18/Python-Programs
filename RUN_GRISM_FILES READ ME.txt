@@ -34,4 +34,6 @@ Finally, several png images are made to show the HAlpha emission line map image 
 
 AnalyzeFits function only returns the radius50 and radius90 of the enclosed emission for later functions to use.
 
+The StarFormation function follows after AnalyzeFits. StarFormation takes the arguments H-Alpha flux, the galaxy's redshift, and radius 50. This function requires the use of Astropy module's cosmology functions. The cosmology functions calculate the angular diameter distance and luminosity distance of the galaxy. Next, units need to be converted to measure the area of the galaxy in terms of kilo parsecs. Finally, the function calculates the star formation rate and star formation rate surface density. This function returns the star formation rate, star formation rate surface density, area in kilo parsecs, and luminosity distance of the galaxy.
+
  

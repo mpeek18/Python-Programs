@@ -3,7 +3,7 @@
 Created on Mon Feb 23 22:07:40 2017
 
 @author: Matthew Peek
-Last Modified: 8 August 2018
+Last Modified: 21 September 2018
 Field 8
 
 Algorithm:
@@ -52,6 +52,7 @@ def processFits(fitsName, finalName, fitsModel):
     sci, header = hdulist[5].data, hdulist[5].header
     sciHeight = header['NAXIS2']
     """
+    Can run this to see sci image.
     plt.clf()
     plt.imshow(sci, cmap='gray', norm=LogNorm())
     plt.colorbar()
@@ -60,6 +61,7 @@ def processFits(fitsName, finalName, fitsModel):
     contam, header = hdulist[8].data, hdulist[8].header
     hdulist.close()
     """
+    Can run this to see contamination image.
     plt.clf()
     plt.imshow(contam, cmap='gray', norm=LogNorm())
     plt.colorbar()
@@ -68,6 +70,7 @@ def processFits(fitsName, finalName, fitsModel):
     model = zFitsModel[1].data
     zFitsModel.close()
     """
+    Can run this to see model image.
     plt.clf()
     plt.imshow(model, cmap='gray', norm=LogNorm())
     plt.colorbar()
@@ -75,12 +78,14 @@ def processFits(fitsName, finalName, fitsModel):
     """
     final = sci-contam-model
     """
+    Can run this to see final image.
     plt.clf()
     plt.imshow(final, cmap='gray', norm=LogNorm())
     plt.colorbar()
     plt.savefig('Final')
     """
     """
+    Can run this to see final image with gaussian blur applied.
     #Gaussian Blur  
     imgBlur = ndimage.gaussian_filter(final, sigma=(2,2), order=0)
     plt.imshow(imgBlur, interpolation='nearest')
@@ -473,6 +478,7 @@ errorFile = []
 angularDistKpc = []
 redshiftQual = []
 invalidGalaxies = []
+positionAngle = []
 
 for i in range(0, len(galaxyID)): #Loop through Galaxy ID #'s.    
     print ("BEGIN NEW FITS IMAGE PROCESS")
@@ -486,6 +492,14 @@ for i in range(0, len(galaxyID)): #Loop through Galaxy ID #'s.
                     
                     galID = galaxyID[i]
                     frame = orientName[i]
+                    
+                    #Get position angle of frame galaxy is located in.
+                    if (frame == '-02-122-'):
+                        positionAngle.append(122)
+                    elif (frame == '-11-275-'):
+                        positionAngle.append(275)
+                    else:
+                        positionAngle.append(122)
 
                     #Get H-Alpha flux from Best_Redux file and calculate flux * 10 ^ -17
                     hAlphaFlux = fluxHa[i] * math.pow(10, -17)
@@ -560,12 +574,6 @@ for i in range(0, len(galaxyID)): #Loop through Galaxy ID #'s.
 print ("Redshift Quality:", redshiftQual,'\n')   
 #End Main section
 ################################################################################
-#List of galaxy ID's with associated absorption, from absorber csv file.
-
-newGalID = ['322', '426', '332', '470', '418']
-#print ("newGalID array length:", len(newGalID))
-#print ("ID array length:", len(ID))
-
 #List of galaxy ID's with associated absorption that are closest to quasar from absorber csv file.
 newAbsorberGalID = ['322', '426', '332', '470', '418']
 
@@ -618,6 +626,7 @@ galAbsorption = []
 angDistQSO = []
 angDistAbsorb = []
 angDistNoAbsorb = []
+totalPositionAngles = []
 
 for i in range(0, len(sfrDens)):
     if (sfrDens[i] >= 0 and angularDistKpc[i] < 150):   #If sfr surface density is >= 0 and Angular distance in Kpc < 120.
@@ -627,6 +636,7 @@ for i in range(0, len(sfrDens)):
         totalZQual.append(redshiftQual[i])
         totalZDist.append(redshift[i])
         angDistQSO.append(angularDistKpc[i])
+        totalPositionAngles.append(positionAngle[i])
         
         if (ID[i] in newAbsorberGalID): #If galaxy ID in ID array is also in newAbsorberGalID array
             sfrDensAbsorb.append(sfrDens[i])
@@ -873,9 +883,10 @@ ascii.write(data, 'HSTData8.dat', format='fixed_width', overwrite=True)
 print ("HSTData.dat file has been written")
 
 #Write absorber data to ascii table
-absorberData = (Table([totalID, totalZDist, totalZQual, totalSFR, totalSFRDens, galAbsorption, totalAngDist],
-                names=['Galaxy ID', 'Z Dist', 'Z Qual', 'Star Formation Rate',
-                       'SFR Surface Density', 'Absorber', 'Angular Distance']))
+absorberData = (Table([totalID, totalZDist, totalZQual, totalSFR, totalSFRDens, 
+                       galAbsorption, totalAngDist, totalPositionAngles],
+                names=['Galaxy ID', 'Z Dist', 'Z Qual', 'Star Formation Rate', 
+                       'SFR Surface Density', 'Absorber', 'Angular Distance', 'Position Angle']))
 ascii.write(absorberData, 'Absorption_Data_Field7.dat', format='fixed_width', overwrite=True)
 
 print ("Absorption_Data.dat file has been written")
