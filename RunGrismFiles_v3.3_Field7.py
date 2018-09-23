@@ -3,7 +3,7 @@
 Created on Mon Feb 23 22:07:40 2017
 
 @author: Matthew Peek
-Last Modified: 8 August 2018
+Last Modified: 23 September 2018
 Field 7
 
 Algorithm:
@@ -472,6 +472,7 @@ errorFile = []
 angularDistKpc = []
 redshiftQual = []
 invalidGalaxies = []
+positionAngle = []
 
 for i in range(0, len(galaxyID)): #Loop through Galaxy ID #'s.    
     print ("BEGIN NEW FITS IMAGE PROCESS")
@@ -485,6 +486,14 @@ for i in range(0, len(galaxyID)): #Loop through Galaxy ID #'s.
         
                     galID = galaxyID[i]
                     frame = orientName[i]
+                    
+                    #Get position angle of frame galaxy is located in.
+                    if (frame == '-04-124-'):
+                        positionAngle.append(124)
+                    elif (frame == '-13-144-'):
+                        positionAngle.append(144)
+                    else:
+                        positionAngle.append(124)
         
                     #Get H-Alpha flux from Best_Redux file and calculate flux * 10 ^ -17
                     hAlphaFlux = fluxHa[i] * math.pow(10, -17)
@@ -617,6 +626,7 @@ galAbsorption = []
 angDistQSO = []
 angDistAbsorb = []
 angDistNoAbsorb = []
+totalPositionAngles = []
 
 for i in range(0, len(sfrDens)):
     if (sfrDens[i] >= 0 and angularDistKpc[i] < 150):   #If sfr surface density is >= 0 and,
@@ -626,6 +636,7 @@ for i in range(0, len(sfrDens)):
         totalZQual.append(redshiftQual[i])
         totalZDist.append(redshift[i])
         angDistQSO.append(angularDistKpc[i])
+        totalPositionAngles.append(positionAngle[i])
         
         if (ID[i] in newAbsorberGalID): #If galaxy ID in ID array is also in newAbsorberGalID array
             sfrDensAbsorb.append(sfrDens[i])
@@ -871,9 +882,10 @@ ascii.write(data, 'HSTData7.dat', format='fixed_width', overwrite=True)
 print ("HSTData.dat file has been written")
 
 #Write absorber data to ascii table
-absorberData = (Table([totalID, totalZDist, totalZQual, totalSFR, totalSFRDens, galAbsorption, totalAngDist],
-                names=['Galaxy ID', 'Z Dist', 'Z Qual', 'Star Formation Rate',
-                       'SFR Surface Density', 'Absorber', 'Angular Distance']))
+absorberData = (Table([totalID, totalZDist, totalZQual, totalSFR, totalSFRDens, 
+                       galAbsorption, totalAngDist, totalPositionAngles],
+                names=['Galaxy ID', 'Z Dist', 'Z Qual', 'Star Formation Rate', 
+                       'SFR Surface Density', 'Absorber', 'Angular Distance', 'Position Angle']))
 ascii.write(absorberData, 'Absorption_Data_Field6.dat', format='fixed_width', overwrite=True)
 
 print ("Absorption_Data.dat file has been written")
