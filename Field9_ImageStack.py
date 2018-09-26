@@ -3,7 +3,7 @@
 Created on Tue May 29 21:05:05 2018
 
 @author: Matthew Peek
-Last Modified: 14 September 2018
+Last Modified: 26 September 2018
 Field 9 Image Stack
 """
 import numpy as np
@@ -83,7 +83,7 @@ def alignImages(normed, ID, galAngle):
     print ("Image shape:", rotImage.shape)
     return rotImage
     
-#End alignAbsorber function
+#End alignImages function
   
       
 """
@@ -198,13 +198,17 @@ for processing in alignImages function.
 fields = []
 galaxyIDs = []
 angles = []
-angleFile = open('All_Galaxy_AnglesM.txt', 'r')
-for line in angleFile:
-    fields.append(line.split()[0])
-    galaxyIDs.append(line.split()[2])
-    angles.append(line.split()[4])
-angleFile.close()
+try:
+    angleFile = open('All_Galaxy_AnglesM.txt', 'r')
+    for line in angleFile:
+        fields.append(line.split()[0])
+        galaxyIDs.append(line.split()[2])
+        angles.append(line.split()[4])
+    angleFile.close()
 
+except IOError:
+    print ("File could not be found in current directory!")
+    
 print ("Fields", fields,'\n')
 print ("Galaxy ID's", galaxyIDs,'\n')
 print ("Angles", angles,'\n')   
