@@ -3,7 +3,7 @@
 Created on Mon Feb 23 22:07:40 2017
 
 @author: Matthew Peek
-Last Modified: 6 August 2018
+Last Modified: 25 September 2018
 Field 4
 
 Algorithm:
@@ -473,6 +473,7 @@ errorFile = []
 angularDistKpc = []
 redshiftQual = []
 invalidGalaxies = []
+positionAngle = []
 
 for i in range(0, len(galaxyID)): #Loop through Galaxy ID #'s.    
     print ("BEGIN NEW FITS IMAGE PROCESS")
@@ -486,6 +487,14 @@ for i in range(0, len(galaxyID)): #Loop through Galaxy ID #'s.
         
                     galID = galaxyID[i]
                     frame = orientName[i]
+                    
+                    #Get position angle of frame galaxy is located in.
+                    if (frame == '-01-312-'):
+                        positionAngle.append(312)
+                    elif (frame == '-10-078-'):
+                        positionAngle.append(78)
+                    else:
+                        positionAngle.append(78)
         
                     #Get H-Alpha flux from Best_Redux file and calculate flux * 10 ^ -17
                     hAlphaFlux = fluxHa[i] * math.pow(10, -17)
@@ -559,12 +568,6 @@ for i in range(0, len(galaxyID)): #Loop through Galaxy ID #'s.
 print ("Redshift Quality:", redshiftQual,'\n')                    
 #End Main section
 ################################################################################
-#List of galaxy ID's with associated absorption, from absorber csv file.
-
-newGalID = ['427', '413', '452', '380', '445', '417', '343', '306']
-#print ("newGalID array length:", len(newGalID))
-#print ("ID array length:", len(ID))
-
 #List of galaxy ID's with associated absorption that are closest to quasar from absorber csv file.
 newAbsorberGalID = ['427', '413', '452', '380', '445']
 
@@ -617,6 +620,7 @@ galAbsorption = []
 angDistQSO = []
 angDistAbsorb = []
 angDistNoAbsorb = []
+totalPositionAngles = []
 
 for i in range(0, len(sfrDens)):
     if (sfrDens[i] >= 0 and angularDistKpc[i] < 150):   #If sfr surface density is >= 0 and,
@@ -626,6 +630,7 @@ for i in range(0, len(sfrDens)):
         totalZQual.append(redshiftQual[i])
         totalZDist.append(redshift[i])
         angDistQSO.append(angularDistKpc[i])
+        totalPositionAngles.append(positionAngle[i])
         
         if (ID[i] in newAbsorberGalID): #If galaxy ID in ID array is also in newAbsorberGalID array
             sfrDensAbsorb.append(sfrDens[i])
@@ -869,9 +874,10 @@ ascii.write(data, 'HSTData4.dat', format='fixed_width', overwrite=True)
 print ("HSTData.dat file has been written")
 
 #Write absorber data to ascii table
-absorberData = (Table([totalID, totalZDist, totalZQual, totalSFR, totalSFRDens, galAbsorption, totalAngDist],
+absorberData = (Table([totalID, totalZDist, totalZQual, totalSFR, totalSFRDens, 
+                       galAbsorption, totalAngDist, totalPositionAngles],
                 names=['Galaxy ID', 'Z Dist', 'Z Qual', 'Star Formation Rate',
-                       'SFR Surface Density', 'Absorber', 'Angular Distance']))
+                       'SFR Surface Density', 'Absorber', 'Angular Distance', 'Position Angle']))
 ascii.write(absorberData, 'Absorption_Data_Field3.dat', format='fixed_width', overwrite=True)
 
 print ("Absorption_Data.dat file has been written")
