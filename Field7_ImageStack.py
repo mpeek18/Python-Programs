@@ -78,8 +78,7 @@ def alignImages(normed, ID, galAngle):
     rotImage = rotate(normed, float(galAngle), True)
     print ("Image " + ID + " Rotated!")
     print ("Image shape:", rotImage.shape)
-    return rotImage
-    
+    return rotImage   
 #End alignImages function
     
 """
