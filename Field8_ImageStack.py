@@ -3,7 +3,7 @@
 Created on Tue May 29 21:05:05 2018
 
 @author: Matthew Peek
-Last Modified: 26 September 2018
+Last Modified: 4 October 2018
 Field 8 Image Stack
 """
 import numpy as np
@@ -11,17 +11,6 @@ from astropy.io import ascii
 import astropy.io.fits as fits
 from matplotlib import pyplot as plt
 from skimage.transform import rotate, resize
-"""
-Algorithm:
-    read in Absorption_Data.dat file
-    get galID column
-    
-    for i in galID:
-        fileName = 'CROP-SDSS-J120639.85+025308.3-G141_' + str(ID).zfill(5) + '.2d.fits'
-        fitsImage = fits file data
-        finalImage = numpy 2d image sum
-        fits.writeto(image name)   
-"""
 
 """
 Normalize image function, takes image as an argument, gets data and stores in
@@ -188,7 +177,7 @@ fields = []
 galaxyIDs = []
 angles = []
 try:
-    angleFile = open('All_Galaxy_AnglesM.txt', 'r')
+    angleFile = open('All_Galaxy_Angles_M.txt', 'r')
     for line in angleFile:
         fields.append(line.split()[0])
         galaxyIDs.append(line.split()[2])
