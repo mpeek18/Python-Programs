@@ -3,7 +3,7 @@
 Created on Tue May 29 21:05:05 2018
 
 @author: Matthew Peek
-Last Modified: 26 August 2018
+Last Modified: 6 October 2018
 Field 4 Image Stack
 """
 import numpy as np
@@ -55,115 +55,32 @@ def imageNormNonAbsorber(fileName):
     print ("Normalization complete!")     
     return normed
 #End imageNormNonAbsorber function
-
-
+    
+"""
+getGalAngle function takes galaxy ID as argument, goes through field7IDs list 
+and matches passed argument. Finds associated galaxy angle and returns angle.
+"""
+def getGalAngle(ID):
+    for i in range(0, len(field3IDs)):
+        if (ID == field3IDs[i]):
+            galAngle = field3Angles[i]
+    print ("ID " + ID + " " + "angle " + galAngle)
+    return galAngle
+#End getGalAngle Function
+    
 """
 alignImages function takes normed numpy array and image ID number and rotates
 numpy array using rotate function. Returns rotated numpy image. Else, returns
 error statement.
 """
 shape = []
-def alignImages(normed, ID):
-    if (ID == '427'):
-        rotImage = rotate(normed, -45.7301, True)
-        print ("Image " + ID + " Rotated!")
-        print ("Image shape:", rotImage.shape)
-        return rotImage
-    elif (ID == '413'):
-        rotImage = rotate(normed, -18.434, True)
-        print ("Image " + ID + " Rotated!")
-        print ("Image shape:", rotImage.shape)
-        return rotImage
-    elif (ID == '452'):
-        rotImage = rotate(normed, -52.5584, True)
-        print ("Image " + ID + " Rotated!")
-        print ("Image shape:", rotImage.shape)
-        return rotImage
-    elif (ID == '428'):
-        rotImage = rotate(normed, -6.5608, True)
-        print ("Image " + ID + " Rotated!")
-        print ("Image shape:", rotImage.shape)
-        return rotImage
-    elif (ID == '404'):
-        rotImage = rotate(normed, 16.3298, True)
-        print ("Image " + ID + " Rotated!")
-        print ("Image shape:", rotImage.shape)
-        return rotImage
-    elif (ID == '417'):
-        rotImage = rotate(normed, -59.7914, True)
-        print ("Image " + ID + " Rotated!")
-        print ("Image shape:", rotImage.shape)
-        return rotImage
-    elif (ID == '343'):
-        rotImage = rotate(normed, -86.3324, True)
-        print ("Image " + ID + " Rotated!")
-        print ("Image shape:", rotImage.shape)
-        return rotImage
-    elif (ID == '461'):
-        rotImage = rotate(normed, -82.6544, True)
-        print ("Image " + ID + " Rotated!")
-        print ("Image shape:", rotImage.shape)
-        return rotImage
-    elif (ID == '428'):
-        rotImage = rotate(normed, 26.9037, True)
-        print ("Image " + ID + " Rotated!")
-        print ("Image shape:", rotImage.shape)
-        return rotImage
-    elif (ID == '380'):
-        rotImage = rotate(normed, 37.7994, True)
-        print ("Image " + ID + " Rotated!")
-        print ("Image shape:", rotImage.shape)
-        return rotImage
-    elif (ID == '427'):
-        rotImage = rotate(normed, -45.7301, True)
-        print ("Image " + ID + " Rotated!")
-        print ("Image shape:", rotImage.shape)
-        return rotImage
-    elif (ID == '413'):
-        rotImage = rotate(normed, -18.434, True)
-        print ("Image " + ID + " Rotated!")
-        print ("Image shape:", rotImage.shape)
-        return rotImage
-    elif (ID == '452'):
-        rotImage = rotate(normed, -52.5584, True)
-        print ("Image " + ID + " Rotated!")
-        print ("Image shape:", rotImage.shape)
-        return rotImage
-    elif (ID == '404'):
-        rotImage = rotate(normed, 16.3298, True)
-        print ("Image " + ID + " Rotated!")
-        print ("Image shape:", rotImage.shape)
-        return rotImage
-    elif (ID == '417'):
-        rotImage = rotate(normed, -59.7914, True)
-        print ("Image " + ID + " Rotated!")
-        print ("Image shape:", rotImage.shape)
-        return rotImage
-    elif (ID == '343'):
-        rotImage = rotate(normed, -86.3324, True)
-        print ("Image " + ID + " Rotated!")
-        print ("Image shape:", rotImage.shape)
-        return rotImage
-    elif (ID == '461'):
-        rotImage = rotate(normed, -82.6544, True)
-        print ("Image " + ID + " Rotated!")
-        print ("Image shape:", rotImage.shape)
-        return rotImage
-    elif (ID == '428'):
-        rotImage = rotate(normed, 26.9037, True)
-        print ("Image " + ID + " Rotated!")
-        print ("Image shape:", rotImage.shape)
-        return rotImage
-    elif (ID == '380'):
-        rotImage = rotate(normed, 37.7994, True)
-        print ("Image " + ID + " Rotated!")
-        print ("Image shape:", rotImage.shape)
-        return rotImage
+def alignImages(normed, ID, galAngle):
+    rotImage = rotate(normed, float(galAngle), True)
+    print ("Image " + ID + " Rotated!")
+    print ("Image shape:", rotImage.shape)
+    return rotImage   
+#End alignImages function
     
-    else:
-        print ("Align Images Function Error!",'\n',"Image " + ID + " Not Found!")
-#End alignImages Function
-
 
 """
 Stack function, takes numpy array as argument, loops through array argument
@@ -261,7 +178,44 @@ def stackAll(fileListAll):
     plt.colorbar()
     print ("Stacking All Complete!")
 #End StackAll function
-   
+    
+#################################################################################    
+"""
+Read in All_Galaxy_Angles file and get fields, galaxy ID's, and Angles.
+Find only galaxies for field 3 and append ID's and Angles to new list
+for processing in alignImages function.
+"""
+fields = []
+galaxyIDs = []
+angles = []
+try:
+    angleFile = open('All_Galaxy_Angles_M.txt', 'r')
+    for line in angleFile:
+        fields.append(line.split()[0])
+        galaxyIDs.append(line.split()[2])
+        angles.append(line.split()[4])
+    angleFile.close()
+
+except IOError:
+    print ("File could not be found in current directory!")
+    
+print ("Fields", fields,'\n')
+print ("Galaxy ID's", galaxyIDs,'\n')
+print ("Angles", angles,'\n')   
+print ("Fields", fields,'\n')
+print ("Galaxy ID's", galaxyIDs,'\n')
+print ("Angles", angles,'\n')   
+
+field3IDs = []
+field3Angles = []
+for i in range(0, len(fields)):
+    if (fields[i] == '3'):
+        field3IDs.append(galaxyIDs[i])
+        field3Angles.append(angles[i])
+        
+print ("Field 3 ID's", field3IDs,'\n')
+print ("Field 3 Angles", field3Angles,'\n')
+
 #################################################################################
 """
 Program's Main Begins Here.
@@ -281,63 +235,82 @@ fileListAll = []
 fileListAbsorb = []
 fileListNonAbsorb = []
 for i in range(1, len(ID)):
-    if (ID[i] != '445' and ID[i] != '360' and ID[i] != '352' and ID[i] != '513' and ID[i] != '540'):
-        if (absorber[i] == 'Yes'):
-            try:
-                fileName = 'CROP-SDSS-J091730.18+324105.5-G141_00' + ID[i] + '.2d.fits'
-        
-                #Call imageNorm function.
-                normed = imageNormAbsorber(fileName)
+    if (absorber[i] == 'Yes'):
+        try:
+            fileName = 'CROP-SDSS-J091730.18+324105.5-G141_00' + ID[i] + '.2d.fits'
+    
+            #Call imageNorm function.
+            normed = imageNormAbsorber(fileName)
             
-                """
-                Call alignImages function and resize to stack.
-                Note, images are not all the same size after rotating them, must resize
-                in order to stack images.
-                """
-                rotImage = alignImages(normed, ID[i])
-                resized = resize(rotImage, (48,48))
-            
-                #Append normalized image to fileList to pass as argument to stack function.
-                fileListAbsorb.append(resized)
-                file = fits.open(fileName)
-                image = file[0].data
-                file.close()
-        
-                print (ID[i])
-                print (image.shape)
-        
-                countAbsorber += 1
-            except IOError:
-                print ("Image ID " + ID[i] + " not found!")
-            
-        else:
-            try:
-                fileName = 'CROP-SDSS-J091730.18+324105.5-G141_00' + ID[i] + '.2d.fits'
+            """
+            Try and match ID's from Absorbtion data file with ID's from
+            All Galaxy Angles file. If match found, call getGalAngles function
+            and pass current matching ID as argument.
+            """
+            galAngle = float(0.0)
+            if (ID[i] in field3IDs):
+                galAngle = getGalAngle(ID[i])
+            #print ("ID " + ID[i] + " " + "Angle " + galAngle) 
                 
-                #Call imageNormNonAbsorb function.
-                normed = imageNormNonAbsorber(fileName)
-                    
-                """
-                Call alignImages function and resize to stack.
-                Note, images are not all the same size after rotating them, must resize
-                in order to stack images.
-                """
-                rotImage = alignImages(normed, ID[i])
-                resized = resize(rotImage, (48,48))
+            """
+            Call alignImages function and resize to stack.
+            Note, images are not all the same size after rotating them, must resize
+            in order to stack images.
+            """
+            rotImage = alignImages(normed, ID[i], galAngle)
+            resized = resize(rotImage, (48,48))
                 
-                #Append normalized image to fileList to pass as argument to stack function.
-                fileListNonAbsorb.append(resized)
-                file = fits.open(fileName)
-                image = file[0].data
-                file.close()
+            #Append normalized image to fileList to pass as argument to stack function.
+            fileListAbsorb.append(resized)
+            file = fits.open(fileName)
+            image = file[0].data
+            file.close()
         
-                print (ID[i])
-                print (image.shape)
+            print (ID[i])
+            print (image.shape)
+        
+            countAbsorber += 1
+        except IOError:
+            print ("Image ID " + ID[i] + " not found!")
             
-                countNonAbsorber += 1
-            except IOError:
-                print ("Image ID " + ID[i] + " not found!")
-        totalCount += 1
+    else:
+        try:
+            fileName = 'CROP-SDSS-J091730.18+324105.5-G141_00' + ID[i] + '.2d.fits'
+                
+            #Call imageNormNonAbsorb function.
+            normed = imageNormNonAbsorber(fileName)
+            
+            """
+            Try and match ID's from Absorbtion data file with ID's from
+            All Galaxy Angles file. If match found, call getGalAngles function
+            and pass current matching ID as argument.
+            """
+            galAngle = float(0.0)
+            if (ID[i] in field3IDs):
+                galAngle = getGalAngle(ID[i])
+            #print ("ID " + ID[i] + " " + "Angle " + galAngle) 
+                
+            """
+            Call alignImages function and resize to stack.
+            Note, images are not all the same size after rotating them, must resize
+            in order to stack images.
+            """
+            rotImage = alignImages(normed, ID[i], galAngle)
+            resized = resize(rotImage, (48,48))
+                
+            #Append normalized image to fileList to pass as argument to stack function.
+            fileListNonAbsorb.append(resized)
+            file = fits.open(fileName)
+            image = file[0].data
+            file.close()
+        
+            print (ID[i])
+            print (image.shape)
+            
+            countNonAbsorber += 1
+        except IOError:
+            print ("Image ID " + ID[i] + " not found!")
+    totalCount += 1
 
 #Combine both lists to stack all images
 fileListAll = fileListAbsorb + fileListNonAbsorb
