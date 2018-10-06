@@ -46,7 +46,7 @@ def imageNormNonAbsorber(fileName):
 #End imageNormNonAbsorber function
 
 """
-getGalAngle function takes galaxy ID as argument, goes through field7IDs list 
+getGalAngle function takes galaxy ID as argument, goes through field4IDs list 
 and matches passed argument. Finds associated galaxy angle and returns angle.
 """
 def getGalAngle(ID):
