@@ -3,7 +3,7 @@
 Created on Tue May 29 21:05:05 2018
 
 @author: Matthew Peek
-Last Modified: 15 July 2018
+Last Modified: 9 November 2018
 All Fields Image Stack
 """
 import numpy as np
@@ -30,6 +30,7 @@ def stackAll(fileListAll):
     
     plt.clf()
     plt.imshow(imageStack)
+    plt.savefig('Stacked_Image_All', dpi=100)
     plt.subplots_adjust(right=2.0)
     plt.subplots_adjust(top=1.0)
     plt.colorbar()
@@ -67,6 +68,7 @@ def stackMeanAll(fileListMeanAll):
     
     plt.clf()
     plt.imshow(meanImage)
+    plt.savefig('Stacked_Image_Mean_All', dpi=100)
     plt.subplots_adjust(right=2.0)
     plt.subplots_adjust(top=1.0)
     plt.colorbar()
@@ -103,6 +105,7 @@ def stackMedianAll(fileListMedianAll):
     
     plt.clf()
     plt.imshow(medianImage)
+    plt.savefig('Stacked_Image_Median_All', dpi=100)
     plt.subplots_adjust(right=2.0)
     plt.subplots_adjust(top=1.0)
     plt.colorbar()
@@ -139,6 +142,7 @@ def stackMeanAbsorb(fileListMeanAbsorb):
     
     plt.clf()
     plt.imshow(meanAbsorbImage)
+    plt.savefig('Stacked_Image_Mean_Absorb', dpi=100)
     plt.subplots_adjust(right=2.0)
     plt.subplots_adjust(top=1.0)
     plt.colorbar()
@@ -175,6 +179,7 @@ def stackMeanNonAbsorb(fileListMeanNonAbsorb):
     
     plt.clf()
     plt.imshow(meanNonAbsorbImage)
+    plt.savefig('Stacked_Image_Mean_NonAbsorb', dpi=100)
     plt.subplots_adjust(right=2.0)
     plt.subplots_adjust(top=1.0)
     plt.colorbar()
@@ -211,6 +216,7 @@ def stackMedianAbsorb(fileListMedianAbsorb):
     
     plt.clf()
     plt.imshow(medianAbsorbImage)
+    plt.savefig('Stacked_Image_Median_Absorb', dpi=100)
     plt.subplots_adjust(right=2.0)
     plt.subplots_adjust(top=1.0)
     plt.colorbar()
@@ -247,6 +253,7 @@ def stackMedianNonAbsorb(fileListMedianNonAbsorb):
     
     plt.clf()
     plt.imshow(medianNonAbsorbImage)
+    plt.savefig('Stacked_Image_Median_NonAbsorb', dpi=100)
     plt.subplots_adjust(right=2.0)
     plt.subplots_adjust(top=1.0)
     plt.colorbar()
@@ -283,6 +290,7 @@ def stackStandardAbsorb(fileListStandardAbsorb):
     
     plt.clf()
     plt.imshow(standardAbsorbImage)
+    plt.savefig('Stacked_Image_Standard_Absorb', dpi=100)
     plt.subplots_adjust(right=2.0)
     plt.subplots_adjust(top=1.0)
     plt.colorbar()
@@ -319,6 +327,7 @@ def stackStandardNonAbsorb(fileListStandardNonAbsorb):
     
     plt.clf()
     plt.imshow(standardNonAbsorbImage)
+    plt.savefig('Stacked_Image_Standard_NonAbsorb', dpi=100)
     plt.subplots_adjust(right=2.0)
     plt.subplots_adjust(top=1.0)
     plt.colorbar()
@@ -336,8 +345,10 @@ def stackStandardNonAbsorb(fileListStandardNonAbsorb):
     
     print ("stackStandardNonAbsorb Function Complete!")
 #End stackStandardNonAbsorb function
-
-
+    
+# =============================================================================
+# Program's 'main'. Begin reading in all images for stacking.
+# =============================================================================
 """
 Define list containing field numbers, go through list and read in fields. Call
 stack function to stack all fields. 

@@ -3,7 +3,7 @@
 Created on Tue May 29 21:05:05 2018
 
 @author: Matthew Peek
-Last Modified: 26 August 2018
+Last Modified: 9 November 2018
 Field 3 Image Stack
 """
 import numpy as np
@@ -56,39 +56,30 @@ def imageNormNonAbsorber(fileName):
     return normed
 #End imageNormNonAbsorber function
 
-
+"""
+getGalAngle function takes galaxy ID as argument, goes through field2IDs list 
+and matches passed argument. Finds associated galaxy angle and returns angle.
+"""
+def getGalAngle(ID):
+    for i in range(0, len(field2IDs)):
+        if (ID == field2IDs[i]):
+            galAngle = field2Angles[i]
+    print ("ID " + ID + " " + "angle " + galAngle)
+    return galAngle
+#End getGalAngle Function
+    
 """
 alignImages function takes normed numpy array and image ID number and rotates
 numpy array using rotate function. Returns rotated numpy image. Else, returns
 error statement.
 """
 shape = []
-def alignImages(normed, ID):
-    if (ID == '370'):
-        rotImage = rotate(normed, 33.7443, True)
-        print ("Image " + ID + " Rotated!")
-        print ("Image shape:", rotImage.shape)
-        return rotImage
-    elif (ID == '305'):
-        rotImage = rotate(normed, 79.965, True)
-        print ("Image " + ID + " Rotated!")
-        print ("Image shape:", rotImage.shape)
-        return rotImage
-    elif (ID == '275'):
-        rotImage = rotate(normed, 70.5928, True)
-        print ("Image " + ID + " Rotated!")
-        print ("Image shape:", rotImage.shape)
-        return rotImage
-    elif (ID == '282'):
-        rotImage = rotate(normed, 82.2546, True)
-        print ("Image " + ID + " Rotated!")
-        print ("Image shape:", rotImage.shape)
-        return rotImage
-    
-    else:
-        print ("Align Images Function Error!",'\n',"Image " + ID + " Not Found!")
-#End alignImages Function
-
+def alignImages(normed, ID, galAngle):
+    rotImage = rotate(normed, float(galAngle), True)
+    print ("Image " + ID + " Rotated!")
+    print ("Image shape:", rotImage.shape)
+    return rotImage   
+#End alignImages function
 
 """
 Stack function, takes numpy array as argument, loops through array argument
@@ -186,7 +177,42 @@ def stackAll(fileListAll):
     plt.colorbar()
     print ("Stacking All Complete!")
 #End StackAll function
+#################################################################################    
+"""
+Read in All_Galaxy_Angles file and get fields, galaxy ID's, and Angles.
+Find only galaxies for field 2 and append ID's and Angles to new list
+for processing in alignImages function.
+"""
+fields = []
+galaxyIDs = []
+angles = []
+try:
+    angleFile = open('All_Galaxy_Angles_M.txt', 'r')
+    for line in angleFile:
+        fields.append(line.split()[0])
+        galaxyIDs.append(line.split()[2])
+        angles.append(line.split()[4])
+    angleFile.close()
+
+except IOError:
+    print ("File could not be found in current directory!")
     
+print ("Fields", fields,'\n')
+print ("Galaxy ID's", galaxyIDs,'\n')
+print ("Angles", angles,'\n')   
+print ("Fields", fields,'\n')
+print ("Galaxy ID's", galaxyIDs,'\n')
+print ("Angles", angles,'\n')   
+
+field2IDs = []
+field2Angles = []
+for i in range(0, len(fields)):
+    if (fields[i] == '2'):
+        field2IDs.append(galaxyIDs[i])
+        field2Angles.append(angles[i])
+        
+print ("Field 2 ID's", field2IDs,'\n')
+print ("Field 2 Angles", field2Angles,'\n')
 
 #################################################################################
 """
@@ -207,22 +233,32 @@ fileListAll = []
 fileListAbsorb = []
 fileListNonAbsorb = []
 for i in range(1, len(ID)):
-    if (ID[i] != '256' and ID[i] != '316' and ID[i] != '381' and ID[i] != '386'):    #Exclude this galaxy due to grism over subtraction.
+    if (ID[i] != '256' and ID[i] != '316'): #Exclude these galaxies due to grism over subtraction.
         if (absorber[i] == 'Yes'):
             try:
                 fileName = 'CROP-SDSS-J083852.05+025703.7-G141_00' + ID[i] + '.2d.fits'
         
                 #Call imageNorm function.
                 normed = imageNormAbsorber(fileName)
+            
+                """
+                Try and match ID's from Absorbtion data file with ID's from
+                All Galaxy Angles file. If match found, call getGalAngles function
+                and pass current matching ID as argument.
+                """
+                galAngle = float(0.0)
+                if (ID[i] in field2IDs):
+                    galAngle = getGalAngle(ID[i])
+                    #print ("ID " + ID[i] + " " + "Angle " + galAngle) 
                 
                 """
                 Call alignImages function and resize to stack.
                 Note, images are not all the same size after rotating them, must resize
                 in order to stack images.
                 """
-                rotImage = alignImages(normed, ID[i])
+                rotImage = alignImages(normed, ID[i], galAngle)
                 resized = resize(rotImage, (48,48))
-        
+            
                 #Append normalized image to fileList to pass as argument to stack function.
                 fileListAbsorb.append(resized)
                 file = fits.open(fileName)
@@ -240,17 +276,27 @@ for i in range(1, len(ID)):
             try:
                 fileName = 'CROP-SDSS-J083852.05+025703.7-G141_00' + ID[i] + '.2d.fits'
             
-                #Call imageNormNonAbsorb function.
+                #Call imageNorm function.
                 normed = imageNormNonAbsorber(fileName)
-                
+            
+                """
+                Try and match ID's from Absorbtion data file with ID's from
+                All Galaxy Angles file. If match found, call getGalAngles function
+                and pass current matching ID as argument.
+                """
+                galAngle = float(0.0)
+                if (ID[i] in field2IDs):
+                    galAngle = getGalAngle(ID[i])
+                    #print ("ID " + ID[i] + " " + "Angle " + galAngle) 
+                    
                 """
                 Call alignImages function and resize to stack.
                 Note, images are not all the same size after rotating them, must resize
                 in order to stack images.
                 """
-                rotImage = alignImages(normed, ID[i])
+                rotImage = alignImages(normed, ID[i], galAngle)
                 resized = resize(rotImage, (48,48))
-        
+            
                 #Append normalized image to fileList to pass as argument to stack function.
                 fileListNonAbsorb.append(resized)
                 file = fits.open(fileName)
