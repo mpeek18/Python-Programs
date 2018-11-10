@@ -3,15 +3,16 @@
 Created on Tue May 29 21:05:05 2018
 
 @author: Matthew Peek
-Last Modified: 4 October 2018
+Last Modified: 10 November 2018
 Field 9 Image Stack
 """
 import numpy as np
 from astropy.io import ascii
 import astropy.io.fits as fits
+from astropy.table import Table
 from matplotlib import pyplot as plt
 from skimage.transform import rotate, resize
-
+ 
 """
 Normalize image function, takes image as an argument, gets data and stores in
 numpy array. Sum all data in image then divides each pixel by image sum.
@@ -32,7 +33,7 @@ def imageNormAbsorber(fileName):
     return normed
 #End Absorber imageNorm function
 
-def imageNormNonAbsorber(fileName, galID):
+def imageNormNonAbsorber(fileName):
     data = fits.getdata(fileName)
     sumData = np.sum(data)
     print ("Summed Image Data:", sumData,'\n')
@@ -81,7 +82,6 @@ Stack image data standard, mean averaging, and median averaging.
 Write results to new fits files.
 """
 def stackAbsorber(fileListAbsorb):
-    #imageData = [fits.getdata(file) for file in fileList]
     imageData = [file for file in fileListAbsorb]
     
     print ("Total Absorber image data:", imageData,'\n')
@@ -114,7 +114,6 @@ def stackAbsorber(fileListAbsorb):
 
 
 def stackNonAbsorber(fileListNonAbsorb):
-    #imageData = [fits.getdata(file) for file in fileList]
     imageData = [file for file in fileListNonAbsorb]
     
     print ("Total Non-Absorber image data:", imageData,'\n')
@@ -220,17 +219,28 @@ Start program by reading in id's and appending them to new list.
 """
 absorberFile = ascii.read('Absorption_Data_Field8.dat', delimiter='|')
 ID = absorberFile['col2']
+redshift = absorberFile['col3']
 absorber = absorberFile['col7']
 totalCount = 0
 countAbsorber = 0
 countNonAbsorber = 0
+objIDAbsorb = []
 fileListAll = []
+objIDNonAbsorb = []
 fileListAbsorb = []
+objRedshiftAbsorb = []
 fileListNonAbsorb = []
+objRedshiftNonAbsorb = []
 for i in range(1, len(ID)):
     #Exclude galaxy 377 due to grism over subtraction.
     if (ID[i] != '377'): 
         if (absorber[i] == 'Yes'):
+            
+            #Append absorber ID's and redshifts to lists for ascii
+            #table output.
+            objIDAbsorb.append(ID[i])
+            objRedshiftAbsorb.append(redshift[i])
+            
             try:
                 fileName = 'CROP-SDSS-J120639.85+025308.3-G141_00' + ID[i] + '.2d.fits'
                                 
@@ -269,11 +279,17 @@ for i in range(1, len(ID)):
                 print ("Image ID " + ID[i] + " not found!")
 
         else:
+            
+            #Append non-absorber ID's and redshifts to list for ascii
+            #table output.
+            objIDNonAbsorb.append(ID[i])
+            objRedshiftNonAbsorb.append(redshift[i])
+            
             try:
                 fileName = 'CROP-SDSS-J120639.85+025308.3-G141_00' + ID[i] + '.2d.fits'
                 
                 #Call imageNormNonAbsorb function.
-                normed = imageNormNonAbsorber(fileName, ID[i])
+                normed = imageNormNonAbsorber(fileName)
                 
                 galAngle = float(0.0)
                 if (ID[i] in field8IDs):
@@ -312,3 +328,15 @@ stackAll(fileListAll)
 print ("Number of Absorbers Processed:", countAbsorber)
 print ("Number of Non-Absorbers Processed:", countNonAbsorber)
 print ("Total Number of Galaxies Processed:", totalCount)
+
+# =============================================================================
+# Write data to ascii table
+# =============================================================================
+stackDataAbsorbers = (Table([objIDAbsorb, objRedshiftAbsorb], 
+                            names=['ID Absorber', 'Redshift Absorber']))
+ascii.write(stackDataAbsorbers, 'Field9_Stack_Data_Absorb.dat', format='fixed_width', overwrite=True)
+
+stackDataNonAbsorbers = (Table([objIDNonAbsorb, objRedshiftNonAbsorb], 
+                               names=['ID Non-Absorber', 'Redshift Non-Absorber']))
+ascii.write(stackDataNonAbsorbers, 'Field9_Stack_Data_NonAbsorb.dat', format='fixed_width', overwrite=True)
+print ("Field9_Stack_Data file has been written")
