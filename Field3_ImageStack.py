@@ -3,7 +3,7 @@
 Created on Tue May 29 21:05:05 2018
 
 @author: Matthew Peek
-Last Modified: 10 November 2018
+Last Modified: 11 November 2018
 Field 3 Image Stack
 """
 import numpy as np
@@ -228,9 +228,13 @@ absorberFile = ascii.read('Absorption_Data_Field2.dat', delimiter='|')
 ID = absorberFile['col2']
 redshift = absorberFile['col3']
 absorber = absorberFile['col7']
+wavelength = absorberFile['col10']
+
 totalCount = 0
 countAbsorber = 0
 countNonAbsorber = 0
+haAbsorb = []
+haNonAbsorb = []
 objIDAbsorb = []
 fileListAll = []
 objIDNonAbsorb = []
@@ -242,8 +246,9 @@ for i in range(1, len(ID)):
     if (ID[i] != '256' and ID[i] != '316'): #Exclude these galaxies due to grism over subtraction.
         if (absorber[i] == 'Yes'):
             
-            #Append absorber ID's and redshifts to lists for ascii
+            #Append absorber ID's, redshifts, and wavelength to lists for ascii
             #table output.
+            haAbsorb.append(wavelength[i])
             objIDAbsorb.append(ID[i])
             objRedshiftAbsorb.append(redshift[i])
         
@@ -286,8 +291,9 @@ for i in range(1, len(ID)):
             
         else:
             
-            #Append non-absorber ID's and redshifts to list for ascii
+            #Append non-absorber ID's, redshifts, and wavelength to list for ascii
             #table output.
+            haNonAbsorb.append(wavelength[i])
             objIDNonAbsorb.append(ID[i])
             objRedshiftNonAbsorb.append(redshift[i])
         
@@ -343,11 +349,11 @@ print ("Total Number of Galaxies Processed:", totalCount)
 # =============================================================================
 # Write data to ascii table
 # =============================================================================
-stackDataAbsorbers = (Table([objIDAbsorb, objRedshiftAbsorb], 
-                            names=['ID Absorber', 'Redshift Absorber']))
+stackDataAbsorbers = (Table([objIDAbsorb, objRedshiftAbsorb, haAbsorb], 
+                            names=['ID Absorber', 'Redshift Absorber', 'Wavelength']))
 ascii.write(stackDataAbsorbers, 'Field3_Stack_Data_Absorb.dat', format='fixed_width', overwrite=True)
 
-stackDataNonAbsorbers = (Table([objIDNonAbsorb, objRedshiftNonAbsorb], 
-                               names=['ID Non-Absorber', 'Redshift Non-Absorber']))
+stackDataNonAbsorbers = (Table([objIDNonAbsorb, objRedshiftNonAbsorb, haNonAbsorb], 
+                               names=['ID Non-Absorber', 'Redshift Non-Absorber', 'Wavelength']))
 ascii.write(stackDataNonAbsorbers, 'Field3_Stack_Data_NonAbsorb.dat', format='fixed_width', overwrite=True)
 print ("Field3_Stack_Data file has been written")

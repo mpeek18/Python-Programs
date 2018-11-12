@@ -3,7 +3,7 @@
 Created on Mon Feb 23 22:07:40 2017
 
 @author: Matthew Peek
-Last Modified: 25 September 2018
+Last Modified: 11 November 2018
 Field 2
 
 Algorithm:
@@ -340,7 +340,7 @@ def analyzeFits(finalName, fitsName, zGal, sciHeight, hAlphaFlux):
     
     print ("End radius computation")
     print ()
-    return (radius50, radius90)
+    return (radius50, radius90, wavelength)
 #End analyzeFits Function
 ###############################################################################
 #Begin Function to calculate star formation rates
@@ -472,6 +472,7 @@ R90 = []
 redshiftQual = []
 invalidGalaxies = []
 positionAngle = []
+haLambda = []
 
 for i in range(0, len(galaxyID)): #Loop through Galaxy ID #'s.    
     print ("BEGIN NEW FITS IMAGE PROCESS")
@@ -527,7 +528,7 @@ for i in range(0, len(galaxyID)): #Loop through Galaxy ID #'s.
         
                     #Call functions
                     sciHeight = processFits(fitsName, finalName, fitsModel)
-                    radius50, radius90 = analyzeFits(finalName, fitsName, zGal, sciHeight, hAlphaFlux)
+                    radius50, radius90, wavelength = analyzeFits(finalName, fitsName, zGal, sciHeight, hAlphaFlux)
                     sfr, areaKpc, sfrSurfaceDens, lumDist = starFormation(hAlphaFlux, zGal, radius50)
                     angDistKpc = convertDist(zGal, arcsecDist)
         
@@ -541,6 +542,7 @@ for i in range(0, len(galaxyID)): #Loop through Galaxy ID #'s.
                     sfrDens.append(sfrSurfaceDens)
                     distance.append(lumDist)
                     angularDistKpc.append(angDistKpc)
+                    haLambda.append(wavelength)
 
                     print ("END OF FITS FILE")
                     print ("------------------------------------------------------------------------")
@@ -620,6 +622,7 @@ angDistQSO = []
 angDistAbsorb = []
 angDistNoAbsorb = []
 totalPositionAngles = []
+totalWavelength = []
 
 for i in range(0, len(sfrDens)):
     if (sfrDens[i] >= 0 and angularDistKpc[i] < 150):   #If sfr surface density is >= 0 and,
@@ -630,6 +633,7 @@ for i in range(0, len(sfrDens)):
         totalZDist.append(redshift[i])
         angDistQSO.append(angularDistKpc[i])
         totalPositionAngles.append(positionAngle[i])
+        totalWavelength.append(haLambda[i])
         
         if (ID[i] in newAbsorberGalID): #If galaxy ID in ID array is also in newAbsorberGalID array
             sfrDensAbsorb.append(sfrDens[i])
@@ -874,8 +878,9 @@ print ("HSTData.dat file has been written")
 
 #Write absorber data to ascii table
 absorberData = (Table([totalID, totalZDist, totalZQual, totalSFR, totalSFRDens, 
-                       galAbsorption, totalAngDist, totalPositionAngles],
+                       galAbsorption, totalAngDist, totalPositionAngles, totalWavelength],
                 names=['Galaxy ID', 'Z Dist', 'Z Qual', 'Star Formation Rate',
-                       'SFR Surface Density', 'Absorber', 'Angular Distance', 'Position Angle']))
+                       'SFR Surface Density', 'Absorber', 'Angular Distance', 
+                       'Position Angle', 'Wavelength']))
 ascii.write(absorberData, 'Absorption_Data_Field1.dat', format='fixed_width', overwrite=True)
 print ("Absorption_Data.dat file has been written")

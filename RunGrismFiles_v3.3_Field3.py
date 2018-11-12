@@ -3,7 +3,7 @@
 Created on Mon Feb 23 22:07:40 2017
 
 @author: Matthew Peek
-Last Modified: 1 August 2018
+Last Modified: 11 November 2018
 Field 3
 
 Algorithm:
@@ -340,7 +340,7 @@ def analyzeFits(finalName, fitsName, zGal, sciHeight, hAlphaFlux):
     
     print ("End radius computation")
     print ()
-    return (radius50, radius90)
+    return (radius50, radius90, wavelength)
 #End analyzeFits Function
 ###############################################################################
 #Begin Function to calculate star formation rates
@@ -471,94 +471,110 @@ distance = []
 R50 = []
 R90 = []
 redshiftQual = []
+invalidGalaxies = []
+positionAngle = []
+haLambda = []
 
 for i in range(0, len(galaxyID)): #Loop through Galaxy ID #'s.    
     print ("BEGIN NEW FITS IMAGE PROCESS")
-    
-    if (zQual[i] != 'unsure' and zQual[i] != 'uncertain' and zQual[i] != 'unlikely'):
-        #redshiftQual.append(zQual[i])
-        if (galRedshift[i] < 1.6 and galRedshift[i] > 0.65):
-            if (fluxHa[i] > 0 and fluxErrHa[i] > 0):
-                if ((fluxHa[i] / fluxErrHa[i]) > 3): 
-                    redshiftQual.append(zQual[i])
+    if (galaxyID[i] != '312'):
+        if (zQual[i] != 'unsure' and zQual[i] != 'uncertain' and zQual[i] != 'unlikely'):
+            if (galRedshift[i] < 1.6 and galRedshift[i] > 0.65):
+                if (fluxHa[i] > 0 and fluxErrHa[i] > 0):
+                    if ((fluxHa[i] / fluxErrHa[i]) > 1): 
+                        redshiftQual.append(zQual[i])
         
-                    galID = galaxyID[i]
-                    frame = orientName[i]
-                    z = galRedshift[i]
+                        galID = galaxyID[i]
+                        frame = orientName[i]
+                        z = galRedshift[i]
+                        
+                        #Get position angle of frame galaxy is located in.
+                        if (frame == '-01-312-'):
+                            positionAngle.append(312)
+                        elif (frame == '-10-078-'):
+                            positionAngle.append(78)
+                        else:
+                            positionAngle.append(78)
         
-                    #Get H-Alpha flux from Best_Redux file and calculate flux * 10 ^ -17
-                    hAlphaFlux = fluxHa[i] * math.pow(10, -17)
-                    hAlphaFluxErr = fluxErrHa[i]
-                    print ("HAlpha Flux:", hAlphaFlux)
-                    print ("HAlpha Flux Error:", hAlphaFluxErr)
+        
+                        #Get H-Alpha flux from Best_Redux file and calculate flux * 10 ^ -17
+                        hAlphaFlux = fluxHa[i] * math.pow(10, -17)
+                        hAlphaFluxErr = fluxErrHa[i]
+                        print ("HAlpha Flux:", hAlphaFlux)
+                        print ("HAlpha Flux Error:", hAlphaFluxErr)
         
             
-                    #Hubble fits image
-                    fitsName = 'SDSS-J083852.05+025703.7' + str(frame) + 'G141_' + str(galID).zfill(5) + '.2D.fits'
-                    finalName = 'FINAL-' + fitsName
-                    print ("Fits Name:",fitsName)
-                    print ("Final Name:", finalName)
+                        #Hubble fits image
+                        fitsName = 'SDSS-J083852.05+025703.7' + str(frame) + 'G141_' + str(galID).zfill(5) + '.2D.fits'
+                        finalName = 'FINAL-' + fitsName
+                        print ("Fits Name:",fitsName)
+                        print ("Final Name:", finalName)
         
         
-                    try:
-                        #zfits.dat file
-                        zFits = ascii.read('SDSS-J083852.05+025703.7' + str(frame) + 'G141_' + str(galID).zfill(5) + '.zfit.dat')     
-                        zGal = zFits['z_max_spec']
-                        print (zGal)
+                        try:
+                            #zfits.dat file
+                            zFits = ascii.read('SDSS-J083852.05+025703.7' + str(frame) + 'G141_' + str(galID).zfill(5) + '.zfit.dat')     
+                            zGal = zFits['z_max_spec']
+                            print (zGal)
             
-                    except IOError:
-                        print ('Galaxy ' + galID + ' zFits.dat file not found!')            
-                        zGal = z
-                        print (zGal)
+                        except IOError:
+                            print ('Galaxy ' + galID + ' zFits.dat file not found!')            
+                            zGal = z
+                            print (zGal)
         
         
-                    #zfits.fits file has data for model subtraction in processFits function
-                    try:
-                        fitsModel = 'SDSS-J083852.05+025703.7' + str(frame) + 'G141_' + str(galID).zfill(5) + '.zfit.fits'
-                        print ("Continuum model:", fitsModel)
+                        #zfits.fits file has data for model subtraction in processFits function
+                        try:
+                            fitsModel = 'SDSS-J083852.05+025703.7' + str(frame) + 'G141_' + str(galID).zfill(5) + '.zfit.fits'
+                            print ("Continuum model:", fitsModel)
             
-                    except IOError:
-                        print ('zfits.fits file ' + galID + ' not found!')
+                        except IOError:
+                            print ('zfits.fits file ' + galID + ' not found!')
         
         
-                    for i in range(0, len(radecGal)):
-                        if (galID in radecGal[i]):
-                            arcsecDist = angularDist[i]
-                            print ("Angular Distance in Arcseconds:", arcsecDist)
+                        for i in range(0, len(radecGal)):
+                            if (galID in radecGal[i]):
+                                arcsecDist = angularDist[i]
+                                print ("Angular Distance in Arcseconds:", arcsecDist)
         
-                    #Call functions
-                    sciHeight = processFits(fitsName, finalName, fitsModel)
-                    radius50, radius90 = analyzeFits(finalName, fitsName, zGal, sciHeight, hAlphaFlux)
-                    sfr, areaKpc, sfrSurfaceDens, lumDist = starFormation(hAlphaFlux, zGal, radius50)
-                    angDistKpc = convertDist(zGal, arcsecDist)
+                        #Call functions
+                        sciHeight = processFits(fitsName, finalName, fitsModel)
+                        radius50, radius90, wavelength = analyzeFits(finalName, fitsName, zGal, sciHeight, hAlphaFlux)
+                        sfr, areaKpc, sfrSurfaceDens, lumDist = starFormation(hAlphaFlux, zGal, radius50)
+                        angDistKpc = convertDist(zGal, arcsecDist)
         
-                    #Prepare items for ascii table
-                    ID.append(galID)
-                    redshift.append(zGal)
-                    R50.append(radius50)
-                    R90.append(radius90)
-                    starForm.append(sfr)
-                    galAreaKpc.append(areaKpc)
-                    sfrDens.append(sfrSurfaceDens)
-                    distance.append(lumDist)
-                    angularDistKpc.append(angDistKpc)
+                        #Prepare items for ascii table
+                        ID.append(galID)
+                        redshift.append(zGal)
+                        R50.append(radius50)
+                        R90.append(radius90)
+                        starForm.append(sfr)
+                        galAreaKpc.append(areaKpc)
+                        sfrDens.append(sfrSurfaceDens)
+                        distance.append(lumDist)
+                        angularDistKpc.append(angDistKpc)
+                        haLambda.append(wavelength)
 
-                    print ("END OF FITS FILE")
-                    print ("------------------------------------------------------------------------")
-                    print ("------------------------------------------------------------------------")
+                        print ("END OF FITS FILE")
+                        print ("------------------------------------------------------------------------")
+                        print ("------------------------------------------------------------------------")
     
+                    else:
+                        print (galaxyID[i] + " Invalid flux HA / flux ErrHa > 1")
+                        print ("Process Terminated",'\n')
+                        invalidGalaxies.append(galaxyID[i])
                 else:
-                    print ("Invalid flux HA / flux ErrHa > 3")
+                    print (galaxyID[i] + " flux HA or flux Err HA error")
                     print ("Process Terminated",'\n')
+                    invalidGalaxies.append(galaxyID[i])
             else:
-                print ("flux HA or flux Err HA error")
+                print (galaxyID[i] + " Invalid Redshift")
                 print ("Process Terminated",'\n')
+                invalidGalaxies.append(galaxyID[i])
         else:
-            print ("Invalid Redshift")
+            print (galaxyID[i] + " Invalid Redshift Quality")
             print ("Process Terminated",'\n')
-    else:
-        print ("Invalid Redshift Quality")
-        print ("Process Terminated",'\n')
+            invalidGalaxies.append(galaxyID[i])
         
 print ("Redshift Quality:", redshiftQual,'\n')    
 #End Main section
@@ -625,6 +641,8 @@ galAbsorption = []
 angDistQSO = []
 angDistAbsorb = []
 angDistNoAbsorb = []
+totalPositionAngles = []
+totalWavelength = []
 
 for i in range(0, len(sfrDens)):
     if (sfrDens[i] >= 0 and angularDistKpc[i] < 150):   #If sfr surface density is >= 0 and,
@@ -634,6 +652,8 @@ for i in range(0, len(sfrDens)):
         totalZQual.append(redshiftQual[i])
         totalZDist.append(redshift[i])
         angDistQSO.append(angularDistKpc[i])
+        totalPositionAngles.append(positionAngle[i])
+        totalWavelength.append(haLambda[i])
         
         if (ID[i] in newAbsorberGalID): #If galaxy ID in ID array is also in newAbsorberGalID array
             sfrDensAbsorb.append(sfrDens[i])
@@ -674,6 +694,15 @@ print (sfrDensNoAbsorb,'\n')
 print ("Id galaxy absorbers:", galIDAbsorb,'\n')
 print ("Id galaxy non-absorbers:", galIDNoAbsorb, '\n')
 print ("Galaxy ID:", galaxyID,'\n')
+print ("Galaxies That Did Not Make Cut:", invalidGalaxies,'\n')
+
+
+#Check if galaxies in newAbsorberGalID were excluded from processing.
+excludedGals = []
+for i in range(0, len(invalidGalaxies)):
+    if (invalidGalaxies[i] in newAbsorberGalID):
+        excludedGals.append(invalidGalaxies[i])
+print ("Conflicting Galaxies:", excludedGals,'\n')
 
 
 totalAngDist = []
@@ -868,9 +897,11 @@ ascii.write(data, 'HSTData3.dat', format='fixed_width', overwrite=True)
 print ("HSTData.dat file has been written")
 
 #Write absorber data to ascii table
-absorberData = (Table([totalID, totalZDist, totalZQual, totalSFR, totalSFRDens, galAbsorption, totalAngDist],
+absorberData = (Table([totalID, totalZDist, totalZQual, totalSFR, totalSFRDens, 
+                       galAbsorption, totalAngDist, totalPositionAngles, totalWavelength],
                 names=['Galaxy ID', 'Z Dist', 'Z Qual', 'Star Formation Rate',
-                       'SFR Surface Density', 'Absorber', 'Angular Distance']))
-ascii.write(absorberData, 'Absorption_Data.dat', format='fixed_width', overwrite=True)
+                       'SFR Surface Density', 'Absorber', 'Angular Distance',
+                       'Position Angle', 'Wavelength']))
+ascii.write(absorberData, 'Absorption_Data_Field2.dat', format='fixed_width', overwrite=True)
 
 print ("Absorption_Data.dat file has been written")
