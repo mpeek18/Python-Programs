@@ -3,7 +3,7 @@
 Created on Tue May 29 21:05:05 2018
 
 @author: Matthew Peek
-Last Modified: 11 November 2018
+Last Modified: 18 November 2018
 Field 4 Image Stack
 """
 import numpy as np
@@ -21,8 +21,8 @@ returns normalized image as numpy array.
 def imageNormAbsorber(fileName):
     data = fits.getdata(fileName)
     sumData = np.sum(data)
-    print ("Summed Image Data:", sumData,'\n')
-    print ("Data:", data,'\n')
+    #print ("Summed Image Data:", sumData,'\n')
+    #print ("Data:", data,'\n')
         
     normed = (data / sumData)
    
@@ -35,8 +35,8 @@ def imageNormAbsorber(fileName):
 def imageNormNonAbsorber(fileName):
     data = fits.getdata(fileName)
     sumData = np.sum(data)
-    print ("Summed Image Data:", sumData,'\n')
-    print ("Data:", data,'\n')
+    #print ("Summed Image Data:", sumData,'\n')
+    #print ("Data:", data,'\n')
         
     normed = (data / sumData)
     
@@ -54,7 +54,7 @@ def getGalAngle(ID):
     for i in range(0, len(field3IDs)):
         if (ID == field3IDs[i]):
             galAngle = field3Angles[i]
-    print ("ID " + ID + " " + "angle " + galAngle)
+    print ("ID " + ID + " " + "angle " + str(galAngle))
     return galAngle
 #End getGalAngle Function
     
@@ -192,16 +192,13 @@ except IOError:
 print ("Fields", fields,'\n')
 print ("Galaxy ID's", galaxyIDs,'\n')
 print ("Angles", angles,'\n')   
-print ("Fields", fields,'\n')
-print ("Galaxy ID's", galaxyIDs,'\n')
-print ("Angles", angles,'\n')   
 
 field3IDs = []
 field3Angles = []
 for i in range(0, len(fields)):
     if (fields[i] == '3'):
         field3IDs.append(galaxyIDs[i])
-        field3Angles.append(angles[i])
+        field3Angles.append(float(angles[i]))
         
 print ("Field 3 ID's", field3IDs,'\n')
 print ("Field 3 Angles", field3Angles,'\n')
@@ -234,96 +231,72 @@ objRedshiftAbsorb = []
 fileListNonAbsorb = []
 objRedshiftNonAbsorb = []
 for i in range(1, len(ID)):
-    if (absorber[i] == 'Yes'):
+    if (ID[i] in field3IDs):
+        if (absorber[i] == 'Yes'):
         
-        #Append absorber ID's, redshifts, and wavelength to lists for ascii
-        #table output.
-        haAbsorb.append(wavelength[i])
-        objIDAbsorb.append(ID[i])
-        objRedshiftAbsorb.append(redshift[i])
+            #Append absorber ID's, redshifts, and wavelength to lists for ascii
+            #table output.
+            haAbsorb.append(wavelength[i])
+            objIDAbsorb.append(ID[i])
+            objRedshiftAbsorb.append(redshift[i])
         
-        try:
-            fileName = 'CROP-SDSS-J091730.18+324105.5-G141_00' + ID[i] + '.2d.fits'
+            try:
+                fileName = 'CROP-SDSS-J091730.18+324105.5-G141_00' + ID[i] + '.2d.fits'
     
-            #Call imageNorm function.
-            normed = imageNormAbsorber(fileName)
+                #Call imageNorm function.
+                normed = imageNormAbsorber(fileName)
             
-            """
-            Try and match ID's from Absorbtion data file with ID's from
-            All Galaxy Angles file. If match found, call getGalAngles function
-            and pass current matching ID as argument.
-            """
-            galAngle = float(0.0)
-            if (ID[i] in field3IDs):
+                """
+                Try and match ID's from Absorbtion data file with ID's from
+                All Galaxy Angles file. If match found, call getGalAngles function
+                and pass current matching ID as argument.
+                
+                Call alignImages function and resize to stack.
+                Note, images are not all the same size after rotating them, must resize
+                in order to stack images.
+                """
                 galAngle = getGalAngle(ID[i])
-            #print ("ID " + ID[i] + " " + "Angle " + galAngle) 
+                rotImage = alignImages(normed, ID[i], galAngle)
+                resized = resize(rotImage, (48,48))
                 
-            """
-            Call alignImages function and resize to stack.
-            Note, images are not all the same size after rotating them, must resize
-            in order to stack images.
-            """
-            rotImage = alignImages(normed, ID[i], galAngle)
-            resized = resize(rotImage, (48,48))
-                
-            #Append normalized image to fileList to pass as argument to stack function.
-            fileListAbsorb.append(resized)
-            file = fits.open(fileName)
-            image = file[0].data
-            file.close()
-        
-            print (ID[i])
-            print (image.shape)
-        
-            countAbsorber += 1
-        except IOError:
-            print ("Image ID " + ID[i] + " not found!")
+                #Append normalized image to fileList to pass as argument to stack function.
+                fileListAbsorb.append(resized)
             
-    else:
-        
-        #Append non-absorber ID's, redshifts, and wavelength to list for ascii
-        #table output.
-        haNonAbsorb.append(wavelength[i])
-        objIDNonAbsorb.append(ID[i])
-        objRedshiftNonAbsorb.append(redshift[i])
-        
-        try:
-            fileName = 'CROP-SDSS-J091730.18+324105.5-G141_00' + ID[i] + '.2d.fits'
-                
-            #Call imageNormNonAbsorb function.
-            normed = imageNormNonAbsorber(fileName)
+            except IOError:
+                print ("Image ID " + ID[i] + " not found!")
             
-            """
-            Try and match ID's from Absorbtion data file with ID's from
-            All Galaxy Angles file. If match found, call getGalAngles function
-            and pass current matching ID as argument.
-            """
-            galAngle = float(0.0)
-            if (ID[i] in field3IDs):
+        else:
+        
+            #Append non-absorber ID's, redshifts, and wavelength to list for ascii
+            #table output.
+            haNonAbsorb.append(wavelength[i])
+            objIDNonAbsorb.append(ID[i])
+            objRedshiftNonAbsorb.append(redshift[i])
+        
+            try:
+                fileName = 'CROP-SDSS-J091730.18+324105.5-G141_00' + ID[i] + '.2d.fits'
+                
+                #Call imageNormNonAbsorb function.
+                normed = imageNormNonAbsorber(fileName)
+            
+                """
+                Try and match ID's from Absorbtion data file with ID's from
+                All Galaxy Angles file. If match found, call getGalAngles function
+                and pass current matching ID as argument.
+                
+                Call alignImages function and resize to stack.
+                Note, images are not all the same size after rotating them, must resize
+                in order to stack images.
+                """
                 galAngle = getGalAngle(ID[i])
-            #print ("ID " + ID[i] + " " + "Angle " + galAngle) 
+                rotImage = alignImages(normed, ID[i], galAngle)
+                resized = resize(rotImage, (48,48))
                 
-            """
-            Call alignImages function and resize to stack.
-            Note, images are not all the same size after rotating them, must resize
-            in order to stack images.
-            """
-            rotImage = alignImages(normed, ID[i], galAngle)
-            resized = resize(rotImage, (48,48))
+                #Append normalized image to fileList to pass as argument to stack function.
+                fileListNonAbsorb.append(resized)
                 
-            #Append normalized image to fileList to pass as argument to stack function.
-            fileListNonAbsorb.append(resized)
-            file = fits.open(fileName)
-            image = file[0].data
-            file.close()
-        
-            print (ID[i])
-            print (image.shape)
-            
-            countNonAbsorber += 1
-        except IOError:
-            print ("Image ID " + ID[i] + " not found!")
-    totalCount += 1
+            except IOError:
+                print ("Image ID " + ID[i] + " not found!")
 
 #Combine both lists to stack all images
 fileListAll = fileListAbsorb + fileListNonAbsorb
@@ -332,9 +305,9 @@ fileListAll = fileListAbsorb + fileListNonAbsorb
 stackAbsorber(fileListAbsorb)
 stackNonAbsorber(fileListNonAbsorb)
 stackAll(fileListAll)
-print ("Number of Absorbers Processed:", countAbsorber)
-print ("Number of Non-Absorbers Processed:", countNonAbsorber)
-print ("Total Number of Galaxies Processed:", totalCount)
+print ("Number of Absorbers Processed:", len(fileListAbsorb))
+print ("Number of Non-Absorbers Processed:", len(fileListNonAbsorb))
+print ("Total Number of Galaxies Processed:", len(fileListAbsorb) + len(fileListNonAbsorb))
 
 # =============================================================================
 # Write data to ascii table
