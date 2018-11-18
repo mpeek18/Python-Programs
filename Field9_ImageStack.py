@@ -3,7 +3,7 @@
 Created on Tue May 29 21:05:05 2018
 
 @author: Matthew Peek
-Last Modified: 11 November 2018
+Last Modified: 17 November 2018
 Field 9 Image Stack
 """
 import numpy as np
@@ -256,19 +256,17 @@ for i in range(1, len(ID)):
                 Try and match ID's from Absorbtion data file with ID's from
                 All Galaxy Angles file. If match found, call getGalAngles function
                 and pass current matching ID as argument.
-                """
-                galAngle = float(0.0)
-                if (ID[i] in field8IDs):
-                    galAngle = getGalAngle(ID[i])
-                #print ("ID " + ID[i] + " " + "Angle " + galAngle) 
                 
-                """
                 Call alignImages function and resize to stack.
                 Note, images are not all the same size after rotating them, must resize
                 in order to stack images.
                 """
-                rotImage = alignImages(normed, ID[i], galAngle)
-                resized = resize(rotImage, (48,48))
+                if (ID[i] in field8IDs):
+                    galAngle = getGalAngle(ID[i])
+                    rotImage = alignImages(normed, ID[i], galAngle)
+                    resized = resize(rotImage, (48,48))
+                else:
+                    print (ID[i], "not found in angle file.")
                 
                 #Append normalized image to fileList to pass as argument to stack function.
                 fileListAbsorb.append(resized)
@@ -297,18 +295,21 @@ for i in range(1, len(ID)):
                 #Call imageNormNonAbsorb function.
                 normed = imageNormNonAbsorber(fileName)
                 
-                galAngle = float(0.0)
-                if (ID[i] in field8IDs):
-                    galAngle = getGalAngle(ID[i])
-                #print ("ID " + ID[i] + " " + "Angle " + galAngle)   
-                
                 """
+                Try and match ID's from Absorbtion data file with ID's from
+                All Galaxy Angles file. If match found, call getGalAngles function
+                and pass current matching ID as argument.
+                
                 Call alignImages function and resize to stack.
                 Note, images are not all the same size after rotating them, must resize
                 in order to stack images.
                 """
-                rotImage = alignImages(normed, ID[i], galAngle)
-                resized = resize(rotImage, (48,48))
+                if (ID[i] in field8IDs):
+                    galAngle = getGalAngle(ID[i])
+                    rotImage = alignImages(normed, ID[i], galAngle)
+                    resized = resize(rotImage, (48,48))
+                else:
+                    print (ID[i], "not found in angle file.")
                 
                 #Append normalized image to fileList to pass as argument to stack function.
                 fileListNonAbsorb.append(resized)
