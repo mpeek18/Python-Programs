@@ -887,10 +887,10 @@ print ("HSTData.dat file has been written")
 
 #Write absorber data to ascii table
 absorberData = (Table([totalID, totalZDist, totalZQual, totalSFR, totalSFRDens, 
-                       galAbsorption, totalAngDist, totalPositionAngles, totalWavelength],
+                       galAbsorption, totalAngDist, totalPositionAngles],
                 names=['Galaxy ID', 'Z Dist', 'Z Qual', 'Star Formation Rate', 
                        'SFR Surface Density', 'Absorber', 'Angular Distance', 
-                       'Position Angle', 'Wavelength']))
+                       'Position Angle']))
 ascii.write(absorberData, 'Absorption_Data_Field6.dat', format='fixed_width', overwrite=True)
 
 print ("Absorption_Data.dat file has been written")

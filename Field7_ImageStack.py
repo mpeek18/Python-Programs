@@ -214,13 +214,10 @@ absorberFile = ascii.read('Absorption_Data_Field6.dat', delimiter='|')
 ID = absorberFile['col2']
 redshift = absorberFile['col3']
 absorber = absorberFile['col7']
-wavelength = absorberFile['col10']
 
 totalCount = 0
 countAbsorber = 0
 countNonAbsorber = 0
-haAbsorb = []
-haNonAbsorb = []
 objIDAbsorb = []
 fileListAll = []
 objIDNonAbsorb = []
@@ -234,7 +231,6 @@ for i in range(1, len(ID)):
         
             #Append absorber ID's, redshifts, and wavelength to lists for ascii
             #table output.
-            haAbsorb.append(wavelength[i])
             objIDAbsorb.append(ID[i])
             objRedshiftAbsorb.append(redshift[i])
             
@@ -267,7 +263,6 @@ for i in range(1, len(ID)):
         
             #Append non-absorber ID's, redshifts, and wavelength to list for ascii
             #table output.
-            haNonAbsorb.append(wavelength[i])
             objIDNonAbsorb.append(ID[i])
             objRedshiftNonAbsorb.append(redshift[i])
             
@@ -311,11 +306,11 @@ print ("Total Number of Galaxies Processed:", len(fileListAbsorb) + len(fileList
 # =============================================================================
 # Write data to ascii table
 # =============================================================================
-stackDataAbsorbers = (Table([objIDAbsorb, objRedshiftAbsorb, haAbsorb], 
-                            names=['ID Absorber', 'Redshift Absorber', 'Wavelength']))
+stackDataAbsorbers = (Table([objIDAbsorb, objRedshiftAbsorb], 
+                            names=['ID Absorber', 'Redshift Absorber']))
 ascii.write(stackDataAbsorbers, 'Field7_Stack_Data_Absorb.dat', format='fixed_width', overwrite=True)
 
-stackDataNonAbsorbers = (Table([objIDNonAbsorb, objRedshiftNonAbsorb, haNonAbsorb], 
-                               names=['ID Non-Absorber', 'Redshift Non-Absorber', 'Wavelength']))
+stackDataNonAbsorbers = (Table([objIDNonAbsorb, objRedshiftNonAbsorb], 
+                               names=['ID Non-Absorber', 'Redshift Non-Absorber']))
 ascii.write(stackDataNonAbsorbers, 'Field7_Stack_Data_NonAbsorb.dat', format='fixed_width', overwrite=True)
 print ("Field7_Stack_Data file has been written")
